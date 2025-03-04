@@ -14,7 +14,6 @@ class AuthMiddleware
             return response()->json(['message' => 'Неавторизованный'], 401);
         }
 
-        // Проверяем, существует ли пользователь
         $user = User::find($request->session()->get('user_id'));
 
         if (!$user) {

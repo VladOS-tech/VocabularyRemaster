@@ -21,21 +21,21 @@ class User extends Authenticatable
 
     public function login()
     {
-        return $this->belongsTo(Login::class);  // Один пользователь связан с одним логином
+        return $this->belongsTo(Login::class);  
     }
 
     public function role()
     {
-        return $this->belongsTo(Role::class);  // Один пользователь имеет одну роль
+        return $this->belongsTo(Role::class);  
     }
 
     public function isAdmin()
     {
-        return $this->role_id === 1;  // Предположим, что роль администратора имеет ID 1
+        return $this->role_id === 1;  
     }
 
     public function isModerator()
     {
-        return $this->role_id === 2;  // Предположим, что роль модератора имеет ID 2
+        return $this->role_id === 2;  
     }
 }

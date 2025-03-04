@@ -15,7 +15,6 @@ class RoleMiddleware
             return response()->json(['message' => 'Неавторизованный'], 401);
         }
 
-        // Проверяем роль
         if (($role === 'admin' && $role_id != 1) || ($role === 'moderator' && $role_id != 2)) {
             return response()->json(['message' => 'Доступ запрещен'], 403);
         }

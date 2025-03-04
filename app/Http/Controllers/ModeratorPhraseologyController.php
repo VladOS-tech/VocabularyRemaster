@@ -39,14 +39,12 @@ class ModeratorPhraseologyController extends Controller
         return response()->json($phraseologies);
     }
     
-    // Просмотр конкретного фразеологизма (без ограничений)
     public function show($id)
     {
         $phraseology = Phraseology::findOrFail($id);
         return response()->json($phraseology);
     }
 
-    // Обновление (редактирование) **неподтверждённого** фразеологизма
     public function update(Request $request, $id)
     {
         $validated = $request->validate([
@@ -59,7 +57,6 @@ class ModeratorPhraseologyController extends Controller
 
         $phraseology = Phraseology::findOrFail($id);
         
-        // Проверяем, что фразеологизм не подтверждён (модератор не может редактировать уже подтверждённые записи)
         if ($phraseology->status === 'confirmed') {
             return response()->json(['message' => 'Редактирование подтверждённых фразеологизмов запрещено'], 403);
         }
@@ -76,7 +73,6 @@ class ModeratorPhraseologyController extends Controller
         ]);
     }
 
-    // Подтверждение фразеологизма
     public function confirm($id)
     {
         $phraseology = Phraseology::findOrFail($id);
@@ -93,7 +89,6 @@ class ModeratorPhraseologyController extends Controller
         ]);
     }
 
-    // Отклонение фразеологизма (удаление из базы)
     public function reject($id)
     {
         $phraseology = Phraseology::findOrFail($id);
@@ -107,7 +102,6 @@ class ModeratorPhraseologyController extends Controller
         return response()->json(['message' => 'Фразеологизм удалён!']);
     }
 
-    // Отправка **подтверждённого** фразеологизма на удаление (создание заявки для администратора)
     public function requestDeletion(Request $request, $id)
     {
         $phraseology = Phraseology::findOrFail($id);
@@ -124,7 +118,6 @@ class ModeratorPhraseologyController extends Controller
         ]);
     }
 
-    // Управление тегами
     public function updateTags(Request $request, $id)
     {
         $validated = $request->validate([

@@ -10,14 +10,12 @@ use Illuminate\Validation\ValidationException;
 
 class AdminModeratorController extends Controller
 {
-    // Вывод списка всех модераторов
     public function index()
     {
         $moderators = Moderator::with('user')->get();
         return response()->json($moderators);
     }
 
-    // Добавление нового модератора
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -26,14 +24,12 @@ class AdminModeratorController extends Controller
             'contact' => 'required|string|max:255|unique:moderators,contact'
         ]);
 
-        // Создаём пользователя
         $user = User::create([
             'name' => $validated['name'],
             'password' => Hash::make($validated['password']),
-            'role_id' => 2 // 2 = роль модератора
+            'role_id' => 2
         ]);
 
-        // Создаём запись модератора
         $moderator = Moderator::create([
             'user_id' => $user->id,
             'contact' => $validated['contact']
@@ -42,7 +38,6 @@ class AdminModeratorController extends Controller
         return response()->json($moderator, 201);
     }
 
-    // Редактирование модератора
     public function update(Request $request, $id)
     {
         $moderator = Moderator::findOrFail($id);
@@ -54,7 +49,6 @@ class AdminModeratorController extends Controller
             'contact' => 'sometimes|string|max:255|unique:moderators,contact,' . $id
         ]);
 
-        // Обновляем пользователя
         if (isset($validated['name'])) {
             $user->name = $validated['name'];
         }
@@ -63,7 +57,6 @@ class AdminModeratorController extends Controller
         }
         $user->save();
 
-        // Обновляем модератора
         if (isset($validated['contact'])) {
             $moderator->contact = $validated['contact'];
         }
@@ -72,7 +65,6 @@ class AdminModeratorController extends Controller
         return response()->json($moderator);
     }
 
-    // Удаление модератора (удаляем из users и moderators)
     public function destroy($id)
     {
         $moderator = Moderator::findOrFail($id);

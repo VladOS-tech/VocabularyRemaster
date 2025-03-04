@@ -9,11 +9,11 @@ class Role extends Model
     protected $table = 'roles';
 
     protected $fillable = [
-        'name',  // Например: 'admin', 'moderator'
+        'name',  
     ];
 
     public function users()
     {
-        return $this->hasMany(User::class);  // Одна роль может быть связана с несколькими пользователями
+        return $this->hasMany(User::class);  
     }
 }

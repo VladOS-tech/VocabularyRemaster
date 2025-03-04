@@ -18,9 +18,6 @@ use Illuminate\Support\Facades\Log;
 class AuthController extends Controller
 {
     use HasApiTokens, Notifiable;
-    /**
-     * Логика авторизации пользователя
-     */
     public function login(Request $request)
     {
         $request->validate([
@@ -40,11 +37,9 @@ class AuthController extends Controller
             return response()->json(['message' => 'Неверный логин или пароль'], 401);
         }
 
-        // Получаем всех пользователей, привязанных к этому логину
         $users = $login->users;
 
         if ($users->count() > 1) {
-            // Если несколько пользователей, отправляем список ролей
             return response()->json([
                 'message' => 'Выберите роль',
                 'roles' => $users->map(fn($user) => [
@@ -55,10 +50,8 @@ class AuthController extends Controller
             ]);
         }
 
-        // Если только одна роль, сразу авторизуем
         $user = $users->first();
         
-        // Сохраняем данные в сессии
         Session::put('login_id', $login->id);
         Session::put('user_id', $user->id);
         Session::put('role_id', $user->role_id);
@@ -70,9 +63,6 @@ class AuthController extends Controller
         ]);
     }
 
-    /**
-     * Выбор роли для пользователя
-     */
     public function selectRole(Request $request)
     {
         $request->validate([
@@ -85,7 +75,6 @@ class AuthController extends Controller
             return response()->json(['message' => 'Пользователь не найден'], 404);
         }
 
-        // Сохраняем выбор в сессии
         Session::put('user_id', $user->id);
         Session::put('role_id', $user->role_id);
 
@@ -95,10 +84,6 @@ class AuthController extends Controller
         ]);
     }
 
-
-    /**
-     * Логика выхода из системы
-     */
     public function logout()
     {
         Session::forget('login_id');

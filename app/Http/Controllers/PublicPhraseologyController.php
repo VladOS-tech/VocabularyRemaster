@@ -66,14 +66,12 @@ class PublicPhraseologyController extends Controller
 
 
     
-    // Просмотр конкретного фразеологизма
     public function show($id)
     {
         $phraseology = Phraseology::where('id', $id)->where('status', 'confirmed')->firstOrFail();
         return response()->json($phraseology);
     }
 
-    // Создание нового фразеологизма    
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -84,28 +82,25 @@ class PublicPhraseologyController extends Controller
             'tags.*' => 'exists:tags,id'
         ]);
 
-        // Создание фразеологизма
         $phraseology = Phraseology::create([
             'content' => $validated['content'],
             'meaning' => $validated['meaning'],
             'status' => 'pending',
-            'created_at' => now(), // Добавляем дату создания
+            'created_at' => now(), 
         ]);
 
-        // Сохранение контекста
         Context::create([
             'phraseology_id' => $phraseology->id,
             'content' => $validated['context'],
         ]);
 
-        // Привязка тегов
         if (!empty($validated['tags'])) {
             $phraseology->tags()->attach($validated['tags']);
         }
 
         return response()->json([
             'message' => 'Фразеологизм отправлен на проверку!',
-            'phraseology' => $phraseology->load('tags'), // Возвращаем с тегами
+            'phraseology' => $phraseology->load('tags'),
         ], 201);
     }
 

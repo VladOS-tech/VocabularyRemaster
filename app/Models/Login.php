@@ -25,17 +25,17 @@ class Login extends Model
 
     public function getAuthIdentifierName()
     {
-        return 'email'; // email используется как идентификатор
+        return 'email'; 
     }
 
     public function getAuthIdentifier()
     {
-        return $this->email; // идентификатор — это email
+        return $this->email; 
     }
 
     public function getAuthPassword()
     {
-        return $this->password; // пароль для аутентификации
+        return $this->password; 
     }
 
     public function getRememberToken()

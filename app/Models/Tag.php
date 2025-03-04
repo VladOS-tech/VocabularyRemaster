@@ -13,7 +13,6 @@ class Tag extends Model
     
     protected $fillable = ['content'];
 
-    // Связь многие ко многим с фразеологизмами
     public function phraseologies()
     {
         return $this->belongsToMany(Phraseology::class, 'phraseology_tag', 'tag_id', 'phraseology_id');
