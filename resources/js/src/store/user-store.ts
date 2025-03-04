@@ -116,7 +116,8 @@ const actions = {
     async GetPhrasesInfo({ commit }: { commit: any }) {
         commit('setLoading', { whichLoading: 'phrases', newLoading: true })
         try {
-            const { data } = await axios.get('http://127.0.0.1:8000/api/phraseologies')
+            const apiRequest = 'http://localhost:8000/api/phraseologies?sort=' + state.sortingOption
+            const { data } = await axios.get(apiRequest)
             commit('setState', { key: 'phrasesList', value: data })
         } catch (error) {
             console.error('Ошибка при загрузке фразеологизмов:', error)
