@@ -6,12 +6,15 @@ import TagObject from "@/assets/interfaces/TagObject"
 import LoadingObject from "@/assets/interfaces/LoadingObject"
 import MeaningObject from "@/assets/interfaces/MeaningObject"
 import router from "@/router"
+import exampleTags from "@/assets/JSObjects/ExampleTags.json"
 
 interface State {
     isMobile: boolean;
     sortingOption: string;
+    searchRequest: string;
     phrasesList: PhraseObject[] | null;
-    popularTags: TagObject[] | null;
+    availableTags: TagObject[];
+    searchSelectedTags: TagObject[];
     isLoading: LoadingObject;
     inputTags: Set<string>;
     inputTagsError: string;
@@ -24,8 +27,10 @@ interface State {
 const state: State = {
     isMobile: false,
     sortingOption: '',
+    searchRequest: '',
     phrasesList: null,
-    popularTags: null,
+    availableTags: [],
+    searchSelectedTags: [],
     isLoading: { phrases: true, tags: true, inputPhrase: true },
     inputTags: new Set(),
     inputTagsError: '',
@@ -39,7 +44,13 @@ const getters = {
     isMobile: (state: State) => state.isMobile,
     phrasesList: (state: State) => state.phrasesList,
     sortingOption: (state: State) => state.sortingOption,
-    popularTags: (state: State) => state.popularTags,
+    searchRequest: (state: State) => state.searchRequest,
+    popularTags: (state: State) => {
+        console.log(state.availableTags)
+        return state.availableTags.sort((tag) => tag.timesUsed)
+    },
+    availableTags: (state: State) => state.availableTags,
+    searchSelectedTags: (state: State) => state.searchSelectedTags,
     isLoading: (state: State) => state.isLoading,
     inputTagsError: (state: State) => state.inputTagsError,
     inputMeaningsErrors: (state: State) => state.inputMeaningsErrors,
@@ -55,24 +66,51 @@ const mutations = {
     },
     setLoading(state: State, { whichLoading, newLoading }: { whichLoading: keyof LoadingObject, newLoading: boolean }) {
         state.isLoading[whichLoading] = newLoading
+    },
+    setAvailableTags(state: State, tags :TagObject[]){
+        state.availableTags = tags;
+    },
+    setSearchSelectedTags(state: State, tags :TagObject[]){
+        state.searchSelectedTags = tags;
+    },
+    addSearchSelectedTag(state: State, tag :TagObject){
+        state.searchSelectedTags.push(tag);
+    },
+    removeSearchSelectedTag(state: State, tag :TagObject){
+        state.searchSelectedTags = state.searchSelectedTags.filter(selectedtag => selectedtag.id !== tag.id)
+    },
+    setSortingOption(state: State, sortingOption :string){
+        console.log(sortingOption)
+        state.sortingOption = sortingOption;
+    },
+    setSearchRequest(state: State, searchRequest :string){
+        console.log(searchRequest)
+        state.searchRequest = searchRequest
     }
+    // setSearchRecommendedTags(state: State, tags :TagObject[]){
+    //     state.searchRecommendedTags = tags;
+    // }
 }
 
 const actions = {
     async UserPageLoadAllInfo({ dispatch }: { dispatch: any }) {
-        await Promise.all([dispatch('GetPopularTags'), dispatch('GetPhrasesInfo')])
+        await Promise.all([dispatch('GetTags'), dispatch('GetPhrasesInfo')])
     },
-
-    async GetPopularTags({ commit }: { commit: any }) {
+    async GetSearchRecommendedTags({commit }: {commit: any}, searchText: string){
+        //Api request for tags
+        commit('setSearchRecommendedTags', exampleTags)
+    },
+    async GetTags({ commit }: { commit: any }) {
         commit('setLoading', { whichLoading: 'tags', newLoading: true })
-        try {
-            const { data } = await axios.get('http://127.0.0.1:8000/api/tags')
-            commit('setState', { key: 'popularTags', value: data })
-        } catch (error) {
-            console.error('Ошибка при загрузке тегов:', error)
-        } finally {
+        // try {
+        //     const { data } = await axios.get('http://127.0.0.1:8000/api/tags')
+        //     commit('setState', { key: 'popularTags', value: data })
+        // } catch (error) {
+        //     console.error('Ошибка при загрузке тегов:', error)
+        // } finally {
+            commit('setAvailableTags', exampleTags)
             commit('setLoading', { whichLoading: 'tags', newLoading: false })
-        }
+        // }
     },
 
     async GetPhrasesInfo({ commit }: { commit: any }) {

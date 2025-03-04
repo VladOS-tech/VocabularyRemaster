@@ -1,6 +1,7 @@
 interface TagObject{
     id: number,
-    content: string
+    name: string,
+    timesUsed: number
 }
 
 export default TagObject;
