@@ -5,9 +5,9 @@
         </p>
         <h2>{{ PhraseData.phrase }}</h2>
         <div class="tags-block">
-            <div class="tag tag-generic" v-for="tag in PhraseData.tags" :key="tag.id">{{ tag.content }}</div>
+            <div class="tag tag-generic" v-for="tag in PhraseData.tags" :key="tag.id">{{ tag.name }}</div>
         </div>
-        <h3>Значения:</h3>
+        <h3>Значение:</h3>
         <div class="meaning-block meaning-block-light" v-for="meaning in PhraseData.meanings" :key="meaning.meaning">
             <h4>{{meaning.meaning}}</h4>
             <p class="meaning-example-text">
@@ -19,7 +19,7 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
-import PhraseObject from '@/assets/interfaces/PhraseObject';
+import PhraseObject from '@/assets/types/PhraseObject';
 
     export default defineComponent({
         props:{

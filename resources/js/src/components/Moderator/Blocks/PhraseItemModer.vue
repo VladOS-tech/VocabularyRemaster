@@ -27,7 +27,7 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
-import PhraseObject from '@/assets/interfaces/PhraseObject';
+import PhraseObject from '@/assets/types/PhraseObject';
 
     export default defineComponent({
         props:{

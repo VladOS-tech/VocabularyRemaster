@@ -6,7 +6,9 @@ import staffStore from "./staff-store";
 
 export default createStore({
   state: {
-    pageName: '' as string
+    pageName: '' as string,
+    token: '' as string,
+    role: 'user' as string
   },
   getters: {
     pageName(state) {

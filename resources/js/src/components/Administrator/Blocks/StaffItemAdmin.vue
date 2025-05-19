@@ -35,7 +35,7 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
-import StaffObject from '@/assets/interfaces/StaffObject';
+import StaffObject from '@/assets/types/StaffObject';
 
     export default defineComponent({
         props:{

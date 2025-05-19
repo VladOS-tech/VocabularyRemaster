@@ -32,7 +32,7 @@
 
 <script lang="ts">
     import { defineComponent } from 'vue';
-    import MeaningObject from '@/assets/interfaces/MeaningObject';
+    import MeaningObject from '@/assets/types/MeaningObject';
 import { mapGetters, mapMutations } from 'vuex';
 
     export default defineComponent({

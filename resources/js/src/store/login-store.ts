@@ -1,3 +1,5 @@
+import axios, { AxiosError } from "axios"
+
 interface State {
     login: string,
     password: string
@@ -9,21 +11,47 @@ const state: State = {
 }
 
 const getters = {
-    login(state: State){
-        return state.login
-    },
-    password(state: State){
-        return state.password
-    }
+    // login(state: State){
+    //     return state.login
+    // },
+    // password(state: State){
+    //     return state.password
+    // }
 }
 
 const mutations = {
-    setLogin(state: State, newLogin: string){
-        state.login = newLogin
-    },
-    setPpassword(state: State, newPassword: string){
-        state.password = newPassword
+    // setLogin(state: State, newLogin: string){
+    //     state.login = newLogin
+    // },
+    // setPpassword(state: State, newPassword: string){
+    //     state.password = newPassword
+    // }
+}
+
+const actions = {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    async loginAction({commit}: any, payload: {login: string, password: string}){
+        try{
+            console.log(payload.login,'+', payload.password)
+            const apiRequest = 'http://localhost:8000/api/login'
+            const { data } = await axios.post(apiRequest, {
+                email: payload.login,
+                password: payload.password
+            })
+            window.alert(`login successfull: ${payload.login}\npassword: ${payload.password}\n${data}`)
+        }
+        catch(e){
+            const error = e as AxiosError
+            if(error.response){
+                const code = error.code
+                const message = error.message
+                window.alert(`Login error ${code}, ${message}`)
+            }
+            else if(error.request){
+                window.alert(`Unable to send login request`)
+            }
+        }
     }
 }
 
-export default { state, getters, mutations }
+export default { mutations, getters, state, actions }

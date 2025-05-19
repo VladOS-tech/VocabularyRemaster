@@ -3,7 +3,6 @@
         <div class="sort-area">
             <sortingSelection />
         </div>
-        <!-- Add loading and load phrases from array -->
         <loadingIcon v-if="isLoading.phrases" />
         <div class="phrase-area" v-else>
             <phraseBlock v-for="phrase in phrasesList" :key="phrase.id" :PhraseData="phrase" />
@@ -22,7 +21,7 @@ import helpBlock from '@/components/SidePanel/HelpBlock.vue';
 import SidebarTags from '@/components/SidePanel/SidebarTags.vue';
 import loadingIcon from '@/components/Misc/LoadingIcon.vue';
 import { defineComponent } from 'vue';
-import { mapMutations, mapState, mapActions, mapGetters } from 'vuex';
+import { mapMutations, mapActions, mapGetters } from 'vuex';
 
 export default defineComponent({
     components:{

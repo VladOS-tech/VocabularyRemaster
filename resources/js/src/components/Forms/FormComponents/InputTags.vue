@@ -31,7 +31,7 @@
 <script lang="ts">
     import { defineComponent } from 'vue';
 import { mapGetters, mapMutations, mapActions } from 'vuex';
-import TagObject from '@/assets/interfaces/TagObject';
+import TagObject from '@/assets/types/TagObject';
 
     export default defineComponent({
         data(){

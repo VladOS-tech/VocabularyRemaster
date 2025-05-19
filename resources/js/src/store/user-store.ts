@@ -1,10 +1,10 @@
 import { Store } from 'vuex'
 import axios, { AxiosError } from 'axios'
 
-import PhraseObject from "@/assets/interfaces/PhraseObject"
-import TagObject from "@/assets/interfaces/TagObject"
-import LoadingObject from "@/assets/interfaces/LoadingObject"
-import MeaningObject from "@/assets/interfaces/MeaningObject"
+import PhraseObject from "@/assets/types/PhraseObject"
+import TagObject from "@/assets/types/TagObject"
+import LoadingObject from "@/assets/types/LoadingObject"
+import MeaningObject from "@/assets/types/MeaningObject"
 import router from "@/router"
 import exampleTags from "@/assets/JSObjects/ExampleTags.json"
 

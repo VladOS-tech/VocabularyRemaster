@@ -43,7 +43,7 @@
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
 import loadingIcon from '../Misc/LoadingIcon.vue';
-import TagObject from '@/assets/interfaces/TagObject';
+import TagObject from '@/assets/types/TagObject';
 import { mapGetters, mapActions, mapMutations } from 'vuex';
 
     export default defineComponent({

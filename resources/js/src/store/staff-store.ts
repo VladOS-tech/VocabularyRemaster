@@ -1,5 +1,5 @@
-import PhraseObject from "@/assets/interfaces/PhraseObject"
-import StaffObject from "@/assets/interfaces/StaffObject"
+import PhraseObject from "@/assets/types/PhraseObject"
+import StaffObject from "@/assets/types/StaffObject"
 
 import ExampleRequests from '@/assets/JSObjects/ExamplePhrases.json'
 import ExampleStaff from '@/assets/JSObjects/ExampleStaff.json'
