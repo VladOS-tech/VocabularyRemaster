@@ -16,10 +16,27 @@ class PublicPhraseologyController extends Controller
     public function index(Request $request)
     {
         $sort = $request->query('sort', 'newest'); 
+        $searchQuery = $request->query('query');
+        $tagsParam = $request->query('tags');
 
-        $query = Phraseology::query();
 
-        $query->where('status', 'approved');
+        $query = Phraseology::query() ->where('status', 'approved');
+
+        if ($tagsParam) {
+            $tagIds = explode(',', $tagsParam);
+            $query->whereHas('tags', function ($tagQuery) use ($tagIds) {
+                $tagQuery->whereIn('tags.id', $tagIds);
+            }, '=', count($tagIds));
+        }
+
+        if ($searchQuery) {
+            $query->where(function ($q) use ($searchQuery) {
+                $q->where('content', 'ILIKE', '%' . $searchQuery . '%')
+                  ->orWhereHas('tags', function ($tagQuery) use ($searchQuery) {
+                      $tagQuery->where('content', 'ILIKE', '%' . $searchQuery . '%');
+                  });
+            });
+        }
 
         switch ($sort) {
             case 'oldest':
@@ -147,9 +164,17 @@ class PublicPhraseologyController extends Controller
     {
         $tagIds = $request->query('tags');
 
-        $phraseologies = Phraseology::whereHas('tags', function ($query) use ($tagIds) {
-                $query->whereIn('tags.id', $tagIds);
-            })
+        if (!$tagIds) {
+            return response()->json(['error' => 'Теги не указаны'], 400);
+        }
+
+        $tagIdsArray = explode(',', $tagIds);
+
+        $phraseologies = Phraseology::whereHas('tags', function ($query) use ($tagIdsArray) {
+                foreach ($tagIdsArray as $tagId) {
+                    $query->where('tags.id', $tagId);
+                }
+            }, '=', count($tagIdsArray))
             ->where('status', 'approved')
             ->with('tags', 'contexts')
             ->get()
@@ -177,6 +202,7 @@ class PublicPhraseologyController extends Controller
 
         return response()->json($phraseologies);
     }
+
 
 
 }
