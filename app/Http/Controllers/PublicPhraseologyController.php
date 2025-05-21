@@ -89,7 +89,8 @@ class PublicPhraseologyController extends Controller
         $validated = $request->validate([
             'content' => 'required|string|max:255',
             'meaning' => 'required|string',
-            'context' => 'required|string',
+            'context' => 'required|string|min:1',
+            'context.*' => 'required|string',
             'tags' => 'array',
             'tags.*' => 'exists:tags,id'
         ]);
@@ -101,10 +102,12 @@ class PublicPhraseologyController extends Controller
             'created_at' => now(), 
         ]);
 
-        Context::create([
-            'phraseology_id' => $phraseology->id,
-            'content' => $validated['context'],
-        ]);
+        foreach ($validated['contexts'] as $contextContent) {
+            Context::create([
+                'phraseology_id' => $phraseology->id,
+                'content' => $contextContent,
+            ]);
+        }
 
         if (!empty($validated['tags'])) {
             $phraseology->tags()->attach($validated['tags']);
