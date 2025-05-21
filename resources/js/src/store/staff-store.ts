@@ -5,7 +5,9 @@ import ExampleRequests from '@/assets/JSObjects/ExamplePhrases.json'
 import ExampleStaff from '@/assets/JSObjects/ExampleStaff.json'
 
 interface State {
-    name: string,
+    token: string,
+    role: string,
+    username: string,
     tabName: string,
     requestList: PhraseObject[] | null,
     staffList: StaffObject[] | null,
@@ -15,7 +17,9 @@ interface State {
 }
 
 const state: State = {
-    name: 'Артемий Грищенко',
+    token: '' as string,
+    role: 'user' as string,
+    username: '' as string,
     tabName: '',
     requestList: null,
     staffList: null,
@@ -25,9 +29,6 @@ const state: State = {
 }
 
 const getters = {
-    name(state: State){
-        return state.name
-    },
     tabName(state: State){
         return state.tabName
     },
@@ -46,12 +47,18 @@ const getters = {
     staffLoading(state: State){
         return state.staffLoading
     },
+    role(state: State){
+      return state.role
+    },
+    username(state: State){
+      return state.username
+    },
+    token(state: State){
+      return state.token
+    }
 }
 
 const mutations = {
-    setName(state: State, newName: string){
-        state.name = newName
-    },
     setTabName(state: State, newTabName: string){
         state.tabName = newTabName
     },
@@ -69,6 +76,15 @@ const mutations = {
     },
     setStaffLoading(state: State, newLoading: boolean){
         state.staffLoading = newLoading
+    },
+    setUserRole(state: State, role: string) {
+      state.role = role;
+    },
+    setUsername(state: State, name: string) {
+      state.username = name;
+    },
+    setToken(state: State, token: string) {
+      state.token = token;
     }
 }
 

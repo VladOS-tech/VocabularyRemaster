@@ -7,7 +7,7 @@
         </router-link>
         <div class="header-name-block">
             <div class="header-name">
-                {{ name }}
+                {{ username }}
             </div>
             <div class="button button-large logout-button" @click="onLogout">
                 <img src="@/assets/images/icons/logout-icon.svg" alt="logout">
@@ -22,7 +22,7 @@
 
     export default defineComponent({
         computed:{
-            ...mapGetters(['name', 'pageName'])
+            ...mapGetters(['username', 'pageName'])
         },
         methods:{
             ...mapActions(['logoutAction']),

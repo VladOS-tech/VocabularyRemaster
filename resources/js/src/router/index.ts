@@ -35,34 +35,43 @@ const routes: Array<RouteRecordRaw> = [
   },
   {
     path: '/moderator',
+    meta: {
+      requiredRole: 'moderator'
+    },
     components: {
       default: ModeratorMain,
       nav: AdminHeader,
-      meta: {
-        requiredRole: 'moderator'
-      }
     },
       children: [{
         path: 'requests',
-        component: RequestBlock
+        component: RequestBlock,
+        meta: {
+      requiredRole: 'moderator'
+    },
       },
       {
         path: 'phrases',
-        component: PhraseBlockHolder
+        component: PhraseBlockHolder,
+        meta: {
+      requiredRole: 'moderator'
+    },
       }]
   },
   {
     path: '/admin',
+    meta: {
+      requiredRole: 'administrator'
+    },
     components: {
       default: AdministratorMain,
       nav: AdminHeader,
-      meta: {
-        requiredRole: 'administrator'
-      }
     },
       children: [{
         path: 'staff',
-        component: StaffBlock
+        component: StaffBlock,
+        meta: {
+      requiredRole: 'administrator'
+    },
       }]
   }
 ];
@@ -74,8 +83,11 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
   if(to.meta.requiredRole){
+    // window.alert(`${store.getters.role} and ${to.meta.requiredRole}`)
     if(store.getters.role !== to.meta.requiredRole){
       next('/login')
+    }else{
+      next()
     }
   }
   else{

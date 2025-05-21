@@ -27,7 +27,7 @@ import { mapActions } from 'vuex'
     import { z } from 'zod'
 
     const loginValidation = z.object({
-        login: z.string().min(3, {message: 'Email не может быть короче 3 символов'}).max(20, {message: 'Email не может быть длинее 20 символов'}).email('Введите Email'),
+        login: z.string().min(3, {message: 'Email не может быть короче 3 символов'}).max(40, {message: 'Email не может быть длинее 40 символов'}).email('Введите Email'),
         password: z.string().min(3, {message: 'Пароль не может быть короче 3 символов'}).max(20, {message: 'Пароль не может быть длинее 20 символов'})
     })
 
@@ -52,7 +52,8 @@ import { mapActions } from 'vuex'
                 const result = loginValidation.safeParse({login: this.login, password: this.password})
                 if(result.success){
                     console.log('here')
-                    await this.loginAction({login: result.data.login, password: result.data.password})
+                    const loginErr = await this.loginAction({login: result.data.login, password: result.data.password})
+                    this.errors.root = loginErr
                 }
                 else{
                     result.error.issues.forEach((issue) => {
