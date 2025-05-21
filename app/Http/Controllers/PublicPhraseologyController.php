@@ -65,12 +65,7 @@ class PublicPhraseologyController extends Controller
                         'id' => $tag->id,
                         'content' => $tag->content
                     ]),
-                    'meanings' => [
-                        [
-                            'meaning' => $phraseology->meaning,
-                            'example' => $phraseology->contexts->pluck('content')->join('; ')
-                        ]
-                    ],
+                    'meanings' => $phraseology->meaning,
                     'contexts' => $phraseology->contexts->map(fn($context) => [
                         'id' => $context->id,
                         'content' => $context->content
@@ -120,90 +115,6 @@ class PublicPhraseologyController extends Controller
             'phraseology' => $phraseology->load('tags'),
         ], 201);
     }
-
-
-    public function searchByContent(Request $request)
-    {
-        $query = $request->query('query'); 
-    
-        if (!$query) {
-            return response()->json(['error' => 'Параметр query обязателен'], 400);
-        }
-    
-        $phraseologies = Phraseology::where('content', 'ILIKE', '%' . $query . '%')
-            ->where('status', 'approved')
-            ->with('tags', 'contexts')
-            ->get()
-            ->map(function ($phraseology) {
-                return [
-                    'id' => $phraseology->id,
-                    'date' => $phraseology->confirmed_at ?? $phraseology->updated_at,
-                    'phrase' => $phraseology->content,
-                    'tags' => $phraseology->tags->map(fn($tag) => [
-                        'id' => $tag->id,
-                        'content' => $tag->content
-                    ]),
-                    'meanings' => [
-                        [
-                            'meaning' => $phraseology->meaning,
-                            'example' => $phraseology->contexts->pluck('content')->join('; ')
-                        ]
-                    ],
-                    'contexts' => $phraseology->contexts->map(fn($context) => [
-                        'id' => $context->id,
-                        'content' => $context->content
-                    ])
-                ];
-            });
-    
-        return response()->json($phraseologies);
-    }
-    
-
-    public function filterByTags(Request $request)
-    {
-        $tagIds = $request->query('tags');
-
-        if (!$tagIds) {
-            return response()->json(['error' => 'Теги не указаны'], 400);
-        }
-
-        $tagIdsArray = explode(',', $tagIds);
-
-        $phraseologies = Phraseology::whereHas('tags', function ($query) use ($tagIdsArray) {
-                foreach ($tagIdsArray as $tagId) {
-                    $query->where('tags.id', $tagId);
-                }
-            }, '=', count($tagIdsArray))
-            ->where('status', 'approved')
-            ->with('tags', 'contexts')
-            ->get()
-            ->map(function ($phraseology) {
-                return [
-                    'id' => $phraseology->id,
-                    'date' => $phraseology->confirmed_at ?? $phraseology->updated_at,
-                    'phrase' => $phraseology->content,
-                    'tags' => $phraseology->tags->map(fn($tag) => [
-                        'id' => $tag->id,
-                        'content' => $tag->content
-                    ]),
-                    'meanings' => [
-                        [
-                            'meaning' => $phraseology->meaning,
-                            'example' => $phraseology->contexts->pluck('content')->join('; ')
-                        ]
-                    ],
-                    'contexts' => $phraseology->contexts->map(fn($context) => [
-                        'id' => $context->id,
-                        'content' => $context->content
-                    ])
-                ];
-            });
-
-        return response()->json($phraseologies);
-    }
-
-
 
 }
 

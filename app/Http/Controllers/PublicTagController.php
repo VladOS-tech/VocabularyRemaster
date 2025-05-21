@@ -23,7 +23,7 @@ class PublicTagController extends Controller
             return response()->json(['error' => 'Поисковый запрос не указан'], 400);
         }
 
-        $tags = Tag::where('content', 'ILIKE', "%$query%") // Используем ILIKE для регистронезависимого поиска в PostgreSQL
+        $tags = Tag::where('content', 'ILIKE', "%$query%")
             ->orderBy('content')
             ->get()
             ->map(fn($tag) => [
