@@ -9,11 +9,17 @@ use Illuminate\Http\Request;
 
 class PublicTagController extends Controller
 {
-    public function index(): JsonResponse
+    public function index(Request $request): JsonResponse
     {
-        $tags = Tag::withCount('phraseologies')
-        ->orderBy('content')
-        ->get()
+        $search = $request->query('search');
+
+    $tagsQuery = Tag::withCount('phraseologies')->orderBy('content');
+
+    if ($search) {
+        $tagsQuery->where('content', 'ILIKE', "%{$search}%");
+    }
+
+    $tags = $tagsQuery->get()
         ->map(fn($tag) => [
             'id' => $tag->id,
             'content' => $tag->content,
@@ -22,25 +28,4 @@ class PublicTagController extends Controller
 
         return response()->json($tags);
     }
-
-    public function search(Request $request)
-    {
-        $query = $request->query('q');
-
-        if (!$query) {
-            return response()->json(['error' => 'Поисковый запрос не указан'], 400);
-        }
-
-        $tags = Tag::where('content', 'ILIKE', "%$query%")
-            ->orderBy('content')
-            ->get()
-            ->map(fn($tag) => [
-                'id' => $tag->id,
-                'content' => $tag->content,
-                'timesUsed' => $tag->phraseologies()->count()
-            ]);
-
-        return response()->json($tags);
-    }
-
 }
