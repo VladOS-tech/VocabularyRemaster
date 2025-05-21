@@ -78,11 +78,11 @@ class PublicPhraseologyController extends Controller
 
 
     
-    public function show($id)
+    /*public function show($id)
     {
         $phraseology = Phraseology::where('id', $id)->where('status', 'confirmed')->firstOrFail();
         return response()->json($phraseology);
-    }
+    }*/
 
     public function store(Request $request)
     {
