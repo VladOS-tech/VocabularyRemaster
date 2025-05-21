@@ -89,8 +89,8 @@ class PublicPhraseologyController extends Controller
         $validated = $request->validate([
             'content' => 'required|string|max:255',
             'meaning' => 'required|string',
-            'context' => 'required|string|min:1',
-            'context.*' => 'required|string',
+            'contexts' => 'required|string|min:1',
+            'contexts.*' => 'required|string',
             'tags' => 'array',
             'tags.*' => 'exists:tags,id'
         ]);
