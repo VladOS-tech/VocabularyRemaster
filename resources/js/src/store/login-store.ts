@@ -47,7 +47,7 @@ const actions = {
                 email: payload.login,
                 password: payload.password
             })
-            // window.alert(`login successfull: ${payload.login}\npassword: ${payload.password}\n${data}`)
+            window.alert(`login successfull: ${data.token}`)
             commit('user/setToken', data.token, { root: true })
             commit('user/setUsername', data.user_id, { root: true })
             commit('user/setUserRole', data.role, { root: true })
