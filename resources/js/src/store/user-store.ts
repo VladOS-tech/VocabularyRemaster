@@ -12,7 +12,7 @@ interface State {
     isMobile: boolean;
     sortingOption: string;
     searchRequest: string;
-    phrasesList: PhraseObject[] | null;
+    phraseList: PhraseObject[] | null;
     availableTags: TagObject[];
     searchSelectedTags: TagObject[];
     isLoading: LoadingObject;
@@ -22,7 +22,7 @@ const state: State = {
     isMobile: false,
     sortingOption: '',
     searchRequest: '',
-    phrasesList: null,
+    phraseList: null,
     availableTags: [],
     searchSelectedTags: [],
     isLoading: { phrases: true, tags: true, inputPhrase: true },
@@ -30,7 +30,7 @@ const state: State = {
 
 const getters = {
     isMobile: (state: State) => state.isMobile,
-    phrasesList: (state: State) => state.phrasesList,
+    phraseList: (state: State) => state.phraseList,
     sortingOption: (state: State) => state.sortingOption,
     searchRequest: (state: State) => state.searchRequest,
     popularTags: (state: State) => {
@@ -43,8 +43,11 @@ const getters = {
 }
 
 const mutations = {
-    setState<T>(state: State, { key, value }: { key: keyof State, value: T }) {
-        state[key] = value as never
+    // setState<T>(state: State, { key, value }: { key: keyof State, value: T }) {
+    //     state[key] = value as never
+    // },
+    setPhraseList(state: State, newlist: PhraseObject[]){
+        state.phraseList = newlist;
     },
     setLoading(state: State, { whichLoading, newLoading }: { whichLoading: keyof LoadingObject, newLoading: boolean }) {
         state.isLoading[whichLoading] = newLoading
@@ -100,7 +103,9 @@ const actions = {
         try {
             const apiRequest = 'http://localhost:8000/api/phraseologies?sort=' + state.sortingOption
             const { data } = await axios.get(apiRequest)
-            commit('setState', { key: 'phrasesList', value: data })
+            console.log(data)
+            commit('setPhraseList', data)
+            // commit('setState', { key: 'phrasesList', value: data })
         } catch (error) {
             console.error('Ошибка при загрузке фразеологизмов:', error)
         } finally {

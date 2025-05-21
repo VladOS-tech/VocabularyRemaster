@@ -1,52 +1,52 @@
 [
     {
       "id": 1,
-      "name": "юмор",
+      "content": "юмор",
       "timesUsed": 1000
     },
     {
       "id": 2,
-      "name": "ирония",
+      "content": "ирония",
       "timesUsed": 1000
     },
     {
       "id": 3,
-      "name": "удивление",
+      "content": "удивление",
       "timesUsed": 1000
     },
     {
       "id": 4,
-      "name": "радость",
+      "content": "радость",
       "timesUsed": 1000
     },
     {
       "id": 5,
-      "name": "раздражение",
+      "content": "раздражение",
       "timesUsed": 1000
     },
     {
       "id": 6,
-      "name": "безразличие",
+      "content": "безразличие",
       "timesUsed": 1000
     },
     {
       "id": 7,
-      "name": "вопрос",
+      "content": "вопрос",
       "timesUsed": 1000
     },
     {
       "id": 8,
-      "name": "спокойствие",
+      "content": "спокойствие",
       "timesUsed": 1000
     },
     {
       "id": 9,
-      "name": "решимость",
+      "content": "решимость",
       "timesUsed": 1000
     },
     {
       "id": 10,
-      "name": "погода",
+      "content": "погода",
       "timesUsed": 1000
     }
   ]

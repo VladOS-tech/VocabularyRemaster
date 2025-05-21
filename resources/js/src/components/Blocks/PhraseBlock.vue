@@ -5,13 +5,13 @@
         </p>
         <h2>{{ PhraseData.phrase }}</h2>
         <div class="tags-block">
-            <div class="tag tag-generic" v-for="tag in PhraseData.tags" :key="tag.id">{{ tag.name }}</div>
+            <div class="tag tag-generic" v-for="tag in PhraseData.tags" :key="tag.id">{{ tag.content }}</div>
         </div>
         <h3>Значение:</h3>
-        <div class="meaning-block meaning-block-light" v-for="meaning in PhraseData.meanings" :key="meaning.meaning">
-            <h4>{{meaning.meaning}}</h4>
-            <p class="meaning-example-text">
-                "{{meaning.example}}"
+        <div class="meaning-block meaning-block-light">
+            <h4>{{PhraseData.meanings}}</h4>
+            <p class="meaning-example-text" v-for="(context, index) in PhraseData.contexts" :key="index">
+                "{{context.content}}"
             </p>
         </div>
     </div>

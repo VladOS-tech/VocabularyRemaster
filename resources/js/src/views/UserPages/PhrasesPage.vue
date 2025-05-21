@@ -5,7 +5,7 @@
         </div>
         <loadingIcon v-if="isLoading.phrases" />
         <div class="phrase-area" v-else>
-            <phraseBlock v-for="phrase in phrasesList" :key="phrase.id" :PhraseData="phrase" />
+            <phraseBlock v-for="phrase in phraseList" :key="phrase.id" :PhraseData="phrase" />
         </div>
         <div class="sidebar-area">
             <helpBlock />
@@ -37,7 +37,7 @@ export default defineComponent({
         }
     },
     computed:{
-        ...mapGetters(['isLoading', 'phrasesList', 'SidebarTags']),
+        ...mapGetters(['isLoading', 'phraseList', 'SidebarTags']),
     },
     methods:{
         ...mapMutations(['setPageName']),

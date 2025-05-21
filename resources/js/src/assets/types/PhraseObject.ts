@@ -6,7 +6,11 @@ interface PhraseObject extends MeaningObject, TagObject{
     date: Date,
     phrase: string,
     tags: TagObject[],
-    meanings: MeaningObject[]
+    meanings: MeaningObject,
+    contexts: {
+        id: number,
+        content: string[]
+    }[]
 }
 
 export default PhraseObject;

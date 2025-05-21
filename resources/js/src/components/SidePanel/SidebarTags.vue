@@ -6,14 +6,14 @@
         <!-- make togglable tags(and dispatch event) + hide this menu on mobile and load popular tags via action -->
         <loadingIcon v-if="isLoading.tags" />
         <div class="tags-block" v-else>
-            <div class="tag tag-button tag-highlighted" v-for="tag in unselectedPopularTags" :key="tag.id" @:click="selectTag(tag)"> {{ tag.name }}</div>
+            <div class="tag tag-button tag-highlighted" v-for="tag in unselectedPopularTags" :key="tag.id" @:click="selectTag(tag)"> {{ tag.content }}</div>
         </div>
         <div class="tag-search-input-area">
             <input type="text" class="input-field input-field-regular" v-model="tagSearch" ref="tagSearchInputField" placeholder="Введите желаемый тег:" @input="toggleTagSelector" @keyup="closeTagSelector">
             <ul class="tag-selector-list" v-if="showTagSelector">
                 <li class="tag-selector-list-element button" v-for="tag in unselectedRecommendedTags" :key="tag.id" @click="selectTag(tag); selectTagViaSearch();">
                     <div class="tag-search-inline">
-                    {{ tag.name }}
+                    {{ tag.content }}
                     </div>
                     <div class="tag-search-inline">
                         {{ tag.timesUsed }}
@@ -26,7 +26,7 @@
         </h4>
         <div v-if="searchSelectedTags.length > 0" class="tags-block">
             <div class="tag tag-generic tag-editable" @click.stop v-for="tag in searchSelectedTags" :key="tag.id">
-                {{ tag.name }}
+                {{ tag.content }}
                 <button class="button remove-tag-button" @click="unselectTag(tag)">
                     x
                 </button>
@@ -65,7 +65,7 @@ import { mapGetters, mapActions, mapMutations } from 'vuex';
                 return (this.searchRecommendedTags || []).filter((tag: TagObject) => !(this.searchSelectedTags || []).some((selectedTag: TagObject) => selectedTag.id === tag.id))
             },
             searchRecommendedTags() :TagObject[]{
-                return this.availableTags.filter((tag: TagObject) => tag.name.includes(this.tagSearch.trim()))
+                return this.availableTags.filter((tag: TagObject) => tag.content.includes(this.tagSearch.trim()))
             }
         },
         methods:{
