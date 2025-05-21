@@ -51,15 +51,17 @@ class AuthController extends Controller
         }
 
         $user = $users->first();
+        $token = $user->createToken('api-token')->plainTextToken;
         
-        Session::put('login_id', $login->id);
-        Session::put('user_id', $user->id);
-        Session::put('role_id', $user->role_id);
+        // Session::put('login_id', $login->id);
+        // Session::put('user_id', $user->id);
+        // Session::put('role_id', $user->role_id);
 
         return response()->json([
             'message' => 'Авторизация успешна',
             'user_id' => $user->id,
             'role' => $user->role->name,
+            'token' => $token,
         ]);
     }
 
@@ -84,9 +86,9 @@ class AuthController extends Controller
         ]);
     }
 
-    public function logout()
+    public function logout(Request $request)
     {
-        Session::forget('login_id');
+        $request->user()->currentAccessToken()->delete();
         return response()->json(['message' => 'Вы вышли из системы']);
     }
 }
