@@ -65,7 +65,7 @@ import { mapGetters, mapActions, mapMutations } from 'vuex';
                 return (this.searchRecommendedTags || []).filter((tag: TagObject) => !(this.searchSelectedTags || []).some((selectedTag: TagObject) => selectedTag.id === tag.id))
             },
             searchRecommendedTags() :TagObject[]{
-                return this.availableTags.filter((tag: TagObject) => tag.content.includes(this.tagSearch.trim()))
+                return this.availableTags.filter((tag: TagObject) => tag.content.toLowerCase().includes(this.tagSearch.trim().toLowerCase()))
             }
         },
         methods:{

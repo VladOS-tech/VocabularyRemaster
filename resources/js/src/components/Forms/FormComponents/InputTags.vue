@@ -8,7 +8,7 @@
             <ul class="form-tag-selector-list" v-if="showTagSelector">
                 <li class="tag-selector-list-element button" v-for="tag in unselectedRecommendedTags" :key="tag.id" @click="selectTag(tag); selectTagViaSearch();">
                     <div class="tag-search-inline">
-                    {{ tag.name }}
+                    {{ tag.content }}
                     </div>
                     <div class="tag-search-inline">
                         {{ tag.timesUsed }}
@@ -18,7 +18,7 @@
         </div>
         <div v-if="inputSelectedTags.length > 0" class="tags-block">
             <div class="tag tag-generic tag-editable" @click.stop v-for="tag in inputSelectedTags" :key="tag.id">
-                {{ tag.name }}
+                {{ tag.content }}
                 <button class="button remove-tag-button" @click="unselectTag(tag)">
                     x
                 </button>
@@ -44,6 +44,9 @@ import TagObject from '@/assets/types/TagObject';
             ...mapGetters('phraseForm', ['inputSelectedTags', 'recommendedTags']),
             unselectedRecommendedTags(): TagObject[]{
                 return (this.recommendedTags || []).filter((tag: TagObject) => !(this.inputSelectedTags || []).some((selectedTag: TagObject) => selectedTag.id === tag.id))
+            },
+            searchRecommendedTags() :TagObject[]{
+                return this.recommendedTags.filter((tag: TagObject) => tag.content.toLowerCase().includes(this.tagSearch.trim().toLowerCase()))
             }
         },
         methods:{

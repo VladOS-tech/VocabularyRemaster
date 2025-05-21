@@ -3,7 +3,7 @@
         <p class="post-date post-date-light">
             {{dateToString(PhraseData.date)}}
         </p>
-        <h2>{{ PhraseData.phrase }}</h2>
+        <h2>{{ PhraseData.content }}</h2>
         <div class="tags-block">
             <div class="tag tag-generic" v-for="tag in PhraseData.tags" :key="tag.id">{{ tag.content }}</div>
         </div>

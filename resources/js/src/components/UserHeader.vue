@@ -24,19 +24,25 @@
     export default defineComponent({
         data(){
             return{
-                isSearchActive: false as boolean,
-                searchInput: '' as string
+                isSearchActive: false as boolean
             }
         },
         computed:{
-            ...mapGetters(['pageName', 'isMobile'])
+            ...mapGetters(['pageName', 'isMobile', 'searchRequest']),
+            searchInput: {
+                get(): string{
+                    return this.searchRequest
+                },
+                set(value: string){
+                    this.setSearchRequest(value)
+                }
+            }
         },
         methods:{
             ...mapMutations(['setSearchRequest']),
-            ...mapActions(['SearchPhrasesInBd', 'GetPhrasesInfo']),
+            ...mapActions(['GetPhrasesInfo']),
             search(e: Event){
                 e.preventDefault()
-                this.setSearchRequest(this.searchInput)
                 this.GetPhrasesInfo()
             }
         }

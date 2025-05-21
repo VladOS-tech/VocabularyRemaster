@@ -87,23 +87,37 @@ const actions = {
     },
     async GetTags({ commit }: { commit: any }) {
         commit('setLoading', { whichLoading: 'tags', newLoading: true })
-        // try {
-        //     const { data } = await axios.get('http://127.0.0.1:8000/api/tags')
-        //     commit('setState', { key: 'popularTags', value: data })
-        // } catch (error) {
-        //     console.error('Ошибка при загрузке тегов:', error)
-        // } finally {
-            commit('setAvailableTags', exampleTags)
+        try {
+            const { data } = await axios.get('http://127.0.0.1:8000/api/tags')
+            console.log(data)
+            // commit('setState', { key: 'popularTags', value: data })
+            commit('setAvailableTags', data)
+        } catch (error) {
+            console.error('Ошибка при загрузке тегов:', error)
+        } finally {
             commit('setLoading', { whichLoading: 'tags', newLoading: false })
-        // }
+        }
     },
 
-    async GetPhrasesInfo({ commit }: { commit: any }) {
+    async GetPhrasesInfo({ state, commit }: { state: State, commit: any }) {
+
+        const tagsToString = (tags: TagObject[]): string => {
+            let tagString = ''
+            tags.forEach(el => {
+                tagString += el.id + ','
+            })
+            tagString = tagString.substring(0, tagString.length-1)
+            return tagString
+        }
+
         commit('setLoading', { whichLoading: 'phrases', newLoading: true })
         try {
-            const apiRequest = 'http://localhost:8000/api/phraseologies?sort=' + state.sortingOption
+            const tagString = tagsToString(state.searchSelectedTags)
+            const apiRequest = 'http://localhost:8000/api/phraseologies?sort=' + state.sortingOption +
+            '&tags=' + tagString +
+            '&search=' + state.searchRequest
+            console.log(apiRequest)
             const { data } = await axios.get(apiRequest)
-            console.log(data)
             commit('setPhraseList', data)
             // commit('setState', { key: 'phrasesList', value: data })
         } catch (error) {

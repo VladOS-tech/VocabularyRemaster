@@ -57,7 +57,7 @@ export default defineComponent({
     methods: {
         ...mapMutations(['setLoading']),
         ...mapMutations('phraseForm', ['setInputPhrase']),
-        ...mapActions('phraseForm', ['validatePhraseForm']),
+        ...mapActions('phraseForm', ['sendPhraseForm']),
         updateInputPhrase() {
             //
         },
@@ -69,9 +69,12 @@ export default defineComponent({
         async checkInput() {
             this.setLoading({ whichLoading: 'inputPhrase', newLoading: true })
             // store.commit('setInputTags', selectedTags.value); // Сохраняем выбранные теги
-            await this.validatePhraseForm();
+            await this.sendPhraseForm();
             this.setLoading({ whichLoading: 'inputPhrase', newLoading: false })
-        }
+        },
+        mounted() {
+            this.setLoading({ whichLoading: 'inputPhrase', newLoading: false })
+        },
     }
 })
 </script>

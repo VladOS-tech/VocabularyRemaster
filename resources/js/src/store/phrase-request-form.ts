@@ -1,6 +1,8 @@
 import TagObject from "@/assets/types/TagObject";
 import exampleTags from "@/assets/JSObjects/ExampleTags.json"
 import InputTags from "@/components/Forms/FormComponents/InputTags.vue";
+import axios from "axios";
+import router from "@/router";
 
 interface State {
     inputPhrase: string;
@@ -15,6 +17,11 @@ interface State {
     recommendedTags: TagObject[]
 }
 
+type response = {
+    status: number,
+    response: string,
+    phraseology: any
+}
 
 export default {
     namespaced: true,
@@ -63,10 +70,10 @@ export default {
         setRecommendedTags(state: State, tags: TagObject[]) {
             state.recommendedTags = tags;
         },
-        addInputSelectedTag(state: State, tag :TagObject){
+        addInputSelectedTag(state: State, tag: TagObject) {
             state.inputSelectedTags.push(tag);
         },
-        removeInputSelectedTag(state: State, tag :TagObject){
+        removeInputSelectedTag(state: State, tag: TagObject) {
             state.inputSelectedTags = state.inputSelectedTags.filter(selectedtag => selectedtag.id !== tag.id)
         },
         setInputMeaning(state: State, meaning: string) {
@@ -75,28 +82,28 @@ export default {
         setInputMeaningError(state: State, error: string) {
             state.inputMeaningError = error
         },
-        setInputExamples(state: State, examples: string[]){
+        setInputExamples(state: State, examples: string[]) {
             state.inputExamples = examples
         },
-        addInputExample(state: State){
+        addInputExample(state: State) {
             state.inputExamples.push('')
         },
-        removeInputExample(state: State, index: number){
+        removeInputExample(state: State, index: number) {
             state.inputExamples.splice(index, 1)
         },
-        setInputExample(state: State, payload: {index: number, example: string}){
+        setInputExample(state: State, payload: { index: number, example: string }) {
             state.inputExamples[payload.index] = payload.example
         },
-        addInputExampleError(state: State){
+        addInputExampleError(state: State) {
             state.inputExamplesErrors.push('')
         },
-        removeInputExampleError(state: State, index: number){
+        removeInputExampleError(state: State, index: number) {
             state.inputExamplesErrors.splice(index, 1)
         },
-        setInputExampleError(state: State, payload: {index: number, error: string}){
+        setInputExampleError(state: State, payload: { index: number, error: string }) {
             state.inputExamplesErrors[payload.index] = payload.error
         },
-        clearErrors(state: State){
+        clearErrors(state: State) {
             state.inputPhraseError = ''
             state.inputTagsError = ''
             state.inputMeaningError = ''
@@ -104,7 +111,7 @@ export default {
                 state.inputExamplesErrors[index] = ''
             })
         },
-        clearForm(state: State){
+        clearForm(state: State) {
             state.inputPhrase = ''
             state.inputSelectedTags = []
             state.inputMeaning = ''
@@ -120,23 +127,38 @@ export default {
     },
 
     actions: {
-        async validatePhraseForm({ state, commit }: { state: State, commit: any }) {
+        async sendPhraseForm({ state, commit }: { state: State, commit: any }) {
+
+            const tagsToIds = (tags: TagObject[]): number[] => {
+                return tags.map(el => el.id)
+            }
+
+            const examplesToString = (examples: string[]): string => {
+                let examplesString = '['
+                examples.forEach(el => {
+                    examplesString += el + ','
+                })
+                examplesString = examplesString.substring(0, examplesString.length - 1)
+                examplesString += ']'
+                return examplesString
+            }
+
             const emptyChecks = (valid: boolean): boolean => {
                 let isFilled = valid
-                if(!state.inputPhrase){
+                if (!state.inputPhrase) {
                     commit('setInputPhraseError', 'Введите фразеологизм')
                     isFilled = false;
                 }
-                if(state.inputSelectedTags.length === 0){
+                if (state.inputSelectedTags.length === 0) {
                     commit('setInputTagsError', 'Добавьте хотя бы 1 тег')
                     isFilled = false;
                 }
-                if(!state.inputMeaning){
+                if (!state.inputMeaning) {
                     commit('setInputMeaningError', 'Введите значение')
                     isFilled = false;
                 }
                 state.inputExamples.forEach((example, index) => {
-                    if(!example){
+                    if (!example) {
                         commit('setInputExampleError', { index, error: 'Заполните пример использования' })
                         isFilled = false
                     }
@@ -146,13 +168,39 @@ export default {
             let valid = true
             commit('clearErrors')
             valid = emptyChecks(valid)
-            window.alert(valid)
-
-            
+            if (state.inputPhrase.length > 255) {
+                commit('setInputPhraseError', 'Длина фразеологизма превышает 255 символов')
+                valid = false;
+            }
+            if (valid) {
+                const request = 'http://127.0.0.1:8000/api/phraseologies'
+                const requestContent = {
+                        content: state.inputPhrase,
+                        meaning: state.inputMeaning,
+                        context: Array.from(state.inputExamples),
+                        tags: tagsToIds(Array.from(state.inputSelectedTags))
+                    }
+                    console.log(requestContent)
+                try {
+                    const { data } = await axios.post<response>(request, requestContent)
+                    window.alert(`${data.response}`)
+                    router.push('/')
+                } catch (e) {
+                    window.alert('Ой, вы хуесос')
+                    console.error(e)
+                }
+            }
         },
-        async GetRecommendedTags({commit }: {commit: any}, searchText: string){
+        async GetRecommendedTags({ commit }: { commit: any }, searchText: string) {
             //Api request for tags
-            commit('setRecommendedTags', exampleTags)
+            try {
+                const { data } = await axios.get('http://127.0.0.1:8000/api/tags')
+                console.log(data)
+                // commit('setState', { key: 'popularTags', value: data })
+                commit('setRecommendedTags', data)
+            } catch (error) {
+                console.error('Ошибка при загрузке тегов:', error)
+            }
         },
     }
 }
