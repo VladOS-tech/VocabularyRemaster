@@ -115,7 +115,7 @@ class PublicPhraseologyController extends Controller
 
         return response()->json([
             'message' => 'Фразеологизм отправлен на проверку!',
-            'phraseology' => $phraseology->load('tags'),
+            'phraseology' => $phraseology->load('tags', 'contexts'),
         ], 201);
     }
 
