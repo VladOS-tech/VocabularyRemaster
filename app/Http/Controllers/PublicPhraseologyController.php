@@ -16,7 +16,7 @@ class PublicPhraseologyController extends Controller
     public function index(Request $request)
     {
         $sort = $request->query('sort', 'newest'); 
-        $searchQuery = $request->query('query');
+        $searchQuery = $request->query('search');
         $tagsParam = $request->query('tags');
 
 
@@ -60,7 +60,7 @@ class PublicPhraseologyController extends Controller
                 return [
                     'id' => $phraseology->id,
                     'date' => $phraseology->created_at,  
-                    'phrase' => $phraseology->content,
+                    'content' => $phraseology->content,
                     'tags' => $phraseology->tags->map(fn($tag) => [
                         'id' => $tag->id,
                         'content' => $tag->content

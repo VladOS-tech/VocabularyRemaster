@@ -29,7 +29,7 @@ class PublicTagController extends Controller
             ->map(fn($tag) => [
                 'id' => $tag->id,
                 'content' => $tag->content,
-                'timesUsed' => 1000
+                'timesUsed' => $tag->phraseologies()->count()
             ]);
 
         return response()->json($tags);

@@ -18,8 +18,6 @@ Route::get('/phraseologies', [PublicPhraseologyController::class, 'index']);
 //Route::get('/phraseologies/{id}', [PublicPhraseologyController::class, 'show']);
 Route::post('/phraseologies', [PublicPhraseologyController::class, 'store']);
 Route::get('/tags', [PublicTagController::class, 'index']);
-Route::get('/phraseologies/search', [PublicPhraseologyController::class, 'searchByContent']);
-Route::get('/phraseologies/filter', [PublicPhraseologyController::class, 'filterByTags']);
 
 Route::post('/login', [AuthController::class, 'login'])/*->name('login')*/;
 Route::middleware(['auth:sanctum'])->group(function () {
