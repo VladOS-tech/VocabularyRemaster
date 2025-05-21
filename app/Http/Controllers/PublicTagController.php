@@ -11,7 +11,15 @@ class PublicTagController extends Controller
 {
     public function index(): JsonResponse
     {
-        $tags = Tag::all(['id', 'content']);
+        $tags = Tag::withCount('phraseologies')
+        ->orderBy('content')
+        ->get()
+        ->map(fn($tag) => [
+            'id' => $tag->id,
+            'content' => $tag->content,
+            'timesUsed' => $tag->phraseologies_count
+        ]);
+
         return response()->json($tags);
     }
 
