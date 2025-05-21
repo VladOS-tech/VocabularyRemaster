@@ -15,7 +15,6 @@ class EnsureUserIsModerator
      */
     public function handle(Request $request, Closure $next): Response
     {
-        dd("Moderator is working");
         $user = $request->user();
 
         if (!$user || !$user->isModerator()) {
