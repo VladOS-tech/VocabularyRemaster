@@ -16,8 +16,8 @@
                 </li>
             </ul>
         </div>
-        <div v-if="searchSelectedTags.length > 0" class="tags-block">
-            <div class="tag tag-generic tag-editable" @click.stop v-for="tag in searchSelectedTags" :key="tag.id">
+        <div v-if="inputSelectedTags.length > 0" class="tags-block">
+            <div class="tag tag-generic tag-editable" @click.stop v-for="tag in inputSelectedTags" :key="tag.id">
                 {{ tag.name }}
                 <button class="button remove-tag-button" @click="unselectTag(tag)">
                     x
@@ -41,16 +41,16 @@ import TagObject from '@/assets/types/TagObject';
             }
         },
         computed:{
-            ...mapGetters(['searchSelectedTags', 'searchRecommendedTags']),
+            ...mapGetters('phraseForm', ['inputSelectedTags', 'recommendedTags']),
             unselectedRecommendedTags(): TagObject[]{
-                return (this.searchRecommendedTags || []).filter((tag: TagObject) => !(this.searchSelectedTags || []).some((selectedTag: TagObject) => selectedTag.id === tag.id))
+                return (this.recommendedTags || []).filter((tag: TagObject) => !(this.inputSelectedTags || []).some((selectedTag: TagObject) => selectedTag.id === tag.id))
             }
         },
         methods:{
-            ...mapActions(['GetPhrasesInfo', 'GetSearchRecommendedTags']),
-            ...mapMutations(['setSearchSelectedTags', 'addSearchSelectedTag', 'removeSearchSelectedTag']),
+            ...mapActions('phraseForm', ['GetRecommendedTags']),
+            ...mapMutations('phraseForm', ['setInputSelectedTags', 'addInputSelectedTag', 'removeInputSelectedTag']),
             selectTag(tag: TagObject){
-                this.addSearchSelectedTag(tag)
+                this.addInputSelectedTag(tag)
             },
             selectTagViaSearch(){
                 (this.$refs.tagSearchInputField as HTMLInputElement).blur()
@@ -58,11 +58,11 @@ import TagObject from '@/assets/types/TagObject';
                 this.showTagSelector = false;
             },
             unselectTag(tag: TagObject){
-                this.removeSearchSelectedTag(tag)
+                this.removeInputSelectedTag(tag)
             },
             async toggleTagSelector(){
                 if(this.tagSearch.length >= 3){
-                    await this.GetSearchRecommendedTags(this.tagSearch)
+                    await this.GetRecommendedTags(this.tagSearch)
                     if(this.unselectedRecommendedTags.length > 0) this.showTagSelector = true;
                 }else{
                     this.showTagSelector = false;

@@ -9,6 +9,7 @@ import RequestBlock from "@/components/Moderator/Blocks/RequestBlock.vue";
 import PhraseBlockHolder from "@/components/Moderator/Blocks/PhraseBlockHolder.vue";
 import AdministratorMain from "@/views/AdminPages/AdministratorMain.vue";
 import StaffBlock from "@/components/Administrator/Blocks/StaffBlock.vue";
+import store from "@/store";
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -36,7 +37,10 @@ const routes: Array<RouteRecordRaw> = [
     path: '/moderator',
     components: {
       default: ModeratorMain,
-      nav: AdminHeader
+      nav: AdminHeader,
+      meta: {
+        requiredRole: 'moderator'
+      }
     },
       children: [{
         path: 'requests',
@@ -51,7 +55,10 @@ const routes: Array<RouteRecordRaw> = [
     path: '/admin',
     components: {
       default: AdministratorMain,
-      nav: AdminHeader
+      nav: AdminHeader,
+      meta: {
+        requiredRole: 'administrator'
+      }
     },
       children: [{
         path: 'staff',
@@ -64,5 +71,16 @@ const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes,
 });
+
+router.beforeEach((to, from, next) => {
+  if(to.meta.requiredRole){
+    if(store.getters.role !== to.meta.requiredRole){
+      next('/login')
+    }
+  }
+  else{
+    next()
+  }
+})
 
 export default router;

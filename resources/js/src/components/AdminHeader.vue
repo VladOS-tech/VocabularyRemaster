@@ -9,7 +9,7 @@
             <div class="header-name">
                 {{ name }}
             </div>
-            <div class="button button-large logout-button">
+            <div class="button button-large logout-button" @click="onLogout">
                 <img src="@/assets/images/icons/logout-icon.svg" alt="logout">
             </div>
         </div>
@@ -23,6 +23,12 @@
     export default defineComponent({
         computed:{
             ...mapGetters(['name', 'pageName'])
+        },
+        methods:{
+            ...mapActions(['logoutAction']),
+            onLogout(){
+                this.logoutAction()
+            }
         }
     }) 
 </script>

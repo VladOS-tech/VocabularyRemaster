@@ -1,29 +1,25 @@
 <template>
     <div class="add-phrase-block add-phrase-block-light">
         <h2>Заполните указанные поля</h2>
-        <div class="separator-line"/>
+        <div class="separator-line" />
 
-        <textarea type="text" class="input-field input-field-header input-field-textarea" 
-                  placeholder="Введите новый фразеологизм"
-                  @input="heightResize" 
-                  @blur="updateInputPhrase" 
-                  rows="1" 
-                  v-model="inputPhrase">
+        <textarea type="text" class="input-field input-field-header input-field-textarea"
+            placeholder="Введите новый фразеологизм" @blur="updateInputPhrase" rows="1"
+            :value="inputPhrase" @input="heightResize($event); setInputPhrase(($event.target as HTMLTextAreaElement).value)">
         </textarea>
-        <div class="input-error">
+        <div v-if="inputPhraseError" class="input-error">
             {{ inputPhraseError }}
-        </div>  
-        <InputTags/>
-        <div class="input-error">
+        </div>
+        <InputTags />
+        <div v-if="inputTagsError" class="input-error">
             {{ inputTagsError }}
         </div>
 
-        <inputMeanings/>
+        <inputMeanings />
 
         <div class="buttons-block">
-            <button class="button button-large confirm-meaning-button" 
-                    :disabled="isLoading.inputPhrase"
-                    @click="checkInput">
+            <button class="button button-large confirm-meaning-button"
+                @click="checkInput">
                 Готово
             </button>
             <router-link to="/" class="button button-large cancel-meaning-button link-style">
@@ -34,60 +30,52 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, onMounted, computed } from 'vue';
-import { useStore } from 'vuex';
+import { defineComponent } from 'vue';
 import inputMeanings from './FormComponents/InputMeanings.vue';
 import InputTags from './FormComponents/InputTags.vue';
+import { mapActions, mapGetters, mapMutations } from 'vuex';
 
 export default defineComponent({
     components: { inputMeanings, InputTags },
-    setup() {
-        const store = useStore();
-        const inputPhrase = ref('');
-        const selectedTags = ref<number[]>([]);
-
-        onMounted(() => {
-            store.dispatch('GetPopularTags'); // Загружаем теги с бэкенда
-            store.commit('setInputPhrase', ''); // Очищаем поле при монтировании
-        });
-
-        const tagsList = computed(() => store.getters.popularTags);
-        const inputPhraseError = computed(() => store.getters.inputPhraseError);
-        const inputTagsError = computed(() => store.getters.inputTagsError);
-        const isLoading = computed(() => store.getters.isLoading);
-
-        const heightResize = (e: Event) => {
+    data() {
+        return {
+            
+        }
+    },
+    computed:{
+        ...mapGetters(['isLoading']),
+        ...mapGetters('phraseForm', ['inputPhrase', 'inputPhraseError', 'inputTagsError']),
+        // inputPhrase: {
+        //     get(): string {
+        //         return this.inputPhrase
+        //     },
+        //     set(value: string){
+        //         this.setInputPhrase(value)
+        //     }
+        // }
+    },
+    methods: {
+        ...mapMutations(['setLoading']),
+        ...mapMutations('phraseForm', ['setInputPhrase']),
+        ...mapActions('phraseForm', ['validatePhraseForm']),
+        updateInputPhrase() {
+            //
+        },
+        heightResize(e: Event) {
             const textField = e.target as HTMLTextAreaElement;
             textField.style.height = '0px';
             textField.style.height = textField.scrollHeight + 'px';
-        };
-
-        const updateInputPhrase = () => {
-            store.commit('setInputPhrase', inputPhrase.value);
-        };
-
-        const checkInput = async () => {
-            store.commit('setLoading', { whichLoading: 'inputPhrase', newLoading: true });
-            store.commit('setInputTags', selectedTags.value); // Сохраняем выбранные теги
-            await store.dispatch('CheckPhraseInput');
-            store.commit('setLoading', { whichLoading: 'inputPhrase', newLoading: false });
-        };
-
-        return {
-            inputPhrase,
-            selectedTags,
-            tagsList,
-            inputPhraseError,
-            inputTagsError,
-            isLoading,
-            heightResize,
-            updateInputPhrase, // Исправленный метод обновления фразы
-            checkInput
-        };
+        },
+        async checkInput() {
+            this.setLoading({ whichLoading: 'inputPhrase', newLoading: true })
+            // store.commit('setInputTags', selectedTags.value); // Сохраняем выбранные теги
+            await this.validatePhraseForm();
+            this.setLoading({ whichLoading: 'inputPhrase', newLoading: false })
+        }
     }
-});
+})
 </script>
 
 <style scoped>
-    @import url('@/assets/style/forms/add-phrase-form.css');
+@import url('@/assets/style/forms/add-phrase-form.css');
 </style>

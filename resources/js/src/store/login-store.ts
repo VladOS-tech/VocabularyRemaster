@@ -1,4 +1,5 @@
 import axios, { AxiosError } from "axios"
+import router from "@/router"
 
 interface State {
     login: string,
@@ -33,11 +34,12 @@ const actions = {
     async loginAction({commit}: any, payload: {login: string, password: string}){
         try{
             console.log(payload.login,'+', payload.password)
-            const apiRequest = 'http://localhost:8000/api/login'
-            const { data } = await axios.post(apiRequest, {
-                email: payload.login,
-                password: payload.password
-            })
+            const apiRequest = 'http://localhost:8000/api/login?email='+payload.login+"&login="+payload.password
+            const { data } = await axios.post(apiRequest)
+            // const { data } = await axios.post(apiRequest, {
+            //     email: payload.login,
+            //     password: payload.password
+            // })
             window.alert(`login successfull: ${payload.login}\npassword: ${payload.password}\n${data}`)
         }
         catch(e){
@@ -51,6 +53,15 @@ const actions = {
                 window.alert(`Unable to send login request`)
             }
         }
+    },
+    logoutAction({commit}: any){
+        commit('setToken', '')
+        localStorage.setItem('token', '')
+        commit('setUsername', '')
+        localStorage.setItem('username', '')
+        commit('setUserRole', '')
+        localStorage.setItem('role', ''),
+        router.push('/login')
     }
 }
 
