@@ -6,15 +6,27 @@
 <script lang="ts">
   
 import { defineComponent } from 'vue';
-import store from '@/store/index';
-  export default {
+import { mapMutations } from 'vuex';
+  export default defineComponent({
     mounted(){
       if(window.innerWidth <= 768){
-        store.commit('setMobile', true);
+        this.setMobile(true)
       }
-      else store.commit('setMobile', false);
+      else this.setMobile(false)
+      this.loadUser()
+    },
+    methods:{
+      ...mapMutations(['setToken', 'setUsername', 'setUserRole', 'setMobile']),
+      loadUser(){
+        const token = localStorage.getItem('token') as string
+        const username = localStorage.getItem('username') as string
+        const role = localStorage.getItem('role') as string
+        this.setToken(token)
+        this.setUsername(username)
+        this.setUserRole(role)
+      }
     }
-  }
+  })
 </script>
 
 <style>

@@ -6,22 +6,30 @@
     box-sizing: border-box;
 }
 
-.input-meaning-block-content{
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    flex-wrap: wrap;
-    flex: 1;
-}
-
-.input-meaning-block{
+.input-example-block{
     display: flex;
     gap: 10px;
     padding: 0;
+    align-items: center;
+    align-content: center;
+}
+
+.input-example-container{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 0;
+}
+
+.input-meaning-block{
+    flex-direction: column;
+    border-radius: var(--default-border-radius);
     background-color: var(--light-meaning-block-color);
     padding: 10px;
     display: flex;
-    border-radius: var(--default-border-radius);
+    gap: 10px;
+    flex-wrap: wrap;
+    flex: 1;
 }
 
 .delete-button{

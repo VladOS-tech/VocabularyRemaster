@@ -16,12 +16,6 @@ interface State {
     availableTags: TagObject[];
     searchSelectedTags: TagObject[];
     isLoading: LoadingObject;
-    inputTags: Set<string>;
-    inputTagsError: string;
-    inputMeanings: MeaningObject[];
-    inputMeaningsErrors: MeaningObject[];
-    inputPhrase: string;
-    inputPhraseError: string;
 }
 
 const state: State = {
@@ -32,12 +26,6 @@ const state: State = {
     availableTags: [],
     searchSelectedTags: [],
     isLoading: { phrases: true, tags: true, inputPhrase: true },
-    inputTags: new Set(),
-    inputTagsError: '',
-    inputMeanings: [{ meaning: '', example: '' }],
-    inputMeaningsErrors: [],
-    inputPhrase: '',
-    inputPhraseError: ''
 }
 
 const getters = {
@@ -52,12 +40,6 @@ const getters = {
     availableTags: (state: State) => state.availableTags,
     searchSelectedTags: (state: State) => state.searchSelectedTags,
     isLoading: (state: State) => state.isLoading,
-    inputTagsError: (state: State) => state.inputTagsError,
-    inputMeaningsErrors: (state: State) => state.inputMeaningsErrors,
-    inputPhraseError: (state: State) => state.inputPhraseError,
-    inputTags: (state: State) => state.inputTags,
-    inputMeanings: (state: State) => state.inputMeanings,
-    inputPhrase: (state: State) => state.inputPhrase
 }
 
 const mutations = {
@@ -123,48 +105,6 @@ const actions = {
             console.error('Ошибка при загрузке фразеологизмов:', error)
         } finally {
             commit('setLoading', { whichLoading: 'phrases', newLoading: false })
-        }
-    },
-
-    async CheckPhraseInput({ state, commit }: { state: State, commit: any }) {
-         const valid = true
-
-        // Валидация полей
-        commit('setState', { key: 'inputPhraseError', value: state.inputPhrase ? '' : 'Вы не ввели фразеологизм' })
-        commit('setState', { key: 'inputTagsError', value: state.inputTags.size ? '' : 'Вы не добавили ни одного тега' })
-
-        const inputMeaningsErrors = state.inputMeanings.map(m => ({
-            meaning: m.meaning ? '' : 'Заполните поле значения',
-            example: m.example ? '' : 'Заполните поле примера'
-        }))
-
-        if (!state.inputPhrase || !state.inputTags.size || inputMeaningsErrors.some(m => m.meaning || m.example)) {
-            commit('setState', { key: 'inputMeaningsErrors', value: inputMeaningsErrors })
-            return
-        }
-
-        // Отправка данных
-        commit('setLoading', { whichLoading: 'inputPhrase', newLoading: true })
-        try {
-            await axios.post('http://127.0.0.1:8000/api/phraseologies', {
-                phrase: state.inputPhrase,
-                meanings: state.inputMeanings,
-                tags: Array.from(state.inputTags)
-            })
-            console.log('✅ Фразеологизм добавлен')
-
-            // Очистка формы
-            commit('setState', { key: 'inputPhrase', value: '' })
-            commit('setState', { key: 'inputMeanings', value: [{ meaning: '', example: '' }] })
-            commit('setState', { key: 'inputTags', value: new Set() })
-
-            router.push('/')
-        } catch (error: unknown) {
-            const axiosError = error as AxiosError
-            console.error('❌ Ошибка при отправке:', axiosError)
-            if (axiosError.response) console.error('Ответ сервера:', axiosError.response.data)
-        } finally {
-            commit('setLoading', { whichLoading: 'inputPhrase', newLoading: false })
         }
     }
 }
