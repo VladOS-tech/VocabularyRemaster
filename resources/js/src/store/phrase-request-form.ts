@@ -19,7 +19,7 @@ interface State {
 
 type response = {
     status: number,
-    response: string,
+    message: string,
     phraseology: any
 }
 
@@ -129,9 +129,7 @@ export default {
     actions: {
         async sendPhraseForm({ state, commit }: { state: State, commit: any }) {
 
-            const tagsToIds = (tags: TagObject[]): number[] => {
-                return tags.map(el => el.id)
-            }
+            const tagsToIds = (tags: TagObject[]): number[] => tags.map(el => el.id)
 
             const examplesToString = (examples: string[]): string => {
                 let examplesString = '['
@@ -176,17 +174,17 @@ export default {
                 const request = 'http://127.0.0.1:8000/api/phraseologies'
                 const requestContent = {
                         content: state.inputPhrase,
+                        contexts: Array.from(state.inputExamples),
                         meaning: state.inputMeaning,
-                        context: Array.from(state.inputExamples),
                         tags: tagsToIds(Array.from(state.inputSelectedTags))
                     }
                     console.log(requestContent)
                 try {
                     const { data } = await axios.post<response>(request, requestContent)
-                    window.alert(`${data.response}`)
+                    window.alert(`${data.message}`)
                     router.push('/')
                 } catch (e) {
-                    window.alert('Ой, вы хуесос')
+                    window.alert('Ой, у вас не получилось😵‍💫')
                     console.error(e)
                 }
             }
