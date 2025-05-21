@@ -28,7 +28,8 @@ class PublicTagController extends Controller
             ->get()
             ->map(fn($tag) => [
                 'id' => $tag->id,
-                'content' => $tag->content
+                'content' => $tag->content,
+                'timesUsed' => 1000
             ]);
 
         return response()->json($tags);
