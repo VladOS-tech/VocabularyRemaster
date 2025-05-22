@@ -20,7 +20,7 @@ Route::post('/phraseologies', [PublicPhraseologyController::class, 'store']);
 Route::get('/tags', [PublicTagController::class, 'index']);
 
 Route::post('/login', [AuthController::class, 'login']);
-Route::middleware(['auth:login'])->group(function () {
+Route::middleware(['auth:login', 'role:moderator'])->group(function () {
     Route::get('/moderator/phraseologies', [ModeratorPhraseologyController::class, 'index']);
     Route::get('/moderator/phraseologies/{id}', [ModeratorPhraseologyController::class, 'show']);
     Route::get('/moderator/tags', [ModeratorTagController::class, 'index']);
