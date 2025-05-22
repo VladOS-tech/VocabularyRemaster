@@ -20,6 +20,7 @@ class ModeratorPhraseologyController extends Controller
                     'date' => $phraseology->confirmed_at ?? $phraseology->updated_at,
                     'content' => $phraseology->content,
                     'meaning' => $phraseology->meaning,
+                    'status' => $phraseology->status,
                     'tags' => $phraseology->tags->map(fn($tag) => [
                         'id' => $tag->id,
                         'content' => $tag->content
