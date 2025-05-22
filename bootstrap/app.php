@@ -12,8 +12,14 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
-        //
+        $middleware->append(\App\Http\Middleware\ForceJsonResponse::class);
+
+        $middleware->alias([
+            'moderator' => \App\Http\Middleware\EnsureUserIsModerator::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
-        //
+        $exceptions->renderable(function (\Illuminate\Auth\AuthenticationException $e, $request) {
+            return response()->json(['message' => 'Неавторизован'], 401);
+        });
     })->create();

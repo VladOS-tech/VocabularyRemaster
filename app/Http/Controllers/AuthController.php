@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Log;
 
 class AuthController extends Controller
 {
-    use HasApiTokens, Notifiable;
+    
     public function login(Request $request)
     {
         $request->validate([
@@ -51,12 +51,10 @@ class AuthController extends Controller
         }
 
         $user = $users->first();
-        $token = $user->createToken('api-token')->plainTextToken;
-        
-        // Session::put('login_id', $login->id);
-        // Session::put('user_id', $user->id);
-        // Session::put('role_id', $user->role_id);
-
+        $token = $login->createToken('api-token', [
+            'user_id' => $user->id,
+            'role_id' => $user->role_id,
+        ])->plainTextToken;
         return response()->json([
             'message' => 'Авторизация успешна',
             'user_id' => $user->id,
@@ -77,8 +75,8 @@ class AuthController extends Controller
             return response()->json(['message' => 'Пользователь не найден'], 404);
         }
 
-        Session::put('user_id', $user->id);
-        Session::put('role_id', $user->role_id);
+        // Session::put('user_id', $user->id);
+        // Session::put('role_id', $user->role_id);
 
         return response()->json([
             'message' => 'Роль выбрана успешно',

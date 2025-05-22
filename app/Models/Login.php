@@ -2,15 +2,15 @@
 
 namespace App\Models;
 
+use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use Laravel\Sanctum\HasApiTokens;
 
-
-class Login extends Model
+class Login extends Authenticatable
 {
-    use HasFactory;
+    use HasFactory, HasApiTokens;
 
-    protected $table = 'logins'; 
+    protected $table = 'logins';
 
     protected $fillable = ['email', 'password'];
 
@@ -22,35 +22,5 @@ class Login extends Model
     public function users()
     {
         return $this->hasMany(User::class);
-    }
-
-    public function getAuthIdentifierName()
-    {
-        return 'email'; 
-    }
-
-    public function getAuthIdentifier()
-    {
-        return $this->email; 
-    }
-
-    public function getAuthPassword()
-    {
-        return $this->password; 
-    }
-
-    public function getRememberToken()
-    {
-        return $this->remember_token;
-    }
-
-    public function setRememberToken($value)
-    {
-        $this->remember_token = $value;
-    }
-
-    public function getRememberTokenName()
-    {
-        return 'remember_token';
     }
 }

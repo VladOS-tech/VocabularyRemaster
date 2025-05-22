@@ -18,17 +18,12 @@ class ModeratorPhraseologyController extends Controller
                 return [
                     'id' => $phraseology->id,
                     'date' => $phraseology->confirmed_at ?? $phraseology->updated_at,
-                    'phrase' => $phraseology->content,
+                    'content' => $phraseology->content,
+                    'meaning' => $phraseology->meaning,
                     'tags' => $phraseology->tags->map(fn($tag) => [
                         'id' => $tag->id,
                         'content' => $tag->content
                     ]),
-                    'meanings' => [
-                        [
-                            'meaning' => $phraseology->meaning,
-                            'example' => $phraseology->contexts->pluck('content')->join('; ')
-                        ]
-                    ],
                     'contexts' => $phraseology->contexts->map(fn($context) => [
                         'id' => $context->id,
                         'content' => $context->content
@@ -41,9 +36,25 @@ class ModeratorPhraseologyController extends Controller
     
     public function show($id)
     {
-        $phraseology = Phraseology::findOrFail($id);
-        return response()->json($phraseology);
+        $phraseology = Phraseology::with('tags', 'contexts')->findOrFail($id);
+
+        return response()->json([
+            'id' => $phraseology->id,
+            'content' => $phraseology->content,
+            'meaning' => $phraseology->meaning,
+            'status' => $phraseology->status,
+            'created_at' => $phraseology->created_at,
+            'tags' => $phraseology->tags->map(fn($tag) => [
+                'id' => $tag->id,
+                'content' => $tag->content,
+            ]),
+            'contexts' => $phraseology->contexts->map(fn($ctx) => [
+                'id' => $ctx->id,
+                'content' => $ctx->content,
+            ])
+        ]);
     }
+
 
     public function update(Request $request, $id)
     {

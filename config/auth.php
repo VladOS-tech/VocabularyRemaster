@@ -14,8 +14,8 @@ return [
     */
 
     'defaults' => [
-        'guard' => env('AUTH_GUARD', 'sanctum'),
-        'passwords' => env('AUTH_PASSWORD_BROKER', 'users'),
+        'guard' => env('AUTH_GUARD', 'login'),
+        'passwords' => env('AUTH_PASSWORD_BROKER', 'login'),
     ],
 
     /*
@@ -36,14 +36,22 @@ return [
     */
 
     'guards' => [
-        'web' => [
-            'driver' => 'session',
-            'provider' => 'users',
-        ],
-        'api' => [
+        // 'web' => [
+        //     'driver' => 'session',
+        //     'provider' => 'users',
+        // ],
+        /*'api' => [
             'driver' => 'sanctum',
-            'provider' => 'users',
+            'provider' => 'logins',
+        ],*/
+        'login' => [
+            'driver' => 'sanctum',
+            'provider' => 'logins',
         ],
+        // 'moderator' => [
+        //     'driver' => 'sanctum',
+        //     'provider' => 'moderators',
+        // ],
     ],
 
     /*
@@ -64,20 +72,15 @@ return [
     */
 
     'providers' => [
-        'users' => [
+        'logins' => [
             'driver' => 'eloquent',
-            'model' => env('AUTH_MODEL', App\Models\User::class),
+            'model' => env('AUTH_MODEL', App\Models\Login::class),
         ],
 
-        // 'users' => [
-        //     'driver' => 'database',
-        //     'table' => 'users',
+        // 'moderators' => [
+        //     'driver' => 'eloquent',
+        //     'model' => App\Models\Moderator::class,
         // ],
-
-        'moderators' => [
-            'driver' => 'eloquent',
-            'model' => App\Models\Moderator::class,
-        ],
     ],
 
     /*
@@ -100,8 +103,8 @@ return [
     */
 
     'passwords' => [
-        'users' => [
-            'provider' => 'users',
+        'login' => [
+            'provider' => 'login',
             'table' => env('AUTH_PASSWORD_RESET_TOKEN_TABLE', 'password_reset_tokens'),
             'expire' => 60,
             'throttle' => 60,

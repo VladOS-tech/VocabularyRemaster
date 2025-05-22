@@ -19,9 +19,10 @@ Route::get('/phraseologies', [PublicPhraseologyController::class, 'index']);
 Route::post('/phraseologies', [PublicPhraseologyController::class, 'store']);
 Route::get('/tags', [PublicTagController::class, 'index']);
 
-Route::post('/login', [AuthController::class, 'login'])/*->name('login')*/;
-Route::middleware(['auth:sanctum'])->group(function () {
+Route::post('/login', [AuthController::class, 'login']);
+Route::middleware(['auth:login'])->group(function () {
     Route::get('/moderator/phraseologies', [ModeratorPhraseologyController::class, 'index']);
+    Route::get('/moderator/phraseologies/{id}', [ModeratorPhraseologyController::class, 'show']);
     Route::get('/moderator/tags', [ModeratorTagController::class, 'index']);
     Route::post('/moderator/tags', [ModeratorTagController::class, 'store']);
     Route::put('/moderator/tags/{id}', [ModeratorTagController::class, 'update']);

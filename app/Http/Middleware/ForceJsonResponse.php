@@ -6,20 +6,16 @@ use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class EnsureUserIsModerator
+class ForceJsonResponse
 {
     /**
      * Handle an incoming request.
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
-    public function handle(Request $request, Closure $next): Response
+    public function handle(Request $request, Closure $next)
     {
-        $user = $request->user();
-
-        if (!$user || $user->role_id !== 2) {
-            return response()->json(['message' => 'Доступ разрешён только модераторам'], 403);
-        }
+        $request->headers->set('Accept', 'application/json');
 
         return $next($request);
     }

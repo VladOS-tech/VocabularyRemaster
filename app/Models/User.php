@@ -3,14 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Laravel\Sanctum\HasApiTokens;
 
 
-class User extends Authenticatable
+class User extends Model
 {
-    use HasFactory,HasApiTokens;
+    use HasFactory;
     protected $table = 'users';
 
     protected $fillable = [
@@ -24,12 +22,12 @@ class User extends Authenticatable
         return $this->belongsTo(Login::class);  
     }
 
-    public function role()
-    {
-        return $this->belongsTo(Role::class);  
-    }
+     public function role()
+     {
+         return $this->belongsTo(Role::class);  
+     }
 
-    public function isAdmin()
+    /*public function isAdmin()
     {
         return $this->role_id === 1;  
     }
@@ -37,5 +35,5 @@ class User extends Authenticatable
     public function isModerator()
     {
         return $this->role_id === 2;  
-    }
+    }*/
 }
