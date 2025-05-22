@@ -62,6 +62,7 @@ class AuthController extends Controller
             'token' => $token,
         ]);
     }
+    
 
     public function selectRole(Request $request)
     {
