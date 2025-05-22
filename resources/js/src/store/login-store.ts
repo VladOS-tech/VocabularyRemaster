@@ -48,9 +48,9 @@ const actions = {
                 password: payload.password
             })
             // window.alert(`login successfull: ${data.token}`)
-            commit('user/setToken', data.token, { root: true })
-            commit('user/setUsername', data.user_id, { root: true })
-            commit('user/setUserRole', data.role, { root: true })
+            commit('setToken', data.token, { root: true })
+            commit('setUsername', data.user_id, { root: true })
+            commit('setUserRole', data.role, { root: true })
             localStorage.setItem('token', data.token)
             localStorage.setItem('username', data.user_id)
             localStorage.setItem('role', data.role)
@@ -77,9 +77,9 @@ const actions = {
         return 'success'
     },
     logoutAction({commit}: any){
-        commit('user/setToken', '', { root: true })
-        commit('user/setUsername', '', { root: true })
-        commit('user/setUserRole', '', { root: true })
+        commit('setToken', '', { root: true })
+        commit('setUsername', '', { root: true })
+        commit('setUserRole', '', { root: true })
         localStorage.setItem('token', '')
         localStorage.setItem('username', '')
         localStorage.setItem('role', ''),

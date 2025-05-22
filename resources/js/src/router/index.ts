@@ -106,16 +106,19 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
+  if(to.fullPath === '/moderator'){
+    return next('/moderator/requests')
+  }
   if (to.meta.requiredRole) {
     // window.alert(`${store.getters.role} and ${to.meta.requiredRole}`)
     if (store.getters.role !== to.meta.requiredRole) {
-      next('/login')
+      return next('/login')
     } else {
-      next()
+      return next()
     }
   }
   else {
-    next()
+    return next()
   }
 })
 
