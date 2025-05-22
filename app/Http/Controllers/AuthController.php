@@ -62,7 +62,7 @@ class AuthController extends Controller
             'token' => $token,
         ]);
     }
-    
+
 
     public function selectRole(Request $request)
     {
@@ -75,9 +75,6 @@ class AuthController extends Controller
         if (!$user) {
             return response()->json(['message' => 'Пользователь не найден'], 404);
         }
-
-        // Session::put('user_id', $user->id);
-        // Session::put('role_id', $user->role_id);
 
         return response()->json([
             'message' => 'Роль выбрана успешно',
