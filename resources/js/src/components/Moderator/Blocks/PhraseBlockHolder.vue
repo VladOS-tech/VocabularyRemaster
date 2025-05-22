@@ -1,7 +1,7 @@
 <template>
     <div class="request-block">
-        <loadingIcon v-if="phraseLoading" />
-        <phraseItemModer v-for="phrase in phrasesList" :key="phrase.id" :PhraseData="phrase" />
+        <loadingIcon v-if="isLoading" />
+        <phraseItemModer v-else v-for="phrase in phraseList" :key="phrase.id" :PhraseData="phrase" />
     </div>
 </template>
 
@@ -12,20 +12,26 @@ import LoadingIcon from '@/components/Misc/LoadingIcon.vue';
 import { mapActions, mapGetters, mapMutations } from 'vuex';
 
     export default defineComponent({
+        data(){
+            return{
+                isLoading: true as boolean
+            }
+        },
         components:{
             phraseItemModer,
             LoadingIcon
         },
         computed:{
-            ...mapGetters(['phraseLoading', 'requestList', 'phrasesList'])
+            ...mapGetters(['phraseLoading', 'requestList', 'phraseList'])
         },
         methods:{
             ...mapMutations(['setTabName']),
-            ...mapActions(['GetPhraseInfoModerator'])
+            ...mapActions(['GetPhrasesInfo'])
         },
-        mounted(){
+        async beforeMount(){
             this.setTabName('phrases')
-            this.GetPhraseInfoModerator()
+            await this.GetPhrasesInfo()
+            this.isLoading = false
         }
     })
 </script>

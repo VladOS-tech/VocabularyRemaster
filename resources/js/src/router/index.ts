@@ -2,14 +2,16 @@ import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
 import UserHeader from '@/components/UserHeader.vue';
 import PhrasesPage from '@/views/UserPages/PhrasesPage.vue'
 import AddPhrasePage from '@/views/UserPages/AddPhrasePage.vue'
-import AdminHeader from '@/components/AdminHeader.vue';
+import StaffHeader from '@/components/StaffHeader.vue';
 import LoginPage from "@/views/LoginPage.vue";
 import ModeratorMain from "@/views/ModeratorPages/ModeratorMain.vue";
 import RequestBlock from "@/components/Moderator/Blocks/RequestBlock.vue";
 import PhraseBlockHolder from "@/components/Moderator/Blocks/PhraseBlockHolder.vue";
 import AdministratorMain from "@/views/AdminPages/AdministratorMain.vue";
 import StaffBlock from "@/components/Administrator/Blocks/StaffBlock.vue";
+import TagsBlockHolder from "@/components/Moderator/Blocks/TagsBlockHolder.vue";
 import store from "@/store";
+import RequestReview from "@/views/ModeratorPages/RequestReview.vue";
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -30,7 +32,7 @@ const routes: Array<RouteRecordRaw> = [
     path: '/login',
     components: {
       default: LoginPage,
-      nav: AdminHeader
+      nav: StaffHeader
     }
   },
   {
@@ -40,23 +42,45 @@ const routes: Array<RouteRecordRaw> = [
     },
     components: {
       default: ModeratorMain,
-      nav: AdminHeader,
+      nav: StaffHeader,
     },
-      children: [{
-        path: 'requests',
-        component: RequestBlock,
-        meta: {
-      requiredRole: 'moderator'
+    children: [{
+      path: 'requests',
+      component: RequestBlock,
+      meta: {
+        requiredRole: 'moderator'
+      }
     },
+    {
+      path: 'phrases',
+      component: PhraseBlockHolder,
+      meta: {
+        requiredRole: 'moderator'
       },
-      {
-        path: 'phrases',
-        component: PhraseBlockHolder,
-        meta: {
-      requiredRole: 'moderator'
+
     },
-      }]
+    {
+      path: 'tags',
+      component: TagsBlockHolder,
+      meta: {
+        requiredRole: 'moderator'
+      },
+
+    }]
   },
+  {
+      path: '/moderator/approval/:id',
+      components: {
+        nav: StaffHeader,
+        default: RequestReview
+      },
+      props:{
+        default: true
+      },
+      meta: {
+        requiredRole: 'moderator'
+      },
+    },
   {
     path: '/admin',
     meta: {
@@ -64,15 +88,15 @@ const routes: Array<RouteRecordRaw> = [
     },
     components: {
       default: AdministratorMain,
-      nav: AdminHeader,
+      nav: StaffHeader,
     },
-      children: [{
-        path: 'staff',
-        component: StaffBlock,
-        meta: {
-      requiredRole: 'administrator'
-    },
-      }]
+    children: [{
+      path: 'staff',
+      component: StaffBlock,
+      meta: {
+        requiredRole: 'administrator'
+      },
+    }]
   }
 ];
 
@@ -82,15 +106,15 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  if(to.meta.requiredRole){
+  if (to.meta.requiredRole) {
     // window.alert(`${store.getters.role} and ${to.meta.requiredRole}`)
-    if(store.getters.role !== to.meta.requiredRole){
+    if (store.getters.role !== to.meta.requiredRole) {
       next('/login')
-    }else{
+    } else {
       next()
     }
   }
-  else{
+  else {
     next()
   }
 })

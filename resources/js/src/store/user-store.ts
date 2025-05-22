@@ -135,6 +135,7 @@ const actions = {
             '&search=' + state.searchRequest
             console.log(apiRequest)
             const { data } = await axios.get(apiRequest)
+            console.log(data)
             commit('setPhraseList', data)
             // commit('setState', { key: 'phrasesList', value: data })
         } catch (error) {

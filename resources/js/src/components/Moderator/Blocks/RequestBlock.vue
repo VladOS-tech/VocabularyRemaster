@@ -1,7 +1,7 @@
 <template>
     <div class="request-block">
-        <loadingIcon v-if="requestLoading" />
-        <requestItem v-for="request in requestList" :key="request.id" :RequestData="request" />
+        <loadingIcon v-if="isLoading" />
+        <requestItem v-else v-for="request in requestList" :key="request.id" :RequestData="request" />
     </div>
 </template>
 
@@ -16,6 +16,11 @@ import { mapActions, mapGetters, mapMutations } from 'vuex';
             requestItem,
             LoadingIcon
         },
+        data(){
+            return{
+                isLoading: true as boolean
+            }
+        },
         computed:{
             ...mapGetters(['requestLoading', 'requestList'])
         },
@@ -23,9 +28,10 @@ import { mapActions, mapGetters, mapMutations } from 'vuex';
             ...mapMutations(['setTabName']),
             ...mapActions(['GetRequestsInfo'])
         },
-        mounted(){
+        async beforeMount(){
             this.setTabName('requests')
-            this.GetRequestsInfo()
+            await this.GetRequestsInfo()
+            this.isLoading = false
         }
     })
 </script>

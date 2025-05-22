@@ -3,6 +3,8 @@ import StaffObject from "@/assets/types/StaffObject"
 
 import ExampleRequests from '@/assets/JSObjects/ExamplePhrases.json'
 import ExampleStaff from '@/assets/JSObjects/ExampleStaff.json'
+import axios, { AxiosError } from "axios"
+import router from "@/router"
 
 interface State {
     token: string,
@@ -91,12 +93,22 @@ const mutations = {
 const actions = {
     async GetRequestsInfo({commit}: {commit: any}) {
         commit('setRequestList', null)
-        commit('setRequestLoading', true)
-        await new Promise(resolve => {
-            setTimeout(resolve, 2000)
-        })
-        commit('setRequestList', ExampleRequests)
-        commit('setRequestLoading', false)
+        try {
+            const request = 'http://127.0.0.1:8000/api/moderator/phraseologies'
+            const { data } = await axios.get(request, {
+                headers: {
+                    Authorization: `Bearer ${state.token}`
+                }
+            })
+            // commit('setState', { key: 'popularTags', value: data })
+            commit('setRequestList', data)
+            console.log(data)
+        } catch (error) {
+            if(error instanceof AxiosError && error.status){
+                router.push('/login')
+            }
+            console.error('Ошибка при загрузке запросов:', error)
+        }
     },
     async GetPhraseInfoModerator({commit}: {commit: any}) {
         commit('setPhraseLoading', true)

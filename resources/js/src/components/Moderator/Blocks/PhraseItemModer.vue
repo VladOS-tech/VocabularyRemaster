@@ -3,23 +3,20 @@
         <p class="post-date post-date-light">
             {{dateToString(PhraseData.date)}}
         </p>
-        <h2>{{ PhraseData.phrase }}</h2>
+        <h2>{{ PhraseData.content }}</h2>
         <div class="tags-block">
-            <div class="tag tag-generic" v-for="tag in PhraseData.tags" :key="tag.id">{{ tag.name }}</div>
+            <div class="tag tag-generic" v-for="tag in PhraseData.tags" :key="tag.id">{{ tag.content }}</div>
         </div>
-        <h3>Значения</h3>
-        <div class="meaning-block meaning-block-light" v-for="meaning in PhraseData.meanings" :key="meaning.meaning">
-            <h4>{{meaning.meaning}}</h4>
-            <p class="meaning-example-text">
-                "{{meaning.example}}"
+        <h3>Значение</h3>
+        <div class="meaning-block meaning-block-light">
+            <h4>{{PhraseData.meanings}}</h4>
+            <p class="meaning-example-text" v-for="context in PhraseData.contexts" :key="context.id">
+                "{{context.content}}"
             </p>
         </div>
         <div class="moder-phrase-button">
             <button class="button button-large remove-phrase-button">
-                Удалить
-            </button>
-            <button class="button button-large edit-phrase-button">
-                Редактировать
+                Запросить удаление
             </button>
         </div>
     </div>

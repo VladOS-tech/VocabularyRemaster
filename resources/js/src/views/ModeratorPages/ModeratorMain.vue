@@ -16,7 +16,8 @@
             <router-link :class="tabName=='phrases' ? 'tab-selected' : 'tab-unselected'" class="tab-style button tab-button" to="/moderator/phrases">Фразеологизмы</router-link>
             <div class="tabs-vertical-separator">
             </div>
-            <router-link to="moderator/add" class="button tab-button tab-add-button link-style">Добавить</router-link>
+            <router-link :class="tabName=='tags' ? 'tab-selected' : 'tab-unselected'" class="tab-style button tab-button" to="/moderator/tags">Теги</router-link>
+            <!-- <router-link to="moderator/add" class="button tab-button tab-add-button link-style">Добавить</router-link> -->
         </div>
         <div class="request-area">
             <router-view/>

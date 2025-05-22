@@ -47,7 +47,7 @@ const actions = {
                 email: payload.login,
                 password: payload.password
             })
-            window.alert(`login successfull: ${data.token}`)
+            // window.alert(`login successfull: ${data.token}`)
             commit('user/setToken', data.token, { root: true })
             commit('user/setUsername', data.user_id, { root: true })
             commit('user/setUserRole', data.role, { root: true })
@@ -55,9 +55,9 @@ const actions = {
             localStorage.setItem('username', data.user_id)
             localStorage.setItem('role', data.role)
             if(data.role === 'moderator'){
-                router.push('/moderator')
+                await router.push('/moderator')
             }else{
-                router.push('/admin')
+                await router.push('/admin')
             }
         }
         catch(e){

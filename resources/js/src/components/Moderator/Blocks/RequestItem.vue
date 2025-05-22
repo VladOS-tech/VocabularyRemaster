@@ -3,9 +3,9 @@
         <p class="request-date request-date-light">
             {{dateToString(RequestData.date)}}
         </p>
-        <h2>{{ RequestData.phrase }}</h2>
+        <h2>{{ RequestData.content }}</h2>
         <div class="review-button-container">
-            <router-link to="moderator/requestApproval" class="link-style button button-large review-button">Рассмотреть</router-link>
+            <router-link :to="`/moderator/approval/${RequestData.id}`" class="link-style button button-large review-button">Рассмотреть</router-link>
         </div>
     </div>
 </template>
