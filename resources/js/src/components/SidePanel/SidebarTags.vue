@@ -4,14 +4,14 @@
             Популярные теги
         </h3>
         <!-- make togglable tags(and dispatch event) + hide this menu on mobile and load popular tags via action -->
-        <loadingIcon v-if="isLoading.tags" />
+        <loadingIcon v-if="isLoading" />
         <div class="tags-block" v-else>
             <div class="tag tag-button tag-highlighted" v-for="tag in unselectedPopularTags" :key="tag.id" @:click="selectTag(tag)"> {{ tag.content }}</div>
         </div>
         <div class="tag-search-input-area">
-            <input type="text" class="input-field input-field-regular" v-model="tagSearch" ref="tagSearchInputField" placeholder="Введите желаемый тег:" @input="toggleTagSelector" @keyup="closeTagSelector">
-            <ul class="tag-selector-list" v-if="showTagSelector">
-                <li class="tag-selector-list-element button" v-for="tag in unselectedRecommendedTags" :key="tag.id" @click="selectTag(tag); selectTagViaSearch();">
+            <input type="text" class="input-field input-field-regular" v-model="tagSearch" ref="tagSearchInputField" placeholder="Введите желаемый тег:" @input="searchTag" @keyup="closeTagSelector">
+            <ul class="tag-selector-list" v-if="showTagSelector && tagSearch.length >= 3">
+                <li class="tag-selector-list-element button" v-for="tag in unselectedSearchResultTags" :key="tag.id" @click="selectTag(tag); selectTagViaSearch();">
                     <div class="tag-search-inline">
                     {{ tag.content }}
                     </div>
@@ -41,35 +41,37 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from 'vue';
+import { defineComponent } from 'vue';
 import loadingIcon from '../Misc/LoadingIcon.vue';
 import TagObject from '@/assets/types/TagObject';
 import { mapGetters, mapActions, mapMutations } from 'vuex';
+import { throttle } from '@/assets/lib/throttle';
 
     export default defineComponent({
         data() {
             return{
                 tagSearch: '' as string,
-                showTagSelector: false as boolean
+                showTagSelector: false as boolean,
+                isLoading: true as boolean,
+                popularTags: [] as TagObject[],
+                tagSearchResult: [] as TagObject[],
+                throttleTagSearch: undefined as undefined | ((...args: any[]) => void)
             }
         },
         components:{
             loadingIcon
         },
         computed:{
-            ...mapGetters(['isLoading', 'popularTags', 'availableTags', 'searchSelectedTags']),
+            ...mapGetters(['searchSelectedTags']),
             unselectedPopularTags(): TagObject[]{
                 return (this.popularTags || []).filter((tag: TagObject) => !(this.searchSelectedTags || []).some((selectedTag: TagObject) => selectedTag.id === tag.id))
             },
-            unselectedRecommendedTags(): TagObject[]{
-                return (this.searchRecommendedTags || []).filter((tag: TagObject) => !(this.searchSelectedTags || []).some((selectedTag: TagObject) => selectedTag.id === tag.id))
-            },
-            searchRecommendedTags() :TagObject[]{
-                return this.availableTags.filter((tag: TagObject) => tag.content.toLowerCase().includes(this.tagSearch.trim().toLowerCase()))
+            unselectedSearchResultTags(): TagObject[]{
+                return (this.tagSearchResult || []).filter((tag: TagObject) => !(this.searchSelectedTags || []).some((selectedTag: TagObject) => selectedTag.id === tag.id))
             }
         },
         methods:{
-            ...mapActions(['GetPhrasesInfo', 'GetSearchRecommendedTags']),
+            ...mapActions(['GetPhrasesInfo', 'GetSearchRecommendedTags', 'getPopularTags', 'getTagsSearch']),
             ...mapMutations(['setSearchSelectedTags', 'addSearchSelectedTag', 'removeSearchSelectedTag', 'setSearchSelectedTags']),
             selectTag(tag: TagObject){
                 this.addSearchSelectedTag(tag)
@@ -82,9 +84,9 @@ import { mapGetters, mapActions, mapMutations } from 'vuex';
             unselectTag(tag: TagObject){
                 this.removeSearchSelectedTag(tag)
             },
-            toggleTagSelector(){
+            searchTag(){
                 if(this.tagSearch.length >= 3){
-                    if(this.unselectedRecommendedTags.length > 0) this.showTagSelector = true
+                    if (this.throttleTagSearch) this.throttleTagSearch()
                 }else{
                     this.showTagSelector = false
                 }
@@ -92,7 +94,7 @@ import { mapGetters, mapActions, mapMutations } from 'vuex';
             closeTagSelector(e: KeyboardEvent){
                 if(e.key === 'Enter' || e.key === 'Escape'){
                     if(e.key == 'Enter'){
-                    let firstTag = this.unselectedRecommendedTags[0]
+                    let firstTag = this.unselectedSearchResultTags[0]
                     if (firstTag) {
                         this.selectTag(firstTag)
                     }
@@ -101,8 +103,17 @@ import { mapGetters, mapActions, mapMutations } from 'vuex';
                 this.tagSearch = ''
                 this.showTagSelector = false
                 }
-            }
-        }
+            },
+        },
+        async beforeMount() {
+            this.throttleTagSearch = throttle(async () => {
+                        // window.alert('debounced')
+                        this.tagSearchResult = await this.getTagsSearch({searchQuery: this.tagSearch})
+                        if(this.unselectedSearchResultTags.length > 0) this.showTagSelector = true
+                    }, 1000)
+            this.popularTags = await this.getPopularTags()
+            this.isLoading = false
+        },
     })
 </script>
 

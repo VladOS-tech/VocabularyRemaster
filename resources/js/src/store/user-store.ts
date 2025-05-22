@@ -86,7 +86,6 @@ const actions = {
         commit('setSearchRecommendedTags', exampleTags)
     },
     async GetTags({ commit }: { commit: any }) {
-        commit('setLoading', { whichLoading: 'tags', newLoading: true })
         try {
             const { data } = await axios.get('http://127.0.0.1:8000/api/tags')
             console.log(data)
@@ -94,11 +93,29 @@ const actions = {
             commit('setAvailableTags', data)
         } catch (error) {
             console.error('Ошибка при загрузке тегов:', error)
-        } finally {
-            commit('setLoading', { whichLoading: 'tags', newLoading: false })
         }
     },
-
+    async getPopularTags(): Promise<TagObject[]>{
+        try {
+            const { data } = await axios.get('http://127.0.0.1:8000/api/tags')
+            console.log(data)
+            return data
+        } catch (error) {
+            console.error('Ошибка при загрузке тегов:', error)
+        }
+        return []
+    },
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    async getTagsSearch({commit}: {commit:any}, payload: {searchQuery: string}): Promise<TagObject[]>{
+        try {
+            const { data } = await axios.get('http://127.0.0.1:8000/api/tags?search=' + payload.searchQuery)
+            console.log(data)
+            return data
+        } catch (error) {
+            console.error('Ошибка при загрузке тегов:', error)
+        }
+        return []
+    },
     async GetPhrasesInfo({ state, commit }: { state: State, commit: any }) {
 
         const tagsToString = (tags: TagObject[]): string => {

@@ -3,7 +3,7 @@
         <div class="sort-area">
             <sortingSelection />
         </div>
-        <loadingIcon v-if="isLoading.phrases" />
+        <loadingIcon v-if="isLoading" />
         <div class="phrase-area" v-else>
             <phraseBlock v-for="phrase in phraseList" :key="phrase.id" :PhraseData="phrase" />
         </div>
@@ -33,7 +33,8 @@ export default defineComponent({
     },
     data(){
         return{
-            pageName: 'Словарь Фразеологизмов' as string
+            pageName: 'Словарь Фразеологизмов' as string,
+            isLoading: true as boolean
         }
     },
     computed:{
@@ -42,8 +43,9 @@ export default defineComponent({
     methods:{
         ...mapMutations(['setPageName']),
         ...mapActions(['GetPhrasesInfo', 'UserPageLoadAllInfo'])
-    },beforeMount(){
-        this.UserPageLoadAllInfo()
+    },async beforeMount(){
+        await this.GetPhrasesInfo()
+        this.isLoading = false
     },
     mounted(){
         this.setPageName(this.pageName)

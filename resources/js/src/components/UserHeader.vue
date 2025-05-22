@@ -6,7 +6,7 @@
             </h1>
         </router-link>
         <form class="search-block" :class="{'mobile-search-block-active': isMobile && isSearchActive, 'search-block-inactive-mobile': !isSearchActive || !isMobile}">
-            <input id="search-field-id" type="text" class="user-search-field user-search-field-light" placeholder="Поиск" v-model="searchInput" @keypress.enter="search" @focus="isSearchActive = true" @blur="isSearchActive = false"/>
+            <input id="search-field-id" type="text" class="user-search-field user-search-field-light" placeholder="Поиск" v-model="searchInput" @keypress.enter="search" @input="search" @focus="isSearchActive = true" @blur="isSearchActive = false"/>
             <label for="search-field-id">
                 <img src="@/assets/images/icons/search-icon.svg" alt="search-icon" class="search-icon-header search-icon-header-light">
             </label>
@@ -18,13 +18,15 @@
 </template>
 
 <script lang="ts">
-    import { defineComponent } from 'vue';
+    import { throttle } from '@/assets/lib/throttle';
+import { defineComponent } from 'vue';
     import { mapGetters, mapActions, mapMutations } from 'vuex';
 
     export default defineComponent({
         data(){
             return{
-                isSearchActive: false as boolean
+                isSearchActive: false as boolean,
+                throttleSearch: undefined as undefined | ((...any: any[]) => void)
             }
         },
         computed:{
@@ -43,8 +45,13 @@
             ...mapActions(['GetPhrasesInfo']),
             search(e: Event){
                 e.preventDefault()
-                this.GetPhrasesInfo()
+                !!this.throttleSearch && this.throttleSearch()
             }
+        },
+        beforeMount(){
+            this.throttleSearch = throttle(() => {
+                this.GetPhrasesInfo()
+            },1000)
         }
     }) 
 </script>
