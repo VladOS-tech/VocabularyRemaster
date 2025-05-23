@@ -185,33 +185,26 @@ class ModeratorPhraseologyController extends Controller
         return response()->json(['message' => 'Фразеологизм отклонён и удалён.']);
     }
 
-    public function requestDeletion(Request $request, $id)
-    {
-        $phraseology = Phraseology::findOrFail($id);
+    public function markForDeletion($id)
+{
+    $phraseology = Phraseology::findOrFail($id);
 
-        if ($phraseology->status !== 'approved') {
-            return response()->json(['message' => 'Только подтверждённые фразеологизмы могут быть отправлены на удаление'], 400);
-        }
-
-        $phraseology->update(['status' => 'deletion_requested']);
-
-        return response()->json([
-            'message' => 'Фразеологизм отправлен на удаление!',
-            'phraseology' => $phraseology
-        ]);
+    if ($phraseology->status !== 'approved') {
+        return response()->json(['message' => 'Фразеологизм уже обработан или уже помечен на удаление'], 400);
     }
 
-    public function updateTags(Request $request, $id)
-    {
-        $validated = $request->validate([
-            'tags' => 'array',
-            'tags.*' => 'exists:tags,id'
-        ]);
+    $phraseology->update([
+        'status' => 'deletion_requested',
+        'updated_at' => now(),
+    ]);
 
-        $phraseology = Phraseology::findOrFail($id);
-        $phraseology->tags()->sync($validated['tags']);
-
-        return response()->json(['message' => 'Теги обновлены!']);
-    }
+    return response()->json([
+        'message' => 'Фразеологизм отправлен на удаление.',
+        'phraseology' => [
+            'id' => $phraseology->id,
+            'status' => $phraseology->status,
+        ]
+    ]);
+}
 }
 

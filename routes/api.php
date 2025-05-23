@@ -26,6 +26,7 @@ Route::middleware(['auth:login', 'role:moderator'])->group(function () {
     Route::put('/moderator/phraseologies/{id}', [ModeratorPhraseologyController::class, 'update']);
     Route::patch('/moderator/phraseologies/{id}/approve', [ModeratorPhraseologyController::class, 'approve']);
     Route::delete('/moderator/phraseologies/{id}/reject', [ModeratorPhraseologyController::class, 'reject']);
+    Route::patch('/moderator/phraseologies/{id}/delete-request', [ModeratorPhraseologyController::class, 'markForDeletion']);
 
     Route::get('/moderator/tags', [ModeratorTagController::class, 'index']);
     Route::post('/moderator/tags', [ModeratorTagController::class, 'store']);
