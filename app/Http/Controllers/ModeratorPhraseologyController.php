@@ -9,10 +9,22 @@ use Illuminate\Http\Request;
 
 class ModeratorPhraseologyController extends Controller
 {
-    public function index()
+
+    public function index(Request $request)
     {
-        $phraseologies = Phraseology::where('status', 'pending')
-            ->with('tags', 'contexts')
+        $statuses = (array) $request->input('status', 'pending');
+    
+        $validStatuses = ['pending', 'approved', 'rejected', 'deletion_requested'];
+    
+        foreach ($statuses as $status) {
+            if (!in_array($status, $validStatuses)) {
+                return response()->json(['message' => "Недопустимый статус: $status"], 400);
+            }
+        }
+    
+        $phraseologies = Phraseology::whereIn('status', $statuses)
+            ->with(['tags', 'contexts'])
+            ->orderByDesc('updated_at')
             ->get()
             ->map(function ($phraseology) {
                 return [
@@ -20,6 +32,7 @@ class ModeratorPhraseologyController extends Controller
                     'date' => $phraseology->confirmed_at ?? $phraseology->updated_at,
                     'content' => $phraseology->content,
                     'meaning' => $phraseology->meaning,
+                    'status' => $phraseology->status,
                     'tags' => $phraseology->tags->map(fn($tag) => [
                         'id' => $tag->id,
                         'content' => $tag->content
@@ -30,7 +43,7 @@ class ModeratorPhraseologyController extends Controller
                     ])
                 ];
             });
-
+    
         return response()->json($phraseologies);
     }
     
@@ -61,26 +74,58 @@ class ModeratorPhraseologyController extends Controller
         $validated = $request->validate([
             'content' => 'nullable|string',
             'meaning' => 'nullable|string',
-            'status' => 'nullable|in:pending,confirmed,rejected',
             'tags' => 'array',
-            'tags.*' => 'exists:tags,id'
+            'tags.*' => 'exists:tags,id',
+            'contexts' => 'nullable|array',
+            'contexts.*' => 'string|min:1',
         ]);
 
-        $phraseology = Phraseology::findOrFail($id);
+        $phraseology = Phraseology::with('tags', 'contexts')->findOrFail($id);
         
-        if ($phraseology->status === 'confirmed') {
+        if ($phraseology->status === 'approved') {
             return response()->json(['message' => 'Редактирование подтверждённых фразеологизмов запрещено'], 403);
         }
 
-        $phraseology->update($validated);
+        $phraseology->fill([
+            'content' => $validated['content'] ?? $phraseology->content,
+            'meaning' => $validated['meaning'] ?? $phraseology->meaning,
+        ]);
 
-        if ($request->has('tags')) {
-            $phraseology->tags()->sync($request->tags);
+        $phraseology->updated_at = now();
+        $phraseology->save();  
+        
+        if (isset($validated['tags'])) {
+            $phraseology->tags()->sync($validated['tags']);
         }
+    
+        if (isset($validated['contexts'])) {
+            $phraseology->contexts()->delete();
+            foreach ($validated['contexts'] as $contextContent) {
+                $phraseology->contexts()->create([
+                    'content' => $contextContent,
+                ]);
+            }
+        }
+        $phraseology->load('tags', 'contexts');
+
 
         return response()->json([
             'message' => 'Фразеологизм обновлён!',
-            'phraseology' => $phraseology
+            'phraseology' => [
+                'id' => $phraseology->id,
+                'content' => $phraseology->content,
+                'meaning' => $phraseology->meaning,
+                'status' => $phraseology->status,
+                'date' => $phraseology->confirmed_at ?? $phraseology->updated_at,
+                'tags' => $phraseology->tags->map(fn($tag) => [
+                    'id' => $tag->id,
+                    'content' => $tag->content,
+                ]),
+                'contexts' => $phraseology->contexts->map(fn($ctx) => [
+                    'id' => $ctx->id,
+                    'content' => $ctx->content,
+                ]),
+            ]
         ]);
     }
 

@@ -23,6 +23,8 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::middleware(['auth:login', 'role:moderator'])->group(function () {
     Route::get('/moderator/phraseologies', [ModeratorPhraseologyController::class, 'index']);
     Route::get('/moderator/phraseologies/{id}', [ModeratorPhraseologyController::class, 'show']);
+    Route::put('/moderator/phraseologies/{id}', [ModeratorPhraseologyController::class, 'update']);
+
     Route::get('/moderator/tags', [ModeratorTagController::class, 'index']);
     Route::post('/moderator/tags', [ModeratorTagController::class, 'store']);
     Route::put('/moderator/tags/{id}', [ModeratorTagController::class, 'update']);
