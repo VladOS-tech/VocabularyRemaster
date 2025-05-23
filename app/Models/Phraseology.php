@@ -17,6 +17,8 @@ class Phraseology extends Model
         'content',      
         'meaning',     
         'status',
+        'confirmed_at',
+        'moderator_id',
     ];
 
     public function moderator()

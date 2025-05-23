@@ -27,13 +27,9 @@ class User extends Model
          return $this->belongsTo(Role::class);  
      }
 
-    /*public function isAdmin()
-    {
-        return $this->role_id === 1;  
-    }
-
-    public function isModerator()
-    {
-        return $this->role_id === 2;  
-    }*/
+     public function moderator()
+     {
+         return $this->hasOne(\App\Models\Moderator::class);
+     }
+     
 }

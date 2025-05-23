@@ -129,7 +129,7 @@ class ModeratorPhraseologyController extends Controller
         ]);
     }
 
-    public function confirm($id)
+    public function approve($id)
     {
         $phraseology = Phraseology::findOrFail($id);
 
@@ -137,13 +137,40 @@ class ModeratorPhraseologyController extends Controller
             return response()->json(['message' => 'Фразеологизм уже обработан'], 400);
         }
 
-        $phraseology->update(['status' => 'approved']);
+        /** @var \App\Models\Login $login */
+        $login = auth()->guard('login')->user();
+
+        $accessToken = $login->currentAccessToken();
+        $userId = $accessToken?->abilities['user_id'] ?? null;
+
+        if (!$userId) {
+            return response()->json(['message' => 'Роль не определена'], 403);
+        }
+
+        $user = \App\Models\User::with('moderator')->find($userId);
+
+        if (!$user || $user->role_id !== 2 || !$user->moderator) {
+            return response()->json(['message' => 'Вы не модератор'], 403);
+        }
+
+        $phraseology->update([
+            'status' => 'approved',
+            'confirmed_at' => now(),
+            'moderator_id' => $user->moderator->id,
+        ]);
 
         return response()->json([
             'message' => 'Фразеологизм подтверждён!',
-            'phraseology' => $phraseology
+            'phraseology' => [
+                'id' => $phraseology->id,
+                'status' => $phraseology->status,
+                'confirmed_at' => $phraseology->confirmed_at,
+                'moderator_id' => $phraseology->moderator_id,
+            ]
         ]);
     }
+
+
 
     public function reject($id)
     {
