@@ -182,7 +182,7 @@ class ModeratorPhraseologyController extends Controller
 
         $phraseology->delete();
 
-        return response()->json(['message' => 'Фразеологизм удалён!']);
+        return response()->json(['message' => 'Фразеологизм отклонён и удалён.']);
     }
 
     public function requestDeletion(Request $request, $id)
