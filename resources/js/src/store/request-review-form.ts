@@ -1,10 +1,12 @@
 import TagObject from "@/assets/types/TagObject";
 import exampleTags from "@/assets/JSObjects/ExampleTags.json"
 import InputTags from "@/components/Forms/FormComponents/InputTags.vue";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import router from "@/router";
+import PhraseObject from "@/assets/types/PhraseObject";
 
 interface State {
+    phraseId: string | undefined,
     inputPhrase: string;
     inputPhraseError: string | undefined;
     inputTags: Set<TagObject>;
@@ -26,6 +28,7 @@ type response = {
 export default {
     namespaced: true,
     state: {
+        phraseId: undefined,
         inputPhrase: '',
         inputPhraseError: undefined,
         inputTags: new Set(),
@@ -39,6 +42,7 @@ export default {
     },
 
     getters: {
+        phraseId: (state: State) => state.phraseId,
         inputPhrase: (state: State) => state.inputPhrase,
         inputPhraseError: (state: State) => state.inputPhraseError,
         inputTags: (state: State) => state.inputTags,
@@ -52,6 +56,9 @@ export default {
     },
 
     mutations: {
+        setPhraseId(state: State, id: string) {
+            state.phraseId = id
+        },
         setInputPhrase(state: State, phrase: string) {
             state.inputPhrase = phrase
         },
@@ -127,19 +134,19 @@ export default {
     },
 
     actions: {
-        async sendPhraseForm({ state, commit }: { state: State, commit: any }) {
+        async approvePhrase({ state, commit, rootGetters, dispatch }: { state: State, commit: any, rootGetters: any, dispatch: any }) {
 
             const tagsToIds = (tags: TagObject[]): number[] => tags.map(el => el.id)
 
-            const examplesToString = (examples: string[]): string => {
-                let examplesString = '['
-                examples.forEach(el => {
-                    examplesString += el + ','
-                })
-                examplesString = examplesString.substring(0, examplesString.length - 1)
-                examplesString += ']'
-                return examplesString
-            }
+            // const examplesToString = (examples: string[]): string => {
+            //     let examplesString = '['
+            //     examples.forEach(el => {
+            //         examplesString += el + ','
+            //     })
+            //     examplesString = examplesString.substring(0, examplesString.length - 1)
+            //     examplesString += ']'
+            //     return examplesString
+            // }
 
             const emptyChecks = (valid: boolean): boolean => {
                 let isFilled = valid
@@ -171,34 +178,70 @@ export default {
                 valid = false;
             }
             if (valid) {
-                const request = 'http://127.0.0.1:8000/api/phraseologies'
+                const token = rootGetters.token
+                console.log(token)
+                const request = 'http://127.0.0.1:8000/api/moderator/phraseologies/' + state.phraseId
+                const config = {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    },
+                }
                 const requestContent = {
-                        content: state.inputPhrase,
-                        contexts: Array.from(state.inputExamples),
-                        meaning: state.inputMeaning,
-                        tags: tagsToIds(Array.from(state.inputSelectedTags))
-                    }
-                    console.log(requestContent)
+                    content: state.inputPhrase,
+                    contexts: Array.from(state.inputExamples),
+                    meaning: state.inputMeaning,
+                    tags: tagsToIds(Array.from(state.inputSelectedTags))
+                }
+                console.log(requestContent)
                 try {
-                    const { data } = await axios.post<response>(request, requestContent)
+                    const { data } = await axios.put<response>(request, requestContent, config)
                     window.alert(`${data.message}`)
-                    router.push('/')
+                    return await router.push('/moderator')
                 } catch (e) {
+                    if(e instanceof AxiosError && e.status === 401){
+                        return await dispatch('logoutAction', null, { root: true })
+                    }
                     window.alert('Ой, у вас не получилось😵‍💫')
                     console.error(e)
                 }
             }
         },
-        async GetRecommendedTags({ commit }: { commit: any }, searchText: string) {
-            //Api request for tags
+        // async GetRecommendedTags({ commit }: { commit: any }, searchText: string) {
+        //     //Api request for tags
+        //     try {
+        //         const { data } = await axios.get('http://127.0.0.1:8000/api/tags')
+        //         console.log(data)
+        //         // commit('setState', { key: 'popularTags', value: data })
+        //         commit('setRecommendedTags', data)
+        //     } catch (error) {
+        //         console.error('Ошибка при загрузке тегов:', error)
+        //     }
+        // },
+        async LoadPhraseInfo({ commit, rootGetters, dispatch }: any, payload: { phraseId: string }) {
+            const token = rootGetters.token
+            console.log(payload.phraseId)
             try {
-                const { data } = await axios.get('http://127.0.0.1:8000/api/tags')
-                console.log(data)
+                const request = 'http://localhost:8000/api/moderator/phraseologies/' + payload.phraseId
+                const { data } = await axios.get<PhraseObject>(request, {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                })
                 // commit('setState', { key: 'popularTags', value: data })
-                commit('setRecommendedTags', data)
+                // commit('setStaffPhraseList', data)
+                commit('setInputPhrase', data.content)
+                commit('setInputExamples', data.contexts.map(el => el.content.replace(/['"]+/g, '')))
+                commit('setInputMeaning', data.meaning)
+                commit('setInputSelectedTags', data.tags)
+                commit('setPhraseId', data.id)
+                // console.log(data)
             } catch (error) {
-                console.error('Ошибка при загрузке тегов:', error)
+                if (error instanceof AxiosError && error.status == 401) {
+                    // return await router.push('/login')
+                    return await dispatch('logoutAction', null, { root: true })
+                }
+                console.error('Ошибка при загрузке запроса:', error)
             }
-        },
+        }
     }
 }

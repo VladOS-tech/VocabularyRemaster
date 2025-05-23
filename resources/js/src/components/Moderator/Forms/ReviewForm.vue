@@ -19,12 +19,12 @@
 
         <div class="buttons-block">
             <button class="button button-large confirm-meaning-button"
-                @click="checkInput">
-                Готово
+                @click="checkInput" :disabled="isLoading">
+                Одобрить
             </button>
-            <router-link to="/" class="button button-large cancel-meaning-button link-style">
-                Отмена
-            </router-link>
+            <button class="button button-large cancel-meaning-button" :disabled="isLoading">
+                Отклонить
+            </button>
         </div>
     </div>
 </template>
@@ -39,12 +39,12 @@ export default defineComponent({
     components: { EditMeanings, EditTags },
     data() {
         return {
-            
+            isLoading: false as boolean
         }
     },
     computed:{
         ...mapGetters(['isLoading']),
-        ...mapGetters('phraseForm', ['inputPhrase', 'inputPhraseError', 'inputTagsError']),
+        ...mapGetters('reviewForm', ['inputPhrase', 'inputPhraseError', 'inputTagsError']),
         // inputPhrase: {
         //     get(): string {
         //         return this.inputPhrase
@@ -56,8 +56,8 @@ export default defineComponent({
     },
     methods: {
         ...mapMutations(['setLoading']),
-        ...mapMutations('phraseForm', ['setInputPhrase']),
-        ...mapActions('phraseForm', ['sendPhraseForm']),
+        ...mapMutations('reviewForm', ['setInputPhrase']),
+        ...mapActions('reviewForm', ['approvePhrase']),
         updateInputPhrase() {
             //
         },
@@ -67,14 +67,11 @@ export default defineComponent({
             textField.style.height = textField.scrollHeight + 'px';
         },
         async checkInput() {
-            this.setLoading({ whichLoading: 'inputPhrase', newLoading: true })
             // store.commit('setInputTags', selectedTags.value); // Сохраняем выбранные теги
-            await this.sendPhraseForm();
-            this.setLoading({ whichLoading: 'inputPhrase', newLoading: false })
-        },
-        mounted() {
-            this.setLoading({ whichLoading: 'inputPhrase', newLoading: false })
-        },
+            this.isLoading = true
+            await this.approvePhrase();
+            this.isLoading = false
+        }
     }
 })
 </script>

@@ -46,15 +46,15 @@ export default defineComponent({
         }
     },
     computed: {
-        ...mapGetters('phraseForm', ['inputSelectedTags']),
+        ...mapGetters('reviewForm', ['inputSelectedTags']),
         unselectedSearchResultTags(): TagObject[] {
             return (this.tagSearchResult || []).filter((tag: TagObject) => !(this.inputSelectedTags || []).some((selectedTag: TagObject) => selectedTag.id === tag.id))
         }
     },
     methods: {
-        ...mapActions('phraseForm', ['GetRecommendedTags']),
+        ...mapActions('reviewForm', ['GetRecommendedTags']),
         ...mapActions(['getTagsSearch']),
-        ...mapMutations('phraseForm', ['setInputSelectedTags', 'addInputSelectedTag', 'removeInputSelectedTag']),
+        ...mapMutations('reviewForm', ['setInputSelectedTags', 'addInputSelectedTag', 'removeInputSelectedTag']),
         selectTag(tag: TagObject) {
             this.addInputSelectedTag(tag)
         },

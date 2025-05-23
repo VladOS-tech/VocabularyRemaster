@@ -12,6 +12,7 @@ interface State {
     username: string,
     tabName: string,
     requestList: PhraseObject[] | null,
+    staffPhraseList: PhraseObject[]  | null,
     staffList: StaffObject[] | null,
     requestLoading: boolean,
     phraseLoading: boolean,
@@ -24,6 +25,7 @@ const state: State = {
     username: '' as string,
     tabName: '',
     requestList: null,
+    staffPhraseList: [],
     staffList: null,
     requestLoading: true,
     phraseLoading: true,
@@ -36,6 +38,9 @@ const getters = {
     },
     requestList(state: State) {
         return state.requestList
+    },
+    staffPhraseList(state: State) {
+        return state.staffPhraseList
     },
     staffList(state: State) {
         return state.staffList
@@ -67,6 +72,9 @@ const mutations = {
     setRequestList(state: State, newList: PhraseObject[]) {
         state.requestList = newList
     },
+    setStaffPhraseList(state: State, newList: PhraseObject[]) {
+        state.staffPhraseList = newList
+    },
     setStaffList(state: State, newList: StaffObject[]) {
         state.staffList = newList
     },
@@ -94,7 +102,7 @@ const actions = {
     async GetRequestsInfo({commit}: {commit: any}) {
         commit('setRequestList', null)
         try {
-            const request = 'http://127.0.0.1:8000/api/moderator/phraseologies'
+            const request = 'http://127.0.0.1:8000/api/moderator/phraseologies?status=pending'
             const { data } = await axios.get(request, {
                 headers: {
                     Authorization: `Bearer ${state.token}`
@@ -104,20 +112,31 @@ const actions = {
             commit('setRequestList', data)
             console.log(data)
         } catch (error) {
-            if(error instanceof AxiosError && error.status){
+            if(error instanceof AxiosError && error.status == 401){
                 router.push('/login')
             }
             console.error('Ошибка при загрузке запросов:', error)
         }
     },
-    async GetPhraseInfoModerator({commit}: {commit: any}) {
-        commit('setPhraseLoading', true)
-        commit('setPhraseList', null)
-        await new Promise(resolve => {
-            setTimeout(resolve, 2000)
-        })
-        commit('setPhraseList', ExampleRequests)
-        commit('setPhraseLoading', false)
+    async GetPhraseInfoModerator({commit, dispatch}: {commit: any, dispatch: any}) {
+        commit('setStaffPhraseList', null)
+        try {
+            const request = 'http://127.0.0.1:8000/api/moderator/phraseologies?status[]=approved&status[]=deletion_requested'
+            const { data } = await axios.get(request, {
+                headers: {
+                    Authorization: `Bearer ${state.token}`
+                }
+            })
+            // commit('setState', { key: 'popularTags', value: data })
+            commit('setStaffPhraseList', data)
+            console.log(data)
+        } catch (error) {
+            if(error instanceof AxiosError && error.status == 401){
+                // return await router.push('/login')
+                return await dispatch('logoutAction')
+            }
+            console.error('Ошибка при загрузке фразеологизмов:', error)
+        }
     },
     async GetStaffInfoAdministrator({commit}: {commit: any}) {
         commit('setStaffLoading', true)

@@ -3,6 +3,7 @@ import userStore from "./user-store";
 import loginStore from "./login-store";
 import staffStore from "./staff-store";
 import phraseForm from "./phrase-request-form"
+import reviewForm from "./request-review-form"
 // ------------
 
 export default createStore({
@@ -23,6 +24,7 @@ export default createStore({
     userStore,
     loginStore,
     staffStore,
-    phraseForm: phraseForm
+    phraseForm: phraseForm,
+    reviewForm: reviewForm
   }
 });

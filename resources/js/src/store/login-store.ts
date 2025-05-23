@@ -1,22 +1,14 @@
 import axios, { AxiosError } from "axios"
 import router from "@/router"
 
-interface State {
-    login: string,
-    password: string
-}
-
 type loginResponse = {
     message: string,
     user_id: string,
     role: string,
-    token: string
+    token: string,
+    name: string
 }
 
-const state: State = {
-    login: '',
-    password: ''
-}
 
 const getters = {
     // login(state: State){
@@ -38,9 +30,9 @@ const mutations = {
 
 const actions = {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    async loginAction({commit}: any, payload: {login: string, password: string}): Promise<string>{
-        try{
-            console.log(payload.login,'+', payload.password)
+    async loginAction({ commit }: any, payload: { login: string, password: string }): Promise<string> {
+        try {
+            console.log(payload.login, '+', payload.password)
             const apiRequest = 'http://localhost:8000/api/login'
             // const { data } = await axios.post(apiRequest)
             const { data } = await axios.post<loginResponse>(apiRequest, {
@@ -48,43 +40,57 @@ const actions = {
                 password: payload.password
             })
             // window.alert(`login successfull: ${data.token}`)
+            console.log(data)
             commit('setToken', data.token, { root: true })
-            commit('setUsername', data.user_id, { root: true })
+            commit('setUsername', data.name, { root: true })
             commit('setUserRole', data.role, { root: true })
             localStorage.setItem('token', data.token)
-            localStorage.setItem('username', data.user_id)
+            localStorage.setItem('username', data.name)
             localStorage.setItem('role', data.role)
-            if(data.role === 'moderator'){
+            if (data.role === 'moderator') {
                 await router.push('/moderator')
-            }else{
+            } else {
                 await router.push('/admin')
             }
         }
-        catch(e){
+        catch (e) {
             const error = e as AxiosError
-            if(error.response){
+            if (error.response) {
                 const code = error.code
                 // window.alert(code)
                 // const message = error.message
-                if(code && code === 'ERR_BAD_RESPONSE'){
+                if (code && code === 'ERR_BAD_RESPONSE') {
                     return 'Неверные данные'
                 }
             }
-            else if(error.request){
+            else if (error.request) {
                 window.alert(`Unable to send login request`)
             }
         }
         return 'success'
     },
-    logoutAction({commit}: any){
+    async logoutAction({ commit, rootGetters }: any) {
+        const token = rootGetters.token
+        // window.alert(token)
+        if (localStorage.getItem('token') !== '') try {
+            const { data } = await axios.post('http://127.0.0.1:8000/api/logout', {
+                headers: {
+                    // temporary from localstorage (currently does not work)
+                    Authorization: `Bearer ${ token }`
+                }
+            })
+            window.alert(data.message)
+        } catch (error) {
+            console.error('Ошибка при выходе:', error)
+        }
         commit('setToken', '', { root: true })
         commit('setUsername', '', { root: true })
         commit('setUserRole', '', { root: true })
         localStorage.setItem('token', '')
         localStorage.setItem('username', '')
-        localStorage.setItem('role', ''),
-        router.push('/login')
+        localStorage.setItem('role', '')
+        return await router.push('/login')
     }
 }
 
-export default { mutations, getters, state, actions }
+export default { mutations, getters, actions }

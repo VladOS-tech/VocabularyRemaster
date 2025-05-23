@@ -9,15 +9,18 @@
         </div>
         <h3>Значение</h3>
         <div class="meaning-block meaning-block-light">
-            <h4>{{PhraseData.meanings}}</h4>
+            <h4>{{PhraseData.meaning}}</h4>
             <p class="meaning-example-text" v-for="context in PhraseData.contexts" :key="context.id">
                 "{{context.content}}"
             </p>
         </div>
         <div class="moder-phrase-button">
-            <button class="button button-large remove-phrase-button">
+            <button class="button button-large remove-phrase-button" :disabled="PhraseData.status === 'deletion_requested'">
                 Запросить удаление
             </button>
+            <div class="deletion-requested" v-if="PhraseData.status === 'deletion_requested'">
+                Удаление запрошено
+            </div>
         </div>
     </div>
 </template>

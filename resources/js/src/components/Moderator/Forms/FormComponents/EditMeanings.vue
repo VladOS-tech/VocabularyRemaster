@@ -54,7 +54,7 @@ export default defineComponent({
         }
     },
     computed: {
-        ...mapGetters('phraseForm', ['inputMeaningError', 'inputMeaning', 'inputExamples', 'inputExamplesErrors']),
+        ...mapGetters('reviewForm', ['inputMeaningError', 'inputMeaning', 'inputExamples', 'inputExamplesErrors']),
         meaning: {
             get(): string {
                 return this.inputMeaning
@@ -68,7 +68,7 @@ export default defineComponent({
         }
     },
     methods: {
-        ...mapMutations('phraseForm', ['setInputMeaning', 'setInputMeaningError', 'addInputExample', 'removeInputExample', 'setInputExample']),
+        ...mapMutations('reviewForm', ['setInputMeaning', 'setInputMeaningError', 'addInputExample', 'removeInputExample', 'setInputExample']),
         heightResize(e: Event) {
             console.log('a')
             const textField = e.target as HTMLTextAreaElement
