@@ -32,5 +32,6 @@ Route::middleware(['auth:login', 'role:moderator'])->group(function () {
     Route::post('/moderator/tags', [ModeratorTagController::class, 'store']);
     Route::put('/moderator/tags/{id}', [ModeratorTagController::class, 'update']);
     Route::delete('/moderator/tags/{id}', [ModeratorTagController::class, 'destroy']);
+    
     Route::post('/logout', [AuthController::class, 'logout']);
 });
