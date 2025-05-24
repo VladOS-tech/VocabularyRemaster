@@ -255,7 +255,7 @@ export default {
                 },
             }
             try {
-                const { data } = await axios.patch<response>(request, {} , config)
+                const { data } = await axios.delete<response>(request, config)
                 window.alert(`${data.message}`)
                 return await router.push('/moderator')
             } catch (e) {

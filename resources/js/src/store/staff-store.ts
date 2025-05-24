@@ -145,7 +145,7 @@ const actions = {
     async requestPhraseDeletion({commit, dispatch}: {commit: any, dispatch: any}, payload: {phraseId: string}){
         try {
             const request = `http://127.0.0.1:8000/api/moderator/phraseologies/${payload.phraseId}/delete-request`
-            const { data } = await axios.delete(request, {
+            const { data } = await axios.patch(request, {}, {
                 headers: {
                     Authorization: `Bearer ${state.token}`
                 }

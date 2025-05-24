@@ -60,4 +60,10 @@ import { mapActions } from 'vuex';
 <style scoped>
     @import url('@/assets/style/elements/phrase-style.css');
     @import url('@/assets/style/moderator/elements/phrase-item.css');
+
+    .deletion-requested{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
 </style>
