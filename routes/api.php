@@ -7,6 +7,7 @@ use App\Http\Controllers\PublicTagController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ModeratorTagController;
 use App\Http\Controllers\ModeratorPhraseologyController;
+use App\Http\Controllers\AdminModeratorController;
 
 
 
@@ -32,6 +33,11 @@ Route::middleware(['auth:login', 'role:moderator'])->group(function () {
     Route::post('/moderator/tags', [ModeratorTagController::class, 'store']);
     Route::put('/moderator/tags/{id}', [ModeratorTagController::class, 'update']);
     Route::delete('/moderator/tags/{id}', [ModeratorTagController::class, 'destroy']);
-    
+
     Route::post('/logout', [AuthController::class, 'logout']);
+});
+
+Route::middleware(['auth:login', 'role:admin'])->group(function(){
+    Route::get('/admin/moderators', [AdminModeratorController::class, 'index']);
+    Route::post('/admin/moderators', [AdminModeratorController::class, 'store']);
 });
