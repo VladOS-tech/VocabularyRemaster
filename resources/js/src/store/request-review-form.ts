@@ -194,11 +194,12 @@ export default {
                 }
                 console.log(requestContent)
                 try {
-                    const { data } = await axios.put<response>(request, requestContent, config)
-                    window.alert(`${data.message}`)
+                    await axios.put<response>(request, requestContent, config)
+                    const approveResponse = await axios.patch<response>(`http://127.0.0.1:8000/api/moderator/phraseologies/${state.phraseId}/approve`, {} , config)
+                    window.alert(`${approveResponse.data.message}`)
                     return await router.push('/moderator')
                 } catch (e) {
-                    if(e instanceof AxiosError && e.status === 401){
+                    if (e instanceof AxiosError && e.status === 401) {
                         return await dispatch('logoutAction', null, { root: true })
                     }
                     window.alert('Ой, у вас не получилось😵‍💫')
@@ -241,6 +242,28 @@ export default {
                     return await dispatch('logoutAction', null, { root: true })
                 }
                 console.error('Ошибка при загрузке запроса:', error)
+            }
+        },
+        async rejectPhrase({ state, rootGetters, dispatch }: { state: State, rootGetters: any, dispatch: any }) {
+
+            const token = rootGetters.token
+            console.log(token)
+            const request = `http://127.0.0.1:8000/api/moderator/phraseologies/${state.phraseId}/reject`
+            const config = {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                },
+            }
+            try {
+                const { data } = await axios.patch<response>(request, {} , config)
+                window.alert(`${data.message}`)
+                return await router.push('/moderator')
+            } catch (e) {
+                if (e instanceof AxiosError && e.status === 401) {
+                    return await dispatch('logoutAction', null, { root: true })
+                }
+                window.alert('Ой, у вас не получилось😵‍💫')
+                console.error(e)
             }
         }
     }

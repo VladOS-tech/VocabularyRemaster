@@ -73,7 +73,7 @@ const actions = {
         const token = rootGetters.token
         // window.alert(token)
         if (localStorage.getItem('token') !== '') try {
-            const { data } = await axios.post('http://127.0.0.1:8000/api/logout', {
+            const { data } = await axios.post('http://127.0.0.1:8000/api/logout', {} , {
                 headers: {
                     // temporary from localstorage (currently does not work)
                     Authorization: `Bearer ${ token }`

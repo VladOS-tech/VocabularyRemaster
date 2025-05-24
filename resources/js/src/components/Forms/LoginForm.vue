@@ -6,7 +6,7 @@
         <div class="separator-line"/>
         <div class="login-field-holder">
             <h4>Email:</h4>
-            <input type="text" class="input-field input-field-regular" v-model="login">
+            <input type="text" class="input-field input-field-regular" v-model="login" >
         </div>
         <div v-if="errors.login" class="input-error">{{ errors.login }}</div>
         <div class="login-field-holder">
@@ -36,8 +36,8 @@ import { mapActions } from 'vuex'
     export default defineComponent({
         data(){
             return{
-                login: '' as string,
-                password: '' as string,
+                login: 'user12345@example.com' as string,
+                password: 'securePass456' as string,
                 errors:{
                     login: null as null | string,
                     password: null as null | string,

@@ -15,7 +15,7 @@
             </p>
         </div>
         <div class="moder-phrase-button">
-            <button class="button button-large remove-phrase-button" :disabled="PhraseData.status === 'deletion_requested'">
+            <button class="button button-large remove-phrase-button" @click="requestDeletion" :disabled="PhraseData.status === 'deletion_requested'">
                 Запросить удаление
             </button>
             <div class="deletion-requested" v-if="PhraseData.status === 'deletion_requested'">
@@ -28,6 +28,7 @@
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
 import PhraseObject from '@/assets/types/PhraseObject';
+import { mapActions } from 'vuex';
 
     export default defineComponent({
         props:{
@@ -36,10 +37,21 @@ import PhraseObject from '@/assets/types/PhraseObject';
                 required: true
             }
         },
+        data(){
+            return{
+                isLoading: false as boolean
+            }
+        },
         methods:{
+            ...mapActions(['requestPhraseDeletion']),
             dateToString(date: Date): string{
                 let newDate: RegExpMatchArray | null = date.toString().match(/^(\d{4})-(\d{2})-(\d{2}).*/)
                 return `${newDate?.[3]}.${newDate?.[2]}.${newDate?.[1]}`
+            },
+            async requestDeletion(){
+                this.isLoading = true
+                await this.requestPhraseDeletion({phraseId: this.PhraseData.id})
+                this.isLoading = false
             }
         }
     })

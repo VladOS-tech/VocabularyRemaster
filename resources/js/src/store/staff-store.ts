@@ -95,6 +95,10 @@ const mutations = {
     },
     setToken(state: State, token: string) {
       state.token = token;
+    },
+    setPhraseStatus(state: State, payload: {phraseId: string, newStatus: string}){
+        const phrase = state.staffPhraseList?.find(el => el.id === payload.phraseId)
+        if (phrase) phrase.status = payload.newStatus
     }
 }
 
@@ -136,6 +140,24 @@ const actions = {
                 return await dispatch('logoutAction')
             }
             console.error('Ошибка при загрузке фразеологизмов:', error)
+        }
+    },
+    async requestPhraseDeletion({commit, dispatch}: {commit: any, dispatch: any}, payload: {phraseId: string}){
+        try {
+            const request = `http://127.0.0.1:8000/api/moderator/phraseologies/${payload.phraseId}/delete-request`
+            const { data } = await axios.delete(request, {
+                headers: {
+                    Authorization: `Bearer ${state.token}`
+                }
+            })
+            commit('setPhraseStatus', { phraseId: payload.phraseId, newStatus: 'deletion_requested' })
+            console.log(data)
+        } catch (error) {
+            if(error instanceof AxiosError && error.status == 401){
+                // return await router.push('/login')
+                return await dispatch('logoutAction')
+            }
+            console.error('Ошибка при запросе удаления:', error)
         }
     },
     async GetStaffInfoAdministrator({commit}: {commit: any}) {

@@ -22,7 +22,7 @@
                 @click="checkInput" :disabled="isLoading">
                 Одобрить
             </button>
-            <button class="button button-large cancel-meaning-button" :disabled="isLoading">
+            <button class="button button-large cancel-meaning-button" @click="reject" :disabled="isLoading">
                 Отклонить
             </button>
         </div>
@@ -57,7 +57,7 @@ export default defineComponent({
     methods: {
         ...mapMutations(['setLoading']),
         ...mapMutations('reviewForm', ['setInputPhrase']),
-        ...mapActions('reviewForm', ['approvePhrase']),
+        ...mapActions('reviewForm', ['approvePhrase', 'rejectPhrase']),
         updateInputPhrase() {
             //
         },
@@ -70,6 +70,11 @@ export default defineComponent({
             // store.commit('setInputTags', selectedTags.value); // Сохраняем выбранные теги
             this.isLoading = true
             await this.approvePhrase();
+            this.isLoading = false
+        },
+        async reject(){
+            this.isLoading = true
+            await this.rejectPhrase();
             this.isLoading = false
         }
     }

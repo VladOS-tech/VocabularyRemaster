@@ -9,7 +9,7 @@ import RequestBlock from "@/components/Moderator/Blocks/RequestBlock.vue";
 import PhraseBlockHolder from "@/components/Moderator/Blocks/PhraseBlockHolder.vue";
 import AdministratorMain from "@/views/AdminPages/AdministratorMain.vue";
 import StaffBlock from "@/components/Administrator/Blocks/StaffBlock.vue";
-import TagsBlockHolder from "@/components/Moderator/Blocks/TagsBlockHolder.vue";
+import TagsPage from "@/components/Moderator/Blocks/TagsPage.vue";
 import store from "@/store";
 import RequestReview from "@/views/ModeratorPages/RequestReview.vue";
 
@@ -61,7 +61,7 @@ const routes: Array<RouteRecordRaw> = [
     },
     {
       path: 'tags',
-      component: TagsBlockHolder,
+      component: TagsPage,
       meta: {
         requiredRole: 'moderator'
       },
