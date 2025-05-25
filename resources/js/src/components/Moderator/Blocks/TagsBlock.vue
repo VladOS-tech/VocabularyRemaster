@@ -10,37 +10,38 @@
         <div v-if="isLoading" class="tag-loading-block">
             <LoadingIcon/>
         </div>
-        <div class="tag-list-item" v-else v-for="(item, index) in Array(20)" :key="index">
-            <div class="tag tag-generic">
-                item
-            </div>
-            <div class="use-count">
-                index
-            </div>
-            <button class="button button-large delete-button">
-                Удалить
-            </button>
-        </div>
+        <TagItem v-else v-for="(tag) in tagList" :key="tag.id" :tagInfo="tag"/>
     </div>
 </template>
 
 <script lang="ts">
 import LoadingIcon from '@/components/Misc/LoadingIcon.vue';
 import { defineComponent } from 'vue';
+import TagItem from './TagItem.vue';
+import { mapActions, mapGetters } from 'vuex';
+import TagObject from '@/assets/types/TagObject';
 
 export default defineComponent({
     components:{
-        LoadingIcon
+        LoadingIcon,
+        TagItem
     },
     data(){
         return{
             isLoading: true as boolean
         }
     },
+    computed:{
+        ...mapGetters(['staffTagList']),
+        tagList(): TagObject[] | null{
+            return this.staffTagList
+        }
+    },
+    methods:{
+        ...mapActions(['getTagsInfo'])  
+    },
     async beforeMount(){
-        await new Promise(resolve => [
-            setTimeout(resolve, 2000)
-        ])
+        await this.getTagsInfo()
         this.isLoading = false
     }
 })
@@ -57,19 +58,6 @@ export default defineComponent({
 
 .tag-loading-block{
     grid-column: 1 / -1;
-}
-
-.tag-list-item {
-    display: contents;
-}
-
-.tag-list-item:after {
-    content: "";
-    grid-column: 1 / -1;
-    height: 1px;
-    background: var(--border-color);
-    display: block;
-    margin-top: -1px;
 }
 
 .tag-list-header {

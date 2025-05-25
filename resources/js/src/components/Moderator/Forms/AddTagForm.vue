@@ -3,18 +3,32 @@
         Добавить новый тег:
         <div class="add-tag-input">
             <div class="tag tag-generic">
-                <input type="text" placeholder="Новый тег" class="input-field input-field-regular">
+                <input type="text" placeholder="Новый тег" class="input-field input-field-regular" v-model="content">
             </div>
-            <button class="button button-large add-tag-button">Добавить</button>
+            <button class="button button-large add-tag-button" :disabled="isLoading || content.length < 3" @click="submitTag">Добавить</button>
         </div>
     </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
+import { mapActions } from 'vuex';
 
     export default defineComponent({
-
+        data(){
+            return{
+                isLoading: false as boolean,
+                content: '' as string
+            }
+        },
+        methods:{
+            ...mapActions(['addTagSuggestion']),
+            async submitTag(){
+                this.isLoading = true
+                await this.addTagSuggestion({content: this.content})
+                this.isLoading = false
+            }
+        }
     })
 </script>
 
