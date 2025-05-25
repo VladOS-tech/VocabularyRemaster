@@ -92,39 +92,51 @@ class AdminModeratorController extends Controller
 
     public function update(Request $request, $id)
     {
-        $moderator = Moderator::findOrFail($id);
-        $user = $moderator->user;
-
         $validated = $request->validate([
-            'name' => 'sometimes|string|max:255',
-            'password' => 'sometimes|string|min:6',
-            'contact' => 'sometimes|string|max:255|unique:moderators,contact,' . $id
+            'name' => 'nullable|string|max:255',
+            'contact' => 'nullable|string|unique:moderators,contact,' . $id,
         ]);
 
+        $moderator = Moderator::with('user')->findOrFail($id);
+
         if (isset($validated['name'])) {
-            $user->name = $validated['name'];
+            $moderator->user->name = $validated['name'];
+            $moderator->user->save();
         }
-        if (isset($validated['password'])) {
-            $user->password = Hash::make($validated['password']);
-        }
-        $user->save();
 
-        if (isset($validated['contact'])) {
-            $moderator->contact = $validated['contact'];
-        }
-        $moderator->save();
+        $moderator->update([
+            'contact' => $validated['contact'] ?? $moderator->contact,
+        ]);
 
-        return response()->json($moderator);
+        return response()->json([
+            'message' => 'Данные модератора обновлены',
+            'data' => [
+                'id' => $moderator->id,
+                'name' => $moderator->user->name,
+                'contact' => $moderator->contact,
+                'online_status' => $moderator->online_status,
+            ]
+        ]);
     }
+
 
     public function destroy($id)
     {
-        $moderator = Moderator::findOrFail($id);
+        $moderator = Moderator::with('user')->findOrFail($id);
+
         $user = $moderator->user;
+        $login = $user->login;
 
         $moderator->delete();
         $user->delete();
 
-        return response()->json(['message' => 'Модератор удалён']);
+        if ($login->users()->count() === 0) {
+            $login->delete();
+        }
+
+        return response()->json([
+            'message' => 'Модератор и связанные данные удалены',
+        ]);
     }
+
 }

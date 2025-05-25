@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Login;
 use App\Models\User;
+use App\Models\Moderator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -56,6 +57,14 @@ class AuthController extends Controller
             'user_id' => $user->id,
             'role_id' => $user->role_id,
         ])->plainTextToken;
+
+        if ($user -> role_id === 2){
+             $moderator = Moderator::where('user_id', $user->id)->first();
+            if ($moderator) {
+                $moderator->update(['online_status' => true]);
+            }
+    }
+
         return response()->json([
             'message' => 'Авторизация успешна',
             'user_id' => $user->id,
@@ -86,7 +95,16 @@ class AuthController extends Controller
 
     public function logout(Request $request)
     {
-        $request->user()->currentAccessToken()->delete();
+        $user = $request->user();
+
+        if ($user->role_id === 2) {
+            Moderator::where('user_id', $user->id)
+                ->update(['online_status' => false]);
+        }
+
+        $user->currentAccessToken()->delete();
+
         return response()->json(['message' => 'Вы вышли из системы']);
     }
+
 }
