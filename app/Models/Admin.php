@@ -9,8 +9,6 @@ class Admin extends Model
 {
     use HasFactory;
 
-    protected $primaryKey = 'user_id';
-
     protected $table = 'admins';
 
     protected $fillable = [
@@ -21,6 +19,11 @@ class Admin extends Model
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function handledDeletionRequests()
+    {
+        return $this->hasMany(PhraseologyDeletionRequest::class, 'admin_id');
     }
 }
 

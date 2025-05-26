@@ -17,5 +17,10 @@ class Moderator extends Model
     {
         return $this->belongsTo(User::class, 'user_id');
     }
+
+    public function deletionRequests()
+    {
+        return $this->hasMany(PhraseologyDeletionRequest::class);
+    }
 }
 

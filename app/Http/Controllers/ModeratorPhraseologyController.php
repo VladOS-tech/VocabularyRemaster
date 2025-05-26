@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Phraseology;
+use App\Models\PhraseologyDeletionRequest;
 use App\Models\Context;
 use App\Models\Tag;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ModeratorPhraseologyController extends Controller
 {
@@ -185,26 +187,44 @@ class ModeratorPhraseologyController extends Controller
         return response()->json(['message' => 'Фразеологизм отклонён и удалён.']);
     }
 
-    public function markForDeletion($id)
-{
-    $phraseology = Phraseology::findOrFail($id);
+    public function markForDeletion(Request $request, $id)
+    {
+        $phraseology = Phraseology::findOrFail($id);
 
-    if ($phraseology->status !== 'approved') {
-        return response()->json(['message' => 'Фразеологизм уже обработан или уже помечен на удаление'], 400);
+        if ($phraseology->status !== 'approved') {
+            return response()->json(['message' => 'Фразеологизм уже обрабатывается или не подтверждён.'], 400);
+        }
+
+        $moderator = Auth::user()->moderator ?? null;
+        if (!$moderator) {
+            return response()->json(['message' => 'Вы не являетесь модератором.'], 403);
+        }
+
+        $existingRequest = PhraseologyDeletionRequest::where('phraseology_id', $phraseology->id)
+            ->where('status', 'pending')
+            ->first();
+
+        if ($existingRequest) {
+            return response()->json(['message' => 'Заявка на удаление уже существует.'], 409);
+        }
+
+        PhraseologyDeletionRequest::create([
+            'phraseology_id' => $phraseology->id,
+            'moderator_id' => $moderator->id,
+            'reason' => $request->input('reason'), 
+        ]);
+
+        $phraseology->update([
+            'status' => 'deletion_requested',
+        ]);
+
+        return response()->json([
+            'message' => 'Фразеологизм отправлен на удаление.',
+            'phraseology' => [
+                'id' => $phraseology->id,
+                'status' => $phraseology->status,
+            ]
+        ]);
     }
-
-    $phraseology->update([
-        'status' => 'deletion_requested',
-        'updated_at' => now(),
-    ]);
-
-    return response()->json([
-        'message' => 'Фразеологизм отправлен на удаление.',
-        'phraseology' => [
-            'id' => $phraseology->id,
-            'status' => $phraseology->status,
-        ]
-    ]);
-}
 }
 

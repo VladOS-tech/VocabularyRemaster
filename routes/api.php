@@ -8,8 +8,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ModeratorTagController;
 use App\Http\Controllers\ModeratorPhraseologyController;
 use App\Http\Controllers\AdminModeratorController;
-
-
+use App\Http\Controllers\AdminDeletionRequestController;
 
 Route::get('/sanctum/csrf-cookie', function (Request $request) {
     return response()->json(['csrf' => csrf_token()]);
@@ -41,4 +40,12 @@ Route::middleware(['auth:login', 'role:admin'])->group(function(){
     Route::get('/admin/moderators', [AdminModeratorController::class, 'index']);
     Route::post('/admin/moderators', [AdminModeratorController::class, 'store']);
     Route::delete('/admin/moderators/{id}', [AdminModeratorController::class, 'destroy']);
+});
+
+
+Route::middleware(['auth:sanctum', 'role:admin'])->prefix('admin/deletion-requests')->group(function () {
+    Route::get('/', [AdminDeletionRequestController::class, 'index']);
+    Route::get('/{id}', [AdminDeletionRequestController::class, 'show']);
+    Route::post('/{id}/approve', [AdminDeletionRequestController::class, 'approve']);
+    Route::post('/{id}/reject', [AdminDeletionRequestController::class, 'reject']);
 });

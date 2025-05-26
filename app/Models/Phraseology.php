@@ -35,5 +35,10 @@ class Phraseology extends Model
     {
         return $this->belongsToMany(Tag::class, 'phraseology_tag', 'phraseology_id', 'tag_id');
     }
+
+    public function deletionRequests()
+    {
+        return $this->hasMany(PhraseologyDeletionRequest::class);
+    }
 }
 
