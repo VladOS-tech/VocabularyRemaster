@@ -108,14 +108,17 @@ class AuthController extends Controller
 
     public function logout(Request $request)
     {
-        $user = $request->user();
+        $login = $request->user();
+        $user = User::where('login_id', $login->id)
+                ->where('role_id', 2)
+                ->first();
 
-        if ($user->role_id === 2) {
+        if ($user) {
             Moderator::where('user_id', $user->id)
-                ->update(['online_status' => false]);
+                        ->update(['online_status' => false]);
         }
 
-        $user->currentAccessToken()->delete();
+        $login->currentAccessToken()->delete();
 
         return response()->json(['message' => 'Вы вышли из системы']);
     }
