@@ -81,17 +81,30 @@ class AuthController extends Controller
             'user_id' => 'required|exists:users,id',
         ]);
 
-        $user = User::find($request->user_id);
+        $user = User::with('role', 'login')->find($request->user_id);
 
-        if (!$user) {
-            return response()->json(['message' => 'Пользователь не найден'], 404);
+        if (!$user || !$user->login) {
+            return response()->json(['message' => 'Пользователь или логин не найден'], 404);
+        }
+
+        $token = $user->login->createToken('api-token', [
+            'user_id' => $user->id,
+            'role_id' => $user->role_id,
+        ])->plainTextToken;
+
+        if ($user->role_id === 2) {
+            Moderator::where('user_id', $user->id)->update(['online_status' => true]);
         }
 
         return response()->json([
             'message' => 'Роль выбрана успешно',
             'role' => $user->role->name,
+            'user_id' => $user->id,
+            'token' => $token,
+            'name' => $user->name,
         ]);
     }
+
 
     public function logout(Request $request)
     {

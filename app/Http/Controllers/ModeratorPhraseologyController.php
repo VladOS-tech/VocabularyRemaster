@@ -197,7 +197,7 @@ class ModeratorPhraseologyController extends Controller
             return response()->json(['message' => 'Фразеологизм уже обрабатывается или не подтверждён.'], 400);
         }
 
-        $login = Auth::user(); // Login
+        $login = Auth::user();
 
         $user = User::where('login_id', $login->id)
                     ->where('role_id', 2)
