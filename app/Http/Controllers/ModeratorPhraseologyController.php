@@ -8,6 +8,8 @@ use App\Models\Context;
 use App\Models\Tag;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Models\User;
+use App\Models\Moderator;
 
 class ModeratorPhraseologyController extends Controller
 {
@@ -195,10 +197,21 @@ class ModeratorPhraseologyController extends Controller
             return response()->json(['message' => 'Фразеологизм уже обрабатывается или не подтверждён.'], 400);
         }
 
-        $moderator = Auth::user()->moderator ?? null;
-        // if (!$moderator) {
-        //     return response()->json(['message' => 'Вы не являетесь модератором.'], 403);
-        // }
+        $login = Auth::user(); // Login
+
+        $user = User::where('login_id', $login->id)
+                    ->where('role_id', 2)
+                    ->first();
+
+        if (!$user) {
+            return response()->json(['message' => 'Пользователь не имеет роли модератора.'], 403);
+        }
+
+        $moderator = Moderator::where('user_id', $user->id)->first();
+
+        if (!$moderator) {
+            return response()->json(['message' => 'Связанный модератор не найден.'], 404);
+        }
 
         $existingRequest = PhraseologyDeletionRequest::where('phraseology_id', $phraseology->id)
             ->where('status', 'pending')
