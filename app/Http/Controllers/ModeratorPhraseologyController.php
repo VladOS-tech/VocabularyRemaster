@@ -196,9 +196,9 @@ class ModeratorPhraseologyController extends Controller
         }
 
         $moderator = Auth::user()->moderator ?? null;
-        if (!$moderator) {
-            return response()->json(['message' => 'Вы не являетесь модератором.'], 403);
-        }
+        // if (!$moderator) {
+        //     return response()->json(['message' => 'Вы не являетесь модератором.'], 403);
+        // }
 
         $existingRequest = PhraseologyDeletionRequest::where('phraseology_id', $phraseology->id)
             ->where('status', 'pending')
