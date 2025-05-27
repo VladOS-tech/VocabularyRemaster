@@ -42,6 +42,7 @@ Route::middleware(['auth:login', 'role:admin'])->group(function(){
     Route::get('/admin/moderators/{id}', [AdminModeratorController::class, 'show']);
     Route::post('/admin/moderators', [AdminModeratorController::class, 'store']);
     Route::delete('/admin/moderators/{id}', [AdminModeratorController::class, 'destroy']);
+    Route::put('/admin/moderators/{id}', [AdminModeratorController::class, 'update']);
     Route::post('/logout', [AuthController::class, 'logout']);
 });
 
