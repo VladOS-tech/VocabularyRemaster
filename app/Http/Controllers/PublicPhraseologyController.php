@@ -140,7 +140,6 @@ class PublicPhraseologyController extends Controller
                         'related_model' => 'phraseologies',
                     ]);
     
-                    // событие можно вызывать после транзакции, но можно и внутри
                     event(new NotificationCreated($notification));
                 }
     
