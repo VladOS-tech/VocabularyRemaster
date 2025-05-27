@@ -9,11 +9,17 @@ class ModeratorTagController extends Controller
 {
     public function index()
     {
-        $tags = Tag::orderBy('content')->get(['id', 'content']);
+        $tags = Tag::withCount('phraseologies')
+            ->orderBy('content')
+            ->get(['id', 'content']);
 
         return response()->json([
             'message' => 'Список тегов загружен',
-            'data' => $tags,
+            'data' => $tags->map(fn($tag) => [
+                'id' => $tag->id,
+                'content' => $tag->content,
+                'count' => $tag->phraseologies_count,
+            ]),
         ]);
     }
 
