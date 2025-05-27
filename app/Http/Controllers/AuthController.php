@@ -28,12 +28,6 @@ class AuthController extends Controller
 
         $login = Login::where('email', $request->email)->first();
 
-        Log::info('Вход в систему', [
-            'email' => $request->email,
-            'пароль из запроса' => $request->password,
-            'пароль в базе' => $login->password
-        ]);
-
         if (!$login || !Hash::check($request->password, $login->password)) {
             return response()->json(['message' => 'Неверный логин или пароль'], 401);
         }

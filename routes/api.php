@@ -21,6 +21,8 @@ Route::post('/phraseologies', [PublicPhraseologyController::class, 'store']);
 Route::get('/tags', [PublicTagController::class, 'index']);
 
 Route::post('/login', [AuthController::class, 'login']);
+Route::post('/select-role', [AuthController::class, 'selectRole']);
+
 Route::middleware(['auth:login', 'role:moderator'])->group(function () {
     Route::get('/moderator/phraseologies', [ModeratorPhraseologyController::class, 'index']);
     Route::get('/moderator/phraseologies/{id}', [ModeratorPhraseologyController::class, 'show']);
