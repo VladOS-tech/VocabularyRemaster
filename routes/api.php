@@ -9,6 +9,7 @@ use App\Http\Controllers\ModeratorTagController;
 use App\Http\Controllers\ModeratorPhraseologyController;
 use App\Http\Controllers\AdminModeratorController;
 use App\Http\Controllers\AdminDeletionRequestController;
+use App\Http\Controllers\ModeratorNotificationController;
 
 Route::get('/sanctum/csrf-cookie', function (Request $request) {
     return response()->json(['csrf' => csrf_token()]);
@@ -42,10 +43,17 @@ Route::middleware(['auth:login', 'role:admin'])->group(function(){
     Route::delete('/admin/moderators/{id}', [AdminModeratorController::class, 'destroy']);
 });
 
-
 Route::middleware(['auth:sanctum', 'role:admin'])->prefix('admin/deletion-requests')->group(function () {
     Route::get('/', [AdminDeletionRequestController::class, 'index']);
     Route::get('/{id}', [AdminDeletionRequestController::class, 'show']);
     Route::post('/{id}/approve', [AdminDeletionRequestController::class, 'approve']);
     Route::post('/{id}/reject', [AdminDeletionRequestController::class, 'reject']);
 });
+
+Route::prefix('moderator/notifications')->middleware(['auth:sanctum', 'role:moderator'])->group(function () {
+    Route::get('/', [ModeratorNotificationController::class, 'index']);
+    Route::get('/unread-count', [ModeratorNotificationController::class, 'unreadCount']);
+    Route::patch('/{id}/read', [ModeratorNotificationController::class, 'markAsRead']);
+    Route::patch('/mark-all-read', [ModeratorNotificationController::class, 'markAllAsRead']);
+});
+

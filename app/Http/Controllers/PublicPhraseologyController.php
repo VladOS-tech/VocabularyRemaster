@@ -8,6 +8,9 @@ use App\Models\Tag;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
+use App\Models\Moderator;
+use App\Models\Notification;
+use App\Events\NotificationCreated;
 
 
 class PublicPhraseologyController extends Controller
@@ -111,6 +114,23 @@ class PublicPhraseologyController extends Controller
 
         if (!empty($validated['tags'])) {
             $phraseology->tags()->attach($validated['tags']);
+        }
+
+        $onlineModerators = Moderator::where('online_status', true)->get();
+        $targetModerators = $onlineModerators->isNotEmpty()
+            ? $onlineModerators
+            : Moderator::all();
+
+        foreach ($targetModerators as $moderator) {
+            $notification = Notification::create([
+                'moderator_id' => $moderator->id,
+                'type' => 'new_phraseology',
+                'content' => 'Добавлен новый фразеологизм: «' . $phraseology->content . '». Требуется модерация.',
+                'related_id' => $phraseology->id,
+                'related_model' => 'phraseologies',
+            ]);
+            event(new NotificationCreated($notification));
+
         }
 
         return response()->json([

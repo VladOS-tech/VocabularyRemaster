@@ -5,13 +5,17 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\PhraseologyDeletionRequest;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Notification;
+use App\Events\NotificationCreated;
 
 class AdminDeletionRequestController extends Controller
 {
     public function index()
     {
         $requests = PhraseologyDeletionRequest::where('status', 'pending')
-        ->with(['phraseology:id,content', 'moderator.user:id,name,email'])
+        ->with(['phraseology:id,content',
+            'moderator.user.login:id,email',
+            'moderator.user:id,name,login_id',])
         ->orderBy('created_at', 'desc')
         ->get()
         ->map(function ($request) {
@@ -19,7 +23,7 @@ class AdminDeletionRequestController extends Controller
                 'id' => $request->id,
                 'phraseology_content' => $request->phraseology->content,
                 'moderator_name' => $request->moderator->user->name ?? null,
-                'moderator_email' => $request->moderator->user->email ?? null,
+                'moderator_email' => $request->moderator->user->login->email ?? null,
                 'reason' => $request->reason,
                 'created_at' => $request->created_at,
             ];
@@ -88,6 +92,16 @@ class AdminDeletionRequestController extends Controller
             $deletionRequest->phraseology->delete();
         }
 
+        $notification = Notification::create([
+            'moderator_id' => $deletionRequest->moderator_id,
+            'type' => 'deletion_result',
+            'content' => 'Ваша заявка на удаление фразеологизма была одобрена. Фразеологизм удалён.',
+            'related_id' => $deletionRequest->id,
+            'related_model' => 'phraseology_deletion_requests',
+        ]);
+        event(new NotificationCreated($notification));
+
+
         return response()->json(['message' => 'Фразеологизм удалён.']);
     }
 
@@ -115,6 +129,15 @@ class AdminDeletionRequestController extends Controller
             'admin_id' => $admin->id,
             'reviewed_at' => now(),
         ]);
+
+        $notification = Notification::create([
+            'moderator_id' => $deletionRequest->moderator_id,
+            'type' => 'deletion_result',
+            'content' => 'Ваша заявка на удаление фразеологизма была отклонена. Комментарий администратора: ' . ($request->input('comment') ?? 'Без комментария.'),
+            'related_id' => $deletionRequest->id,
+            'related_model' => 'phraseology_deletion_requests',
+        ]);     
+        event(new NotificationCreated($notification));
 
         return response()->json(['message' => 'Заявка отклонена.']);
     }

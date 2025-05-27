@@ -9,21 +9,23 @@ class Notification extends Model
 {
     use HasFactory;
 
-    protected $table = 'notifications';
-
     protected $fillable = [
-        'moderator_id', 
-        'content',      
-        'is_read',      
-    ];
-
-    protected $casts = [
-        'is_read' => 'boolean',
+        'moderator_id',
+        'type',
+        'content',
+        'related_id',
+        'related_model',
+        'is_read',
     ];
 
     public function moderator()
     {
-        return $this->belongsTo(Moderator::class, 'moderator_id');
+        return $this->belongsTo(Moderator::class);
+    }
+
+    public function related()
+    {
+        return $this->morphTo(null, 'related_model', 'related_id');
     }
 }
 
