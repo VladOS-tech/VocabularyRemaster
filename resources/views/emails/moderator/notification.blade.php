@@ -4,7 +4,7 @@
 {{ $notification->content }}
 
 @isset($notification->related_model)
-<x-mail::button :url="'http://localhost:8000/moderator/' . $notification->related_model . '/' . $notification->related_id">
+<x-mail::button :url="'http://localhost:5050/moderator/approval/' . $notification->related_id">
 Перейти к объекту
 </x-mail::button>
 @endisset

@@ -13,10 +13,11 @@ class Moderator extends Model
 
     protected $fillable = [
         'user_id',
-        'contact',
-        'online_status',
-        'email',
+        'notification_email',
+        'telegram_chat_id',
         'wants_email_notifications',
+        'wants_telegram_notifications',
+        'online_status',
     ];
     public function user()
     {

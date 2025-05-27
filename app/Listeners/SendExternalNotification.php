@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Log;
 use App\Mail\ModeratorNotificationMail;
 
-class SendExternalNotification
+class SendExternalNotification implements ShouldQueue
 {
     /**
      * Create the event listener.
@@ -27,16 +27,15 @@ class SendExternalNotification
         $notification = $event->notification;
         $moderator = $notification->moderator;
 
-        Log::info('Отправка email уведомления', [
+        Log::info('QUEUE EMAIL SEND', [
             'moderator_id' => $moderator->id,
-            'email' => $moderator->notification_email,
-            'contact' => $moderator->contact,
+            'email' => $moderator->email,
             'wants_email_notifications' => $moderator->wants_email_notifications,
-            'notification_content' => $notification->content
+            'notification_content' => $notification->content,
         ]);
 
-        if ($moderator->wants_email_notifications && $moderator->email) {
-            Mail::to($moderator->email)->send(
+        if ($moderator->wants_email_notifications && $moderator->notification_email) {
+            Mail::to($moderator->notification_email)->send(
                 new ModeratorNotificationMail($notification)
             );
         }
