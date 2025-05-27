@@ -12,6 +12,9 @@ import StaffBlock from "@/components/Administrator/Blocks/StaffBlock.vue";
 import TagsPage from "@/components/Moderator/Blocks/TagsPage.vue";
 import store from "@/store";
 import RequestReview from "@/views/ModeratorPages/RequestReview.vue";
+import AddModerator from "@/views/AdminPages/AddModerator.vue";
+import EditModerator from "@/views/AdminPages/EditModerator.vue";
+import DeletionRequestsBlock from "@/components/Administrator/Blocks/DeletionRequestsBlock.vue";
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -84,7 +87,7 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/admin',
     meta: {
-      requiredRole: 'administrator'
+      requiredRole: 'admin'
     },
     components: {
       default: AdministratorMain,
@@ -94,10 +97,40 @@ const routes: Array<RouteRecordRaw> = [
       path: 'staff',
       component: StaffBlock,
       meta: {
-        requiredRole: 'administrator'
+        requiredRole: 'admin'
+      },
+    },
+  {
+      path: 'deletion-requests',
+      component: DeletionRequestsBlock,
+      meta: {
+        requiredRole: 'admin'
       },
     }]
-  }
+  },
+  {
+      path: '/admin/add-moderator',
+      components: {
+        nav: StaffHeader,
+        default: AddModerator
+      },
+      meta: {
+        requiredRole: 'admin'
+      },
+    },
+    {
+      path: '/admin/edit-moderator/:id',
+      components: {
+        nav: StaffHeader,
+        default: EditModerator
+      },
+      props:{
+        default: true
+      },
+      meta: {
+        requiredRole: 'admin'
+      },
+    },
 ];
 
 const router = createRouter({
@@ -108,6 +141,9 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
   if(to.fullPath === '/moderator'){
     return next('/moderator/requests')
+  }
+  if(to.fullPath === '/admin'){
+    return next('/admin/staff')
   }
   if (to.meta.requiredRole) {
     // window.alert(`${store.getters.role} and ${to.meta.requiredRole}`)

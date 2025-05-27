@@ -1,4 +1,4 @@
-interface SortingOption{
+type SortingOption = {
     displayName: string,
     name: string,
     icon: string

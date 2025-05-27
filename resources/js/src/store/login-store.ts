@@ -54,14 +54,10 @@ const actions = {
             }
         }
         catch (e) {
+            console.log(e)
             const error = e as AxiosError
             if (error.response) {
-                const code = error.code
-                // window.alert(code)
-                // const message = error.message
-                if (code && code === 'ERR_BAD_RESPONSE') {
-                    return 'Неверные данные'
-                }
+                return (error.response.data as {message: string}).message
             }
             else if (error.request) {
                 window.alert(`Unable to send login request`)

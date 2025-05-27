@@ -1,13 +1,13 @@
 <template>
     <div class="moderator-main-grid">
         <div class="sort-area">
-            <sortingSelectionModerator/>
+            <!-- <sortingSelectionModerator/>
                 <form action="-IDK-" class="search-block">
                 <input id="search-field-moderator-id" type="text" class="moderator-search-field moderator-search-field-light" placeholder="Поиск" v-model="searchInput"/>
                 <label for="search-field-moderator-id">
                     <img src="@/assets/images/icons/search-icon.svg" alt="search-icon" class="search-icon-header search-icon-header-light">
                 </label>
-            </form>
+            </form> -->
         </div>
         <div class="tabs-area">
             <router-link :class="tabName=='requests' ? 'tab-selected' : 'tab-unselected'" class="tab-style button tab-button" to="/moderator/requests">Запросы на добавление</router-link>
@@ -34,7 +34,7 @@ import sortingSelectionModerator from '@/components/Moderator/Misc/SortingSelect
 export default defineComponent({
 
         components: {
-            sortingSelectionModerator
+            // sortingSelectionModerator
         },
         data() {
             return{

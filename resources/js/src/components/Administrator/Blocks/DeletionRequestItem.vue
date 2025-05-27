@@ -1,29 +1,35 @@
 <template>
     <div class="phrase-block phrase-block-light">
         <p class="post-date post-date-light">
-            {{ dateToString(PhraseData.date) }}
+            {{ dateToString(RequestData.created_at) }}
         </p>
-        <h2>{{ PhraseData.content }}</h2>
+        <!-- <h2>{{ RequestData.content }}</h2>
         <div class="tags-block">
-            <div class="tag tag-generic" v-for="tag in PhraseData.tags" :key="tag.id">{{ tag.content }}</div>
+            <div class="tag tag-generic" v-for="tag in RequestData.tags" :key="tag.id">{{ tag.content }}</div>
         </div>
-        <h3>Значение</h3>
+        <h3>Значение:</h3>
         <div class="meaning-block meaning-block-light">
-            <h4>{{ PhraseData.meaning }}</h4>
-            <p class="meaning-example-text" v-for="context in PhraseData.contexts" :key="context.id">
-                "{{ context.content }}"
+            <h4>{{RequestData.meaning}}</h4>
+            <p class="meaning-example-text" v-for="(context, index) in RequestData.contexts" :key="index">
+                "{{context.content}}"
             </p>
+        </div> -->
+        <h3>{{ RequestData.phraseology_content }}</h3>
+        <div class="deletion-request-row">
+            <h4>Предложил:</h4>
+            <h4>{{ RequestData.moderator_name }} ({{ RequestData.moderator_email }})</h4>
         </div>
-        <div class="moder-phrase-button">
-            <button class="button button-large remove-phrase-button"
-                :disabled="PhraseData.status === 'deletion_requested'" @click="showReasonForm">
-                Запросить удаление
-            </button>
-            <div class="deletion-requested" v-if="PhraseData.status === 'deletion_requested'">
-                Удаление запрошено
-            </div>
-        </div>
-        <div v-if="showPopup" class="popup-form-container">
+        <h3>Причина удаления:</h3>
+        <h4 class="removal-reason">{{ RequestData.reason }}</h4>
+         <div class="admin-staff-button">
+             <button class="button button-large button-confirm" @click="acceptRequest" :disabled="isLoading">
+                 Подтвердить
+             </button>
+             <button class="button button-large button-reject" @click="showReasonForm" :disabled="isLoading">
+                 Отклонить
+             </button>
+         </div>
+         <div v-if="showPopup" class="popup-form-container">
             <div class="popup-form">
                 <div class="popup-title">
                     Причина удаления
@@ -31,8 +37,8 @@
                 <textarea @input="heightResize" type="text" class="input-field input-field-regular input-field-textarea"
                     rows="1" maxlength="255" v-model="reason"></textarea>
                 <div class="popup-button">
-                    <button class="button button-large button-confirm" :disabled="reason.length < 3"  @click="requestDeletion">Готово</button>
-                    <button class="button button-large button-cancel" @click="hideReasonForm">Отмена</button>
+                    <button class="button button-large button-confirm" :disabled="reason.length < 3"  @click="rejectRequest">Готово</button>
+                    <button class="button button-large button-reject" @click="hideReasonForm">Отмена</button>
                 </div>
             </div>
         </div>
@@ -41,28 +47,43 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
-import PhraseObject from '@/assets/types/PhraseObject';
+import DeletionRequestObject from '@/assets/types/DeletionRequestObject';
 import { mapActions } from 'vuex';
 
 export default defineComponent({
     props: {
-        PhraseData: {
-            type: Object as PropType<PhraseObject>,
+        RequestData: {
+            type: Object as PropType<DeletionRequestObject>,
             required: true
         }
     },
-    data() {
-        return {
+    data(){
+        return{
             isLoading: false as boolean,
             showPopup: false as boolean,
             reason: '' as string
         }
     },
     methods: {
-        ...mapActions(['requestPhraseDeletion']),
+        ...mapActions(['rejectPhraseDeletion', 'acceptPhraseDeletion']),
         dateToString(date: Date): string {
+            if (!date) return "Неизвестно";
             let newDate: RegExpMatchArray | null = date.toString().match(/^(\d{4})-(\d{2})-(\d{2}).*/)
             return `${newDate?.[3]}.${newDate?.[2]}.${newDate?.[1]}`
+        },
+        async acceptRequest(){
+            this.isLoading = true
+            this.acceptPhraseDeletion({id: this.RequestData.id})
+        },
+        async rejectRequest(){
+            this.isLoading = true
+            this.rejectPhraseDeletion({id: this.RequestData.id, reason: this.reason})
+
+        },
+        heightResize(e: Event) {
+            const textField = e.target as HTMLTextAreaElement;
+            textField.style.height = '0px';
+            textField.style.height = textField.scrollHeight + 'px';
         },
         showReasonForm() {
             this.reason = ''
@@ -70,17 +91,6 @@ export default defineComponent({
         },
         hideReasonForm() {
             this.showPopup = false
-        },
-        async requestDeletion() {
-            this.isLoading = true
-            await this.requestPhraseDeletion({ phraseId: this.PhraseData.id, reason: this.reason })
-            this.hideReasonForm()
-            this.isLoading = false
-        },
-        heightResize(e: Event) {
-            const textField = e.target as HTMLTextAreaElement;
-            textField.style.height = '0px';
-            textField.style.height = textField.scrollHeight + 'px';
         }
     }
 })
@@ -88,14 +98,15 @@ export default defineComponent({
 
 <style scoped>
 @import url('@/assets/style/elements/phrase-style.css');
-@import url('@/assets/style/moderator/elements/phrase-item.css');
 
-.deletion-requested {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+.removal-reason {
+    color: #FF3D3D;
 }
 
+.deletion-request-row {
+    display: flex;
+    gap: 10px;
+}
 .popup-form-container {
     position: fixed;
     top: 0;
@@ -138,7 +149,7 @@ export default defineComponent({
     background-color: #7FED7C;
 }
 
-.button-cancel {
+.button-reject {
     background-color: #FF3D3D;
 }
 </style>

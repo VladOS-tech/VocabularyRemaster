@@ -1,4 +1,4 @@
-interface MeaningObject{
+type MeaningObject = {
     meaning: string,
     example: string
 }

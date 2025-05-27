@@ -36,8 +36,8 @@ import { mapActions } from 'vuex'
     export default defineComponent({
         data(){
             return{
-                login: 'user12345@example.com' as string,
-                password: 'securePass456' as string,
+                login: 'admin@example.com' as string,
+                password: 'Secret123' as string,
                 errors:{
                     login: null as null | string,
                     password: null as null | string,

@@ -4,6 +4,8 @@ import loginStore from "./login-store";
 import staffStore from "./staff-store";
 import phraseForm from "./phrase-request-form"
 import reviewForm from "./request-review-form"
+import addModeratorForm from "./add-moderator-form"
+import editModeratorForm from "./edit-moderator-form";
 // ------------
 
 export default createStore({
@@ -25,6 +27,8 @@ export default createStore({
     loginStore,
     staffStore,
     phraseForm: phraseForm,
-    reviewForm: reviewForm
+    reviewForm: reviewForm,
+    addModeratorForm: addModeratorForm,
+    editModeratorForm: editModeratorForm
   }
 });

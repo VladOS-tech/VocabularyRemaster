@@ -1,4 +1,4 @@
-interface LoadingObject{
+type LoadingObject = {
     phrases: boolean,
     tags: boolean,
     inputPhrase: boolean

@@ -1,19 +1,19 @@
 <template>
     <div class="request-block">
         <loadingIcon v-if="isLoading" />
-        <staffItemAdmin v-for="staff in moderatorList" :key="staff.id" :StaffData="staff" />
+        <DeletionRequestItem v-for="request in adminDeletionRequestList" :key="request.id" :RequestData="request" />
     </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import staffItemAdmin from './StaffItemAdmin.vue';
 import LoadingIcon from '@/components/Misc/LoadingIcon.vue';
 import { mapActions, mapGetters, mapMutations } from 'vuex';
+import DeletionRequestItem from './DeletionRequestItem.vue';
 
     export default defineComponent({
         components:{
-            staffItemAdmin,
+            DeletionRequestItem,
             LoadingIcon
         },
         data(){
@@ -22,15 +22,15 @@ import { mapActions, mapGetters, mapMutations } from 'vuex';
             }
         },
         computed:{
-            ...mapGetters(['moderatorList'])
+            ...mapGetters(['adminDeletionRequestList'])
         },
         methods:{
             ...mapMutations(['setTabName']),
-            ...mapActions(['GetModeratorInfoAdministrator'])
+            ...mapActions(['GetDeletionRequestsAdministrator'])
         },
         async beforeMount(){
-            this.setTabName('staff')
-            await this.GetModeratorInfoAdministrator()
+            this.setTabName('deletionRequests')
+            await this.GetDeletionRequestsAdministrator()
             this.isLoading = false
         }
     })

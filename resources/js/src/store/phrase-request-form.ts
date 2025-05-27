@@ -1,7 +1,7 @@
 import TagObject from "@/assets/types/TagObject";
 import exampleTags from "@/assets/JSObjects/ExampleTags.json"
 import InputTags from "@/components/Forms/FormComponents/InputTags.vue";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import router from "@/router";
 
 interface State {
@@ -184,7 +184,7 @@ export default {
                     window.alert(`${data.message}`)
                     router.push('/')
                 } catch (e) {
-                    window.alert('Ой, у вас не получилось😵‍💫')
+                    if(e instanceof AxiosError) window.alert(e.response?.data.message)
                     console.error(e)
                 }
             }

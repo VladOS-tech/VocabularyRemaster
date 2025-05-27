@@ -1,11 +1,10 @@
 import PhraseObject from "@/assets/types/PhraseObject"
-import StaffObject from "@/assets/types/StaffObject"
+import ModeratorObject from "@/assets/types/ModeratorObject"
 
-import ExampleRequests from '@/assets/JSObjects/ExamplePhrases.json'
-import ExampleStaff from '@/assets/JSObjects/ExampleStaff.json'
 import axios, { AxiosError } from "axios"
 import router from "@/router"
 import TagObject from "@/assets/types/TagObject"
+import DeletionRequestObject from "@/assets/types/DeletionRequestObject"
 
 interface State {
     token: string,
@@ -14,11 +13,12 @@ interface State {
     tabName: string,
     requestList: PhraseObject[] | null,
     staffPhraseList: PhraseObject[] | null,
-    staffList: StaffObject[] | null,
+    moderatorList: ModeratorObject[] | null,
     staffTagList: TagObject[] | null,
     requestLoading: boolean,
     phraseLoading: boolean,
-    staffLoading: boolean
+    staffLoading: boolean,
+    adminDeletionRequestList: DeletionRequestObject[] | null,
 }
 
 const state: State = {
@@ -28,11 +28,12 @@ const state: State = {
     tabName: '',
     requestList: null,
     staffPhraseList: null,
-    staffList: null,
+    moderatorList: null,
     staffTagList: null,
     requestLoading: true,
     phraseLoading: true,
-    staffLoading: true
+    staffLoading: true,
+    adminDeletionRequestList: null
 }
 
 const getters = {
@@ -45,8 +46,8 @@ const getters = {
     staffPhraseList(state: State) {
         return state.staffPhraseList
     },
-    staffList(state: State) {
-        return state.staffList
+    moderatorList(state: State) {
+        return state.moderatorList
     },
     staffTagList(state: State) {
         return state.staffTagList
@@ -68,6 +69,9 @@ const getters = {
     },
     token(state: State) {
         return state.token
+    },
+    adminDeletionRequestList(state: State) {
+        return state.adminDeletionRequestList
     }
 }
 
@@ -87,8 +91,11 @@ const mutations = {
     setStaffPhraseList(state: State, newList: PhraseObject[]) {
         state.staffPhraseList = newList
     },
-    setStaffList(state: State, newList: StaffObject[]) {
-        state.staffList = newList
+    setModeratorList(state: State, newList: ModeratorObject[]) {
+        state.moderatorList = newList
+    },
+    removeModerator(state: State, removeId: number) {
+        if(state.moderatorList) state.moderatorList = state.moderatorList?.filter(el => el.id != removeId)
     },
     setStaffLoading(state: State, newLoading: boolean) {
         state.staffLoading = newLoading
@@ -105,11 +112,18 @@ const mutations = {
     setPhraseStatus(state: State, payload: { phraseId: string, newStatus: string }) {
         const phrase = state.staffPhraseList?.find(el => el.id === payload.phraseId)
         if (phrase) phrase.status = payload.newStatus
-    }
+    },
+    setAdminDeletionRequestList(state: State, newList: DeletionRequestObject[]) {
+        console.log('penis')
+        state.adminDeletionRequestList = newList
+    },
+    removeAdminDeletionRequest(state: State, removeId: string) {
+        if(state.adminDeletionRequestList) state.adminDeletionRequestList = state.adminDeletionRequestList?.filter(el => el.id != removeId)
+    },
 }
 
 const actions = {
-    async GetRequestsInfo({ commit }: { commit: any }) {
+    async GetRequestsInfo({ commit, dispatch }: { commit: any, dispatch: any }) {
         commit('setRequestList', null)
         try {
             const request = 'http://127.0.0.1:8000/api/moderator/phraseologies?status=pending'
@@ -123,7 +137,7 @@ const actions = {
             console.log(data)
         } catch (error) {
             if (error instanceof AxiosError && error.status == 401) {
-                router.push('/login')
+                return await dispatch('logoutAction', null, { root: true })
             }
             console.error('Ошибка при загрузке запросов:', error)
         }
@@ -143,15 +157,17 @@ const actions = {
         } catch (error) {
             if (error instanceof AxiosError && error.status == 401) {
                 // return await router.push('/login')
-                return await dispatch('logoutAction')
+                return await dispatch('logoutAction', null, { root: true })
             }
             console.error('Ошибка при загрузке фразеологизмов:', error)
         }
     },
-    async requestPhraseDeletion({ commit, dispatch }: { commit: any, dispatch: any }, payload: { phraseId: string }) {
+    async requestPhraseDeletion({ commit, dispatch }: { commit: any, dispatch: any }, payload: { phraseId: string, reason: string }) {
         try {
             const request = `http://127.0.0.1:8000/api/moderator/phraseologies/${payload.phraseId}/delete-request`
-            const { data } = await axios.patch(request, {}, {
+            const { data } = await axios.patch(request, {
+                reason: payload.reason
+            }, {
                 headers: {
                     Authorization: `Bearer ${state.token}`
                 }
@@ -166,16 +182,26 @@ const actions = {
             console.error('Ошибка при запросе удаления:', error)
         }
     },
-    async GetStaffInfoAdministrator({ commit }: { commit: any }) {
-        commit('setStaffLoading', true)
-        commit('setStaffList', null)
-        await new Promise(resolve => {
-            setTimeout(resolve, 2000)
-        })
-        commit('setStaffList', ExampleStaff)
-        commit('setStaffLoading', false)
+    async GetModeratorInfoAdministrator({ commit, dispatch }: { commit: any, dispatch: any }) {
+        commit('setModeratorList', null)
+        try {
+            const request = 'http://127.0.0.1:8000/api/admin/moderators'
+            const { data } = await axios.get(request, {
+                headers: {
+                    Authorization: `Bearer ${state.token}`
+                }
+            })
+            // commit('setState', { key: 'popularTags', value: data })
+            commit('setModeratorList', data.data)
+            console.log(data)
+        } catch (error) {
+            if (error instanceof AxiosError && error.status == 401) {
+                return await dispatch('logoutAction', null, { root: true })
+            }
+            console.error('Ошибка при загрузке модераторов:', error)
+        }
     },
-    async getTagsInfo({ commit }: any) {
+    async getTagsInfo({ commit, dispatch }: { commit: any, dispatch: any }) {
         commit('setStaffTagList', null)
         try {
             const request = 'http://127.0.0.1:8000/api/moderator/tags'
@@ -189,12 +215,12 @@ const actions = {
             console.log(data)
         } catch (error) {
             if (error instanceof AxiosError && error.status == 401) {
-                router.push('/login')
+                return await dispatch('logoutAction', null, { root: true })
             }
             console.error('Ошибка при загрузке тегов:', error)
         }
     },
-    async addTagSuggestion({ commit }: any, payload: { content: string }) {
+    async addTagSuggestion({ commit, dispatch }: { commit: any, dispatch: any }, payload: { content: string }) {
         try {
             const request = 'http://127.0.0.1:8000/api/moderator/tags'
             const { data } = await axios.post(request,
@@ -211,12 +237,12 @@ const actions = {
             router.go(0)
         } catch (error) {
             if (error instanceof AxiosError && error.status == 401) {
-                router.push('/login')
+                return await dispatch('logoutAction', null, { root: true })
             }
             console.error('Ошибка при добавлении тега:', error)
         }
     },
-    async removeTagSuggestion({ commit }: any, payload: { id: number }) {
+    async removeTagSuggestion({ commit, dispatch }: { commit: any, dispatch: any }, payload: { id: number }) {
         try {
             const request = 'http://127.0.0.1:8000/api/moderator/tags/' + payload.id
             const { data } = await axios.delete(request,
@@ -229,11 +255,86 @@ const actions = {
             // commit('setState', { key: 'popularTags', value: data })
         } catch (error) {
             if (error instanceof AxiosError && error.status == 401) {
-                router.push('/login')
+                return await dispatch('logoutAction', null, { root: true })
             }
             console.error('Ошибка при удалении тега:', error)
         }
-    }
+    },
+    async removeModeratorRequest({ commit, dispatch }: { commit: any, dispatch: any }, payload: { id: number }) {
+        try {
+            const request = 'http://127.0.0.1:8000/api/admin/moderators/' + payload.id
+             await axios.delete(request,
+                {
+                    headers: {
+                        Authorization: `Bearer ${state.token}`
+                    }
+                })
+            commit('removeModerator', payload.id)
+            // commit('setState', { key: 'popularTags', value: data })
+        } catch (error) {
+            if (error instanceof AxiosError && error.status == 401) {
+                return await dispatch('logoutAction', null, { root: true })
+            }
+            console.error('Ошибка при удалении тега:', error)
+        }
+    },
+    async GetDeletionRequestsAdministrator({ commit, dispatch }: { commit: any, dispatch: any }) {
+        commit('setAdminDeletionRequestList', null)
+        try {
+            const request = 'http://127.0.0.1:8000/api/admin/deletion-requests'
+            const { data } = await axios.get(request, {
+                headers: {
+                    Authorization: `Bearer ${state.token}`
+                }   
+            })
+            // commit('setState', { key: 'popularTags', value: data })
+            commit('setAdminDeletionRequestList', data)
+            console.log(state.adminDeletionRequestList)
+        } catch (error) {
+            if (error instanceof AxiosError && error.status == 401) {
+                return await dispatch('logoutAction', null, { root: true })
+            }
+            console.error('Ошибка при загрузке запросов на удаление:', error)
+        }
+    },
+    async acceptPhraseDeletion({ commit, dispatch }: { commit: any, dispatch: any }, payload: { id: number }) {
+        try {
+            const request = 'http://127.0.0.1:8000/api/admin/deletion-requests/' + payload.id + '/approve'
+            await axios.post(request, {},
+                {
+                    headers: {
+                        Authorization: `Bearer ${state.token}`
+                    }
+                })
+            commit('removeAdminDeletionRequest', payload.id)
+            // commit('setState', { key: 'popularTags', value: data })
+        } catch (error) {
+            if (error instanceof AxiosError && error.status == 401) {
+                return await dispatch('logoutAction', null, { root: true })
+            }
+            console.error('Ошибка при одобрении запроса:', error)
+        }
+    },
+    async rejectPhraseDeletion({ commit, dispatch }: { commit: any, dispatch: any }, payload: { id: number, reason: string }) {
+        try {
+            const request = 'http://127.0.0.1:8000/api/admin/deletion-requests/' + payload.id + '/reject'
+            await axios.post(request, {
+                comment: payload.reason
+            },
+                {
+                    headers: {
+                        Authorization: `Bearer ${state.token}`
+                    }
+                })
+            commit('removeAdminDeletionRequest', payload.id)
+            // commit('setState', { key: 'popularTags', value: data })
+        } catch (error) {
+            if (error instanceof AxiosError && error.status == 401) {
+                return await dispatch('logoutAction', null, { root: true })
+            }
+            console.error('Ошибка при отклонении запроса:', error)
+        }
+    },
 }
 
 export default { state, getters, mutations, actions }

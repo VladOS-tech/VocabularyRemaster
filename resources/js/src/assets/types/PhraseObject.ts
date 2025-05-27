@@ -1,6 +1,6 @@
 import TagObject from "./TagObject";
 
-interface PhraseObject {
+type PhraseObject = {
     id: string,
     date: Date,
     content: string,
@@ -10,7 +10,8 @@ interface PhraseObject {
         id: number,
         content: string
     }[],
-    status: string
+    status: string,
+    reason: string
 }
 
 export default PhraseObject;
