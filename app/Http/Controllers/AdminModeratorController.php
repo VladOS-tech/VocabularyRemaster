@@ -32,6 +32,27 @@ class AdminModeratorController extends Controller
         ]);
     }
 
+    public function show($id)
+    {
+        $moderator = Moderator::with([
+            'user.login:id,email',
+            'user:id,name,login_id',
+        ])->findOrFail($id);
+
+        return response()->json([
+            'id' => $moderator->id,
+            'name' => $moderator->user->name ?? null,
+            'login_email' => $moderator->user->login->email ?? null, // email, использующийся для входа
+            'notification_email' => $moderator->notification_email,
+            'telegram_chat_id' => $moderator->telegram_chat_id,
+            'wants_email_notifications' => $moderator->wants_email_notifications,
+            'wants_telegram_notifications' => $moderator->wants_telegram_notifications,
+            'online_status' => $moderator->online_status,
+            'created_at' => $moderator->created_at,
+        ]);
+    }
+
+    
 
     public function store(Request $request)
     {

@@ -29,7 +29,7 @@ class SendExternalNotification
 
         Log::info('Отправка email уведомления', [
             'moderator_id' => $moderator->id,
-            'email' => $moderator->email,
+            'email' => $moderator->notification_email,
             'contact' => $moderator->contact,
             'wants_email_notifications' => $moderator->wants_email_notifications,
             'notification_content' => $notification->content

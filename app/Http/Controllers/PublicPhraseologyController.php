@@ -97,6 +97,13 @@ class PublicPhraseologyController extends Controller
             'tags' => 'array',
             'tags.*' => 'exists:tags,id'
         ]);
+        $existing = Phraseology::whereRaw('LOWER(TRIM(content)) = ?', [mb_strtolower(trim($validated['content']))])->first();
+        if ($existing) {
+            return response()->json([
+                'message' => 'Фразеологизм с таким содержанием уже существует.',
+                'existing_id' => $existing->id,
+            ], 409); 
+        }
 
         $phraseology = Phraseology::create([
             'content' => $validated['content'],
