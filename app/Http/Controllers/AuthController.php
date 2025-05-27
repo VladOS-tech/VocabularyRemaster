@@ -13,9 +13,6 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Log;
 
-
-
-
 class AuthController extends Controller
 {
     
@@ -35,11 +32,12 @@ class AuthController extends Controller
         $users = $login->users;
 
         if ($users->count() > 1) {
+            $token = $login->createToken('role-selection', ['role-selection'])->plainTextToken;
+
             return response()->json([
                 'message' => 'Выберите роль',
+                'token' => $token,
                 'roles' => $users->map(fn($user) => [
-                    'user_id' => $user->id,
-                    'role_id' => $user->role_id,
                     'role_name' => $user->role->name,
                     'name' => $user->name,
                 ]),
@@ -72,16 +70,25 @@ class AuthController extends Controller
     public function selectRole(Request $request)
     {
         $request->validate([
-            'user_id' => 'required|exists:users,id',
+            'role_index' => 'required|integer',
         ]);
 
-        $user = User::with('role', 'login')->find($request->user_id);
+        /** @var \App\Models\Login $login */
+        $login = $request->user();
 
-        if (!$user || !$user->login) {
-            return response()->json(['message' => 'Пользователь или логин не найден'], 404);
+        if (!$login instanceof Login) {
+            return response()->json(['message' => 'Недопустимый токен'], 403);
         }
 
-        $token = $user->login->createToken('api-token', [
+        $users = $login->users;
+
+        if ($request->role_index < 0 || $request->role_index >= $users->count()) {
+            return response()->json(['message' => 'Недопустимый индекс роли'], 400);
+        }
+
+        $user = $users[$request->role_index];
+
+        $token = $login->createToken('api-token', [
             'user_id' => $user->id,
             'role_id' => $user->role_id,
         ])->plainTextToken;
@@ -98,6 +105,7 @@ class AuthController extends Controller
             'name' => $user->name,
         ]);
     }
+
 
 
     public function logout(Request $request)

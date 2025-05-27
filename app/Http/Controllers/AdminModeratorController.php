@@ -8,6 +8,7 @@ use App\Models\Moderator;
 use \App\Models\Login;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Facades\DB;
 
 class AdminModeratorController extends Controller
 {
@@ -70,58 +71,76 @@ class AdminModeratorController extends Controller
             'wants_telegram_notifications' => 'boolean',
         ]);
 
-        $createdLogin = false;
-
-        $login = Login::where('email', $validated['email'])->first();
-
-        if (!$login) {
-            $login = Login::create([
-                'email' => $validated['email'],
-                'password' => Hash::make($validated['password']),
-            ]);
-            $createdLogin = true;
-        }
-
-        $alreadyModerator = $login->users()->where('role_id', 2)->exists();
-
-        if ($alreadyModerator) {
-            if ($createdLogin) {
-                $login->delete();
-            }
-
+        try {
+            $result = DB::transaction(function () use ($validated) {
+                $createdLogin = false;
+    
+                $login = Login::where('email', $validated['email'])->first();
+    
+                if (!$login) {
+                    $login = Login::create([
+                        'email' => $validated['email'],
+                        'password' => Hash::make($validated['password']),
+                    ]);
+                    $createdLogin = true;
+                }
+    
+                $alreadyModerator = $login->users()->where('role_id', 2)->exists();
+    
+                if ($alreadyModerator) {
+                    if ($createdLogin) {
+                        $login->delete();
+                    }
+    
+                    throw ValidationException::withMessages([
+                        'email' => ['Этот логин уже используется как модератор'],
+                    ]);
+                }
+    
+                $user = User::create([
+                    'name' => $validated['name'],
+                    'login_id' => $login->id,
+                    'role_id' => 2,
+                ]);
+    
+                $moderator = Moderator::create([
+                    'user_id' => $user->id,
+                    'notification_email' => $validated['notification_email'] ?? null,
+                    'telegram_chat_id' => $validated['telegram_chat_id'] ?? null,
+                    'wants_email_notifications' => $validated['wants_email_notifications'] ?? false,
+                    'wants_telegram_notifications' => $validated['wants_telegram_notifications'] ?? false,
+                    'online_status' => false,
+                ]);
+    
+                return [
+                    'moderator' => $moderator,
+                    'user' => $user,
+                    'login' => $login,
+                ];
+            });
+    
+            return response()->json([
+                'message' => 'Модератор успешно создан',
+                'data' => [
+                    'id' => $result['moderator']->id,
+                    'name' => $result['user']->name,
+                    'login_email' => $result['login']->email,
+                    'notification_email' => $result['moderator']->notification_email,
+                    'telegram_chat_id' => $result['moderator']->telegram_chat_id,
+                    'wants_email_notifications' => $result['moderator']->wants_email_notifications,
+                    'wants_telegram_notifications' => $result['moderator']->wants_telegram_notifications,
+                    'online_status' => $result['moderator']->online_status,
+                ]
+            ], 201);
+    
+        } catch (ValidationException $e) {
+            throw $e;
+        } catch (\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'Этот логин уже используется как модератор',
-            ], 409);
+                'message' => 'Ошибка при создании модератора: ' . $e->getMessage(),
+            ], 500);
         }
-
-        $user = User::create([
-            'name' => $validated['name'],
-            'login_id' => $login->id,
-            'role_id' => 2,
-        ]);
-
-        $moderator = Moderator::create([
-            'user_id' => $user->id,
-            'notification_email' => $validated['notification_email'] ?? null,
-            'telegram_chat_id' => $validated['telegram_chat_id'] ?? null,
-            'wants_email_notifications' => $validated['wants_email_notifications'] ?? false,
-            'wants_telegram_notifications' => $validated['wants_telegram_notifications'] ?? false,
-            'online_status' => false,
-        ]);
-        return response()->json([
-            'message' => 'Модератор успешно создан',
-            'data' => [
-                'id' => $moderator->id,
-                'name' => $user->name,
-                'login_email' => $login->email,
-                'notification_email' => $moderator->notification_email,
-                'telegram_chat_id' => $moderator->telegram_chat_id,
-                'wants_email_notifications' => $moderator->wants_email_notifications,
-                'wants_telegram_notifications' => $moderator->wants_telegram_notifications,
-                'online_status' => $moderator->online_status,
-            ]
-        ], 201);
     }
 
     public function update(Request $request, $id)
@@ -165,21 +184,30 @@ class AdminModeratorController extends Controller
 
     public function destroy($id)
     {
-        $moderator = Moderator::with('user')->findOrFail($id);
-
-        $user = $moderator->user;
-        $login = $user->login;
-
-        $moderator->delete();
-        $user->delete();
-
-        if ($login->users()->count() === 0) {
-            $login->delete();
+        try {
+            DB::transaction(function () use ($id) {
+                $moderator = Moderator::with('user.login')->findOrFail($id);
+                $user = $moderator->user;
+                $login = $user->login;
+    
+                $moderator->delete();
+    
+                $user->delete();
+    
+                if ($login->users()->count() === 0) {
+                    $login->delete();
+                }
+            });
+    
+            return response()->json([
+                'message' => 'Модератор и связанные данные удалены',
+            ]);
+    
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Ошибка при удалении модератора: ' . $e->getMessage(),
+            ], 500);
         }
-
-        return response()->json([
-            'message' => 'Модератор и связанные данные удалены',
-        ]);
     }
-
 }

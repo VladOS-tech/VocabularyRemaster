@@ -11,6 +11,7 @@ use Inertia\Response;
 use App\Models\Moderator;
 use App\Models\Notification;
 use App\Events\NotificationCreated;
+use Illuminate\Support\Facades\DB;
 
 
 class PublicPhraseologyController extends Controller
@@ -105,46 +106,57 @@ class PublicPhraseologyController extends Controller
             ], 409); 
         }
 
-        $phraseology = Phraseology::create([
-            'content' => $validated['content'],
-            'meaning' => $validated['meaning'],
-            'status' => 'pending',
-            'created_at' => now(), 
-        ]);
-
-        foreach ($validated['contexts'] as $contextContent) {
-            Context::create([
-                'phraseology_id' => $phraseology->id,
-                'content' => $contextContent,
-            ]);
+        try {
+            $result = DB::transaction(function () use ($validated) {
+                $phraseology = Phraseology::create([
+                    'content' => $validated['content'],
+                    'meaning' => $validated['meaning'],
+                    'status' => 'pending',
+                    'created_at' => now(),
+                ]);
+    
+                foreach ($validated['contexts'] as $contextContent) {
+                    Context::create([
+                        'phraseology_id' => $phraseology->id,
+                        'content' => $contextContent,
+                    ]);
+                }
+    
+                if (!empty($validated['tags'])) {
+                    $phraseology->tags()->attach($validated['tags']);
+                }
+    
+                $onlineModerators = Moderator::where('online_status', true)->get();
+                $targetModerators = $onlineModerators->isNotEmpty()
+                    ? $onlineModerators
+                    : Moderator::all();
+    
+                foreach ($targetModerators as $moderator) {
+                    $notification = Notification::create([
+                        'moderator_id' => $moderator->id,
+                        'type' => 'new_phraseology',
+                        'content' => 'Добавлен новый фразеологизм: «' . $phraseology->content . '». Требуется модерация.',
+                        'related_id' => $phraseology->id,
+                        'related_model' => 'phraseologies',
+                    ]);
+    
+                    // событие можно вызывать после транзакции, но можно и внутри
+                    event(new NotificationCreated($notification));
+                }
+    
+                return $phraseology;
+            });
+    
+            return response()->json([
+                'message' => 'Фразеологизм отправлен на проверку!',
+                'phraseology' => $result->load('tags', 'contexts'),
+            ], 201);
+    
+        } catch (\Throwable $e) {
+            return response()->json([
+                'message' => 'Ошибка при добавлении фразеологизма: ' . $e->getMessage()
+            ], 500);
         }
-
-        if (!empty($validated['tags'])) {
-            $phraseology->tags()->attach($validated['tags']);
-        }
-
-        $onlineModerators = Moderator::where('online_status', true)->get();
-        $targetModerators = $onlineModerators->isNotEmpty()
-            ? $onlineModerators
-            : Moderator::all();
-
-        foreach ($targetModerators as $moderator) {
-            $notification = Notification::create([
-                'moderator_id' => $moderator->id,
-                'type' => 'new_phraseology',
-                'content' => 'Добавлен новый фразеологизм: «' . $phraseology->content . '». Требуется модерация.',
-                'related_id' => $phraseology->id,
-                'related_model' => 'phraseologies',
-            ]);
-            event(new NotificationCreated($notification));
-
-        }
-
-        return response()->json([
-            'message' => 'Фразеологизм отправлен на проверку!',
-            'phraseology' => $phraseology->load('tags', 'contexts'),
-        ], 201);
     }
-
 }
 

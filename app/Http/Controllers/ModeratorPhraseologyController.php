@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use App\Models\Moderator;
+use Illuminate\Support\Facades\DB;
 
 class ModeratorPhraseologyController extends Controller
 {
@@ -85,52 +86,61 @@ class ModeratorPhraseologyController extends Controller
         ]);
 
         $phraseology = Phraseology::with('tags', 'contexts')->findOrFail($id);
-        
+
         if ($phraseology->status === 'approved') {
             return response()->json(['message' => 'Редактирование подтверждённых фразеологизмов запрещено'], 403);
         }
 
-        $phraseology->fill([
-            'content' => $validated['content'] ?? $phraseology->content,
-            'meaning' => $validated['meaning'] ?? $phraseology->meaning,
-        ]);
-
-        $phraseology->updated_at = now();
-        $phraseology->save();  
-        
-        if (isset($validated['tags'])) {
-            $phraseology->tags()->sync($validated['tags']);
-        }
-    
-        if (isset($validated['contexts'])) {
-            $phraseology->contexts()->delete();
-            foreach ($validated['contexts'] as $contextContent) {
-                $phraseology->contexts()->create([
-                    'content' => $contextContent,
+        try {
+            DB::transaction(function () use ($validated, $phraseology) {
+                $phraseology->fill([
+                    'content' => $validated['content'] ?? $phraseology->content,
+                    'meaning' => $validated['meaning'] ?? $phraseology->meaning,
+                    'updated_at' => now(),
                 ]);
-            }
+                $phraseology->save();
+
+                if (isset($validated['tags'])) {
+                    $phraseology->tags()->sync($validated['tags']);
+                }
+
+                if (isset($validated['contexts'])) {
+                    $phraseology->contexts()->delete();
+
+                    foreach ($validated['contexts'] as $contextContent) {
+                        $phraseology->contexts()->create([
+                            'content' => $contextContent,
+                        ]);
+                    }
+                }
+            });
+
+            $phraseology->load('tags', 'contexts');
+
+            return response()->json([
+                'message' => 'Фразеологизм обновлён!',
+                'phraseology' => [
+                    'id' => $phraseology->id,
+                    'content' => $phraseology->content,
+                    'meaning' => $phraseology->meaning,
+                    'status' => $phraseology->status,
+                    'date' => $phraseology->confirmed_at ?? $phraseology->updated_at,
+                    'tags' => $phraseology->tags->map(fn($tag) => [
+                        'id' => $tag->id,
+                        'content' => $tag->content,
+                    ]),
+                    'contexts' => $phraseology->contexts->map(fn($ctx) => [
+                        'id' => $ctx->id,
+                        'content' => $ctx->content,
+                    ]),
+                ]
+            ]);
+
+        } catch (\Throwable $e) {
+            return response()->json([
+                'message' => 'Ошибка при обновлении фразеологизма: ' . $e->getMessage()
+            ], 500);
         }
-        $phraseology->load('tags', 'contexts');
-
-
-        return response()->json([
-            'message' => 'Фразеологизм обновлён!',
-            'phraseology' => [
-                'id' => $phraseology->id,
-                'content' => $phraseology->content,
-                'meaning' => $phraseology->meaning,
-                'status' => $phraseology->status,
-                'date' => $phraseology->confirmed_at ?? $phraseology->updated_at,
-                'tags' => $phraseology->tags->map(fn($tag) => [
-                    'id' => $tag->id,
-                    'content' => $tag->content,
-                ]),
-                'contexts' => $phraseology->contexts->map(fn($ctx) => [
-                    'id' => $ctx->id,
-                    'content' => $ctx->content,
-                ]),
-            ]
-        ]);
     }
 
     public function approve($id)
@@ -221,23 +231,32 @@ class ModeratorPhraseologyController extends Controller
             return response()->json(['message' => 'Заявка на удаление уже существует.'], 409);
         }
 
-        PhraseologyDeletionRequest::create([
-            'phraseology_id' => $phraseology->id,
-            'moderator_id' => $moderator->id,
-            'reason' => $request->input('reason'), 
-        ]);
+        try {
+            DB::transaction(function () use ($request, $phraseology, $moderator) {
+                PhraseologyDeletionRequest::create([
+                    'phraseology_id' => $phraseology->id,
+                    'moderator_id' => $moderator->id,
+                    'reason' => $request->input('reason'),
+                ]);
 
-        $phraseology->update([
-            'status' => 'deletion_requested',
-        ]);
+                $phraseology->update([
+                    'status' => 'deletion_requested',
+                ]);
+            });
 
-        return response()->json([
-            'message' => 'Фразеологизм отправлен на удаление.',
-            'phraseology' => [
-                'id' => $phraseology->id,
-                'status' => $phraseology->status,
-            ]
-        ]);
+            return response()->json([
+                'message' => 'Фразеологизм отправлен на удаление.',
+                'phraseology' => [
+                    'id' => $phraseology->id,
+                    'status' => 'deletion_requested',
+                ]
+            ]);
+
+        } catch (\Throwable $e) {
+            return response()->json([
+                'message' => 'Ошибка при создании заявки на удаление: ' . $e->getMessage(),
+            ], 500);
+        }
     }
 }
 

@@ -10,6 +10,7 @@ use App\Http\Controllers\ModeratorPhraseologyController;
 use App\Http\Controllers\AdminModeratorController;
 use App\Http\Controllers\AdminDeletionRequestController;
 use App\Http\Controllers\ModeratorNotificationController;
+use App\Http\Middleware\EnsureRoleSelectionScope;
 
 Route::get('/sanctum/csrf-cookie', function (Request $request) {
     return response()->json(['csrf' => csrf_token()]);
@@ -21,7 +22,7 @@ Route::post('/phraseologies', [PublicPhraseologyController::class, 'store']);
 Route::get('/tags', [PublicTagController::class, 'index']);
 
 Route::post('/login', [AuthController::class, 'login']);
-Route::post('/select-role', [AuthController::class, 'selectRole']);
+Route::middleware(['auth:sanctum', 'role.selection'])->post('/select-role', [AuthController::class, 'selectRole']);
 
 Route::middleware(['auth:login', 'role:moderator'])->group(function () {
     Route::get('/moderator/phraseologies', [ModeratorPhraseologyController::class, 'index']);
