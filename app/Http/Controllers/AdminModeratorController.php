@@ -20,9 +20,13 @@ class AdminModeratorController extends Controller
                 return [
                     'id' => $moderator->id,
                     'name' => $moderator->user->name,
-                    'email' => $moderator->user->login->email,
-                    'contact' => $moderator->contact,
+                    'login_email' => $moderator->user->login->email,
+                    'notification_email' => $moderator->notification_email,
+                    'telegram_chat_id' => $moderator->telegram_chat_id,
+                    'wants_email_notifications' => $moderator->wants_email_notifications,
+                    'wants_telegram_notifications' => $moderator->wants_telegram_notifications,
                     'online_status' => $moderator->online_status,
+                    'created_at' => $moderator->created_at,
                 ];
             });
 
@@ -42,7 +46,7 @@ class AdminModeratorController extends Controller
         return response()->json([
             'id' => $moderator->id,
             'name' => $moderator->user->name ?? null,
-            'login_email' => $moderator->user->login->email ?? null, // email, использующийся для входа
+            'login_email' => $moderator->user->login->email ?? null,
             'notification_email' => $moderator->notification_email,
             'telegram_chat_id' => $moderator->telegram_chat_id,
             'wants_email_notifications' => $moderator->wants_email_notifications,
@@ -60,7 +64,10 @@ class AdminModeratorController extends Controller
             'email' => 'required|email|unique:logins,email',
             'password' => 'required|string|min:6',
             'name' => 'required|string|max:255',
-            'contact' => 'required|string|unique:moderators,contact',
+            'notification_email' => 'nullable|email',
+            'telegram_chat_id' => 'nullable|string|max:255',
+            'wants_email_notifications' => 'boolean',
+            'wants_telegram_notifications' => 'boolean',
         ]);
 
         $createdLogin = false;
@@ -96,17 +103,23 @@ class AdminModeratorController extends Controller
 
         $moderator = Moderator::create([
             'user_id' => $user->id,
-            'contact' => $validated['contact'],
+            'notification_email' => $validated['notification_email'] ?? null,
+            'telegram_chat_id' => $validated['telegram_chat_id'] ?? null,
+            'wants_email_notifications' => $validated['wants_email_notifications'] ?? false,
+            'wants_telegram_notifications' => $validated['wants_telegram_notifications'] ?? false,
             'online_status' => false,
         ]);
-
         return response()->json([
             'message' => 'Модератор успешно создан',
             'data' => [
                 'id' => $moderator->id,
                 'name' => $user->name,
-                'email' => $login->email,
-                'contact' => $moderator->notification_email,
+                'login_email' => $login->email,
+                'notification_email' => $moderator->notification_email,
+                'telegram_chat_id' => $moderator->telegram_chat_id,
+                'wants_email_notifications' => $moderator->wants_email_notifications,
+                'wants_telegram_notifications' => $moderator->wants_telegram_notifications,
+                'online_status' => $moderator->online_status,
             ]
         ], 201);
     }
@@ -115,7 +128,10 @@ class AdminModeratorController extends Controller
     {
         $validated = $request->validate([
             'name' => 'nullable|string|max:255',
-            'contact' => 'nullable|string|unique:moderators,contact,' . $id,
+            'notification_email' => 'nullable|email',
+            'telegram_chat_id' => 'nullable|string|max:255',
+            'wants_email_notifications' => 'boolean',
+            'wants_telegram_notifications' => 'boolean',
         ]);
 
         $moderator = Moderator::with('user')->findOrFail($id);
@@ -126,7 +142,10 @@ class AdminModeratorController extends Controller
         }
 
         $moderator->update([
-            'contact' => $validated['contact'] ?? $moderator->contact,
+            'notification_email' => $validated['notification_email'] ?? $moderator->notification_email,
+            'telegram_chat_id' => $validated['telegram_chat_id'] ?? $moderator->telegram_chat_id,
+            'wants_email_notifications' => $validated['wants_email_notifications'] ?? $moderator->wants_email_notifications,
+            'wants_telegram_notifications' => $validated['wants_telegram_notifications'] ?? $moderator->wants_telegram_notifications,
         ]);
 
         return response()->json([
@@ -134,7 +153,10 @@ class AdminModeratorController extends Controller
             'data' => [
                 'id' => $moderator->id,
                 'name' => $moderator->user->name,
-                'contact' => $moderator->notification_email,
+                'notification_email' => $moderator->notification_email,
+                'telegram_chat_id' => $moderator->telegram_chat_id,
+                'wants_email_notifications' => $moderator->wants_email_notifications,
+                'wants_telegram_notifications' => $moderator->wants_telegram_notifications,
                 'online_status' => $moderator->online_status,
             ]
         ]);
