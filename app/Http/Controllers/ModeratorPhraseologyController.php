@@ -151,7 +151,7 @@ class ModeratorPhraseologyController extends Controller
             return response()->json(['message' => 'Роль не определена'], 403);
         }
 
-        $user = \App\Models\User::with('moderator')->find($userId);
+        $user = User::with('moderator')->find($userId);
 
         if (!$user || $user->role_id !== 2 || !$user->moderator) {
             return response()->json(['message' => 'Вы не модератор'], 403);

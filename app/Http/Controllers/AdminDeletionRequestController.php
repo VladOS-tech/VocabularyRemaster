@@ -7,6 +7,7 @@ use App\Models\PhraseologyDeletionRequest;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Notification;
 use App\Events\NotificationCreated;
+use App\Models\Admin;
 use App\Models\User;
 
 class AdminDeletionRequestController extends Controller
@@ -78,12 +79,14 @@ class AdminDeletionRequestController extends Controller
         }
 
         $login = Auth::user(); 
-        $admin = User::where('login_id', $login->id)
+        $user = User::where('login_id', $login->id)
                     ->where('role_id', 1)
                     ->first();
-        if (!$admin) {
+        if (!$user) {
             return response()->json(['message' => 'Вы не являетесь администратором.'], 403);
         }
+
+        $admin = Admin::where('user_id', $user->id)->first();
 
         $deletionRequest->update([
             'status' => 'approved',
@@ -117,10 +120,15 @@ class AdminDeletionRequestController extends Controller
             return response()->json(['message' => 'Заявка уже рассмотрена.'], 400);
         }
 
-        $admin = Auth::user()->admin ?? null;
-        if (!$admin) {
+        $login = Auth::user(); 
+        $user = User::where('login_id', $login->id)
+                    ->where('role_id', 1)
+                    ->first();
+        if (!$user) {
             return response()->json(['message' => 'Вы не являетесь администратором.'], 403);
         }
+
+        $admin = Admin::where('user_id', $user->id)->first();
 
         $comment = $request->input('comment');
         if (!$comment || trim($comment) === '') {

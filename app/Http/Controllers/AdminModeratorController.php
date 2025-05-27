@@ -134,7 +134,7 @@ class AdminModeratorController extends Controller
             'data' => [
                 'id' => $moderator->id,
                 'name' => $moderator->user->name,
-                'contact' => $moderator->contact,
+                'contact' => $moderator->notification_email,
                 'online_status' => $moderator->online_status,
             ]
         ]);
