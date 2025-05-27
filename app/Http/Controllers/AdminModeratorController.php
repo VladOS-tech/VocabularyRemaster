@@ -106,7 +106,7 @@ class AdminModeratorController extends Controller
                 'id' => $moderator->id,
                 'name' => $user->name,
                 'email' => $login->email,
-                'contact' => $moderator->contact,
+                'contact' => $moderator->notification_email,
             ]
         ], 201);
     }

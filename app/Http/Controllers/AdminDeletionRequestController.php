@@ -7,6 +7,7 @@ use App\Models\PhraseologyDeletionRequest;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Notification;
 use App\Events\NotificationCreated;
+use App\Models\User;
 
 class AdminDeletionRequestController extends Controller
 {
@@ -76,7 +77,10 @@ class AdminDeletionRequestController extends Controller
             return response()->json(['message' => 'Заявка уже была рассмотрена.'], 400);
         }
 
-        $admin = Auth::user()->admin ?? null;
+        $login = Auth::user(); 
+        $admin = User::where('login_id', $login->id)
+                    ->where('role_id', 1)
+                    ->first();
         if (!$admin) {
             return response()->json(['message' => 'Вы не являетесь администратором.'], 403);
         }

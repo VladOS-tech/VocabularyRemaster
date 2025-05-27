@@ -31,5 +31,9 @@ class User extends Model
      {
          return $this->hasOne(\App\Models\Moderator::class);
      }
-     
+
+     public function admin()
+    {
+        return $this->hasOne(\App\Models\Admin::class);
+    }
 }
