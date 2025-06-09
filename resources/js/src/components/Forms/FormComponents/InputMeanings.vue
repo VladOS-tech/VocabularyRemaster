@@ -20,7 +20,7 @@
                     <textarea type="text" class="input-field input-field-regular input-field-textarea"
                         placeholder="Приведите пример использования для текущего значения..."
                         @input="heightResize($event); setExample(index, ($event.target as HTMLTextAreaElement)?.value)"
-                        @blur="console.log('')" rows="1" :value="example"></textarea>
+                        rows="1" :value="example"></textarea>
                     <button class="button delete-button button-large" v-if="examples.length > 1"
                         @click="removeExample(index);">
                         <img src="@/assets/images/icons/trash-icon.svg" alt="delete">
@@ -70,7 +70,6 @@ export default defineComponent({
     methods: {
         ...mapMutations('phraseForm', ['setInputMeaning', 'setInputMeaningError', 'addInputExample', 'removeInputExample', 'setInputExample']),
         heightResize(e: Event) {
-            console.log('a')
             const textField = e.target as HTMLTextAreaElement
             textField.style.height = '0px';
             textField.style.height = textField.scrollHeight + 'px'

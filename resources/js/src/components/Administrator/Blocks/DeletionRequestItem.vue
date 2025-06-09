@@ -3,17 +3,6 @@
         <p class="post-date post-date-light">
             {{ dateToString(RequestData.created_at) }}
         </p>
-        <!-- <h2>{{ RequestData.content }}</h2>
-        <div class="tags-block">
-            <div class="tag tag-generic" v-for="tag in RequestData.tags" :key="tag.id">{{ tag.content }}</div>
-        </div>
-        <h3>Значение:</h3>
-        <div class="meaning-block meaning-block-light">
-            <h4>{{RequestData.meaning}}</h4>
-            <p class="meaning-example-text" v-for="(context, index) in RequestData.contexts" :key="index">
-                "{{context.content}}"
-            </p>
-        </div> -->
         <h3>{{ RequestData.phraseology_content }}</h3>
         <div class="deletion-request-row">
             <h4>Предложил:</h4>

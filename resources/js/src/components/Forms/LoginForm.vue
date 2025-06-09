@@ -51,7 +51,6 @@ import { mapActions } from 'vuex'
                 this.errors = {login: null, password: null, root: null}
                 const result = loginValidation.safeParse({login: this.login, password: this.password})
                 if(result.success){
-                    console.log('here')
                     const loginErr = await this.loginAction({login: result.data.login, password: result.data.password})
                     this.errors.root = loginErr
                 }

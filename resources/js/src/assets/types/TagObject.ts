@@ -1,7 +1,7 @@
 type TagObject = {
     id: number,
     content: string,
-    timesUsed: number
+    count: number
 }
 
 export default TagObject;

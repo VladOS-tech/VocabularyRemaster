@@ -30,7 +30,9 @@ const mutations = {
 
 const actions = {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    async loginAction({ commit }: any, payload: { login: string, password: string }): Promise<string> {
+    async loginAction({ commit, rootGetters, dispatch }: any, payload: { login: string, password: string }): Promise<string> {
+        const token = rootGetters.token
+        if(token && token !== 'null' && token !== 'undefined') await dispatch('softLogoutAction')
         try {
             console.log(payload.login, '+', payload.password)
             const apiRequest = 'http://localhost:8000/api/login'
@@ -75,6 +77,7 @@ const actions = {
                     Authorization: `Bearer ${ token }`
                 }
             })
+            console.log(data)
             window.alert(data.message)
         } catch (error) {
             console.error('Ошибка при выходе:', error)
@@ -86,6 +89,27 @@ const actions = {
         localStorage.setItem('username', '')
         localStorage.setItem('role', '')
         return await router.push('/login')
+    },
+    async softLogoutAction({ commit, rootGetters }: any) {
+        const token = rootGetters.token
+        // window.alert(token)
+        try {
+            await axios.post('http://127.0.0.1:8000/api/logout', {} , {
+            headers: {
+                // temporary from localstorage (currently does not work)
+                Authorization: `Bearer ${ token }`
+            }
+        })
+    }
+     catch (error) {
+            console.log('Пользователь не был в авторизован:', error)
+        }
+        commit('setToken', '', { root: true })
+        commit('setUsername', '', { root: true })
+        commit('setUserRole', '', { root: true })
+        localStorage.setItem('token', '')
+        localStorage.setItem('username', '')
+        localStorage.setItem('role', '')
     }
 }
 

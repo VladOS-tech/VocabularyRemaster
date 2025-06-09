@@ -9,7 +9,7 @@
         </div>
         <h3>Значение:</h3>
         <div class="meaning-block meaning-block-light">
-            <h4>{{PhraseData.meaning}}</h4>
+            <h4>{{PhraseData.meanings}}</h4>
             <p class="meaning-example-text" v-for="(context, index) in PhraseData.contexts" :key="index">
                 "{{context.content}}"
             </p>

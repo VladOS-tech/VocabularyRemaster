@@ -3,7 +3,6 @@
         <h3>
             Популярные теги
         </h3>
-        <!-- make togglable tags(and dispatch event) + hide this menu on mobile and load popular tags via action -->
         <loadingIcon v-if="isLoading" />
         <div class="tags-block" v-else>
             <div class="tag tag-button tag-highlighted" v-for="tag in unselectedPopularTags" :key="tag.id" @:click="selectTag(tag)"> {{ tag.content }}</div>
@@ -16,7 +15,7 @@
                     {{ tag.content }}
                     </div>
                     <div class="tag-search-inline">
-                        {{ tag.timesUsed }}
+                        {{ tag.count }}
                     </div>
                 </li>
             </ul>
@@ -107,7 +106,6 @@ import { throttle } from '@/assets/lib/throttle';
         },
         async beforeMount() {
             this.throttleTagSearch = throttle(async () => {
-                        // window.alert('debounced')
                         this.tagSearchResult = await this.getTagsSearch({searchQuery: this.tagSearch})
                         if(this.unselectedSearchResultTags.length > 0) this.showTagSelector = true
                     }, 1000)

@@ -21,6 +21,9 @@ export default createStore({
     setPageName(state, name: string) {
       state.pageName = name;
     },
+    setMobile(state){
+      null
+    }
   },
   modules: {
     userStore,

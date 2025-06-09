@@ -36,7 +36,6 @@ Route::middleware(['auth:login', 'role:moderator'])->group(function () {
     Route::put('/moderator/tags/{id}', [ModeratorTagController::class, 'update']);
     Route::delete('/moderator/tags/{id}', [ModeratorTagController::class, 'destroy']);
 
-    Route::post('/logout', [AuthController::class, 'logout']);
 });
 
 Route::middleware(['auth:login', 'role:admin'])->group(function(){
@@ -45,7 +44,6 @@ Route::middleware(['auth:login', 'role:admin'])->group(function(){
     Route::post('/admin/moderators', [AdminModeratorController::class, 'store']);
     Route::delete('/admin/moderators/{id}', [AdminModeratorController::class, 'destroy']);
     Route::put('/admin/moderators/{id}', [AdminModeratorController::class, 'update']);
-    Route::post('/logout', [AuthController::class, 'logout']);
 });
 
 Route::middleware(['auth:sanctum', 'role:admin'])->prefix('admin/deletion-requests')->group(function () {
@@ -62,3 +60,7 @@ Route::prefix('moderator/notifications')->middleware(['auth:sanctum', 'role:mode
     Route::patch('/mark-all-read', [ModeratorNotificationController::class, 'markAllAsRead']);
 });
 
+
+Route::middleware(['auth:login'])->group(function () {
+    Route::post('/logout', [AuthController::class, 'logout']);
+});

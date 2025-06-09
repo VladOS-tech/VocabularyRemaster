@@ -212,8 +212,8 @@ export default {
                 // commit('setStaffPhraseList', data)
                 commit('setModeratorName', data.name)
                 commit('setModeratorEmail', data.login_email)
-                commit('setModeratorContactEmail', data.notification_email)
-                commit('setModeratorContactTelegram', data.telegram_chat_id)
+                commit('setModeratorContactTelegram', data.telegram_chat_id ?? '')
+                commit('setModeratorContactEmail', data.notification_email ?? '')
                 commit('setModeratorId', data.id)
                 console.log(data)
             } catch (error) {

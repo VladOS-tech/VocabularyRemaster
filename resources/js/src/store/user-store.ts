@@ -35,7 +35,7 @@ const getters = {
     searchRequest: (state: State) => state.searchRequest,
     popularTags: (state: State) => {
         console.log(state.availableTags)
-        return state.availableTags.sort((tag) => tag.timesUsed)
+        return state.availableTags.sort((tag) => tag.count)
     },
     availableTags: (state: State) => state.availableTags,
     searchSelectedTags: (state: State) => state.searchSelectedTags,
@@ -140,8 +140,6 @@ const actions = {
             // commit('setState', { key: 'phrasesList', value: data })
         } catch (error) {
             console.error('Ошибка при загрузке фразеологизмов:', error)
-        } finally {
-            commit('setLoading', { whichLoading: 'phrases', newLoading: false })
         }
     }
 }

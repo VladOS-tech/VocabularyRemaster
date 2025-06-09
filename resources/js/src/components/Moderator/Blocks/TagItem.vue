@@ -4,7 +4,7 @@
                 {{tagInfo.content}}
             </div>
             <div class="use-count">
-                {{tagInfo.timesUsed}}
+                {{tagInfo.count}}
             </div>
             <button class="button button-large delete-button" @click="removeTag">
                 Удалить

@@ -114,7 +114,6 @@ const mutations = {
         if (phrase) phrase.status = payload.newStatus
     },
     setAdminDeletionRequestList(state: State, newList: DeletionRequestObject[]) {
-        console.log('penis')
         state.adminDeletionRequestList = newList
     },
     removeAdminDeletionRequest(state: State, removeId: string) {
@@ -127,6 +126,7 @@ const actions = {
         commit('setRequestList', null)
         try {
             const request = 'http://127.0.0.1:8000/api/moderator/phraseologies?status=pending'
+            console.log(request)
             const { data } = await axios.get(request, {
                 headers: {
                     Authorization: `Bearer ${state.token}`
@@ -146,6 +146,7 @@ const actions = {
         commit('setStaffPhraseList', null)
         try {
             const request = 'http://127.0.0.1:8000/api/moderator/phraseologies?status[]=approved&status[]=deletion_requested'
+            console.log(request)
             const { data } = await axios.get(request, {
                 headers: {
                     Authorization: `Bearer ${state.token}`
@@ -165,6 +166,7 @@ const actions = {
     async requestPhraseDeletion({ commit, dispatch }: { commit: any, dispatch: any }, payload: { phraseId: string, reason: string }) {
         try {
             const request = `http://127.0.0.1:8000/api/moderator/phraseologies/${payload.phraseId}/delete-request`
+            console.log(request)
             const { data } = await axios.patch(request, {
                 reason: payload.reason
             }, {
@@ -176,7 +178,6 @@ const actions = {
             console.log(data)
         } catch (error) {
             if (error instanceof AxiosError && error.status == 401) {
-                // return await router.push('/login')
                 return await dispatch('logoutAction')
             }
             console.error('Ошибка при запросе удаления:', error)
@@ -211,7 +212,7 @@ const actions = {
                 }
             })
             // commit('setState', { key: 'popularTags', value: data })
-            commit('setStaffTagList', data.data.map((el: TagObject) => ({ id: el.id, content: el.content, timesUsed: 1000 })))
+            commit('setStaffTagList', data.data.map((el: TagObject) => ({ id: el.id, content: el.content, count: el.count })))
             console.log(data)
         } catch (error) {
             if (error instanceof AxiosError && error.status == 401) {
@@ -282,12 +283,14 @@ const actions = {
         commit('setAdminDeletionRequestList', null)
         try {
             const request = 'http://127.0.0.1:8000/api/admin/deletion-requests'
+            console.log(request)
             const { data } = await axios.get(request, {
                 headers: {
                     Authorization: `Bearer ${state.token}`
                 }   
             })
             // commit('setState', { key: 'popularTags', value: data })
+            console.log(data)
             commit('setAdminDeletionRequestList', data)
             console.log(state.adminDeletionRequestList)
         } catch (error) {
@@ -300,12 +303,14 @@ const actions = {
     async acceptPhraseDeletion({ commit, dispatch }: { commit: any, dispatch: any }, payload: { id: number }) {
         try {
             const request = 'http://127.0.0.1:8000/api/admin/deletion-requests/' + payload.id + '/approve'
-            await axios.post(request, {},
+            console.log(request)
+            const response = await axios.post(request, {},
                 {
                     headers: {
                         Authorization: `Bearer ${state.token}`
                     }
                 })
+            console.log(response)
             commit('removeAdminDeletionRequest', payload.id)
             // commit('setState', { key: 'popularTags', value: data })
         } catch (error) {
@@ -318,7 +323,7 @@ const actions = {
     async rejectPhraseDeletion({ commit, dispatch }: { commit: any, dispatch: any }, payload: { id: number, reason: string }) {
         try {
             const request = 'http://127.0.0.1:8000/api/admin/deletion-requests/' + payload.id + '/reject'
-            await axios.post(request, {
+            const response = await axios.post(request, {
                 comment: payload.reason
             },
                 {
@@ -326,6 +331,7 @@ const actions = {
                         Authorization: `Bearer ${state.token}`
                     }
                 })
+                console.log(response)
             commit('removeAdminDeletionRequest', payload.id)
             // commit('setState', { key: 'popularTags', value: data })
         } catch (error) {

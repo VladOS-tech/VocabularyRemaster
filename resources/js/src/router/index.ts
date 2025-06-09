@@ -15,6 +15,7 @@ import RequestReview from "@/views/ModeratorPages/RequestReview.vue";
 import AddModerator from "@/views/AdminPages/AddModerator.vue";
 import EditModerator from "@/views/AdminPages/EditModerator.vue";
 import DeletionRequestsBlock from "@/components/Administrator/Blocks/DeletionRequestsBlock.vue";
+import RoleSelection from "@/views/RoleSelection.vue";
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -35,6 +36,13 @@ const routes: Array<RouteRecordRaw> = [
     path: '/login',
     components: {
       default: LoginPage,
+      nav: StaffHeader
+    }
+  },
+  {
+    path: '/login/role-selection',
+    components: {
+      default: RoleSelection,
       nav: StaffHeader
     }
   },

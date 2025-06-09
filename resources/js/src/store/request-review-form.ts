@@ -138,16 +138,6 @@ export default {
 
             const tagsToIds = (tags: TagObject[]): number[] => tags.map(el => el.id)
 
-            // const examplesToString = (examples: string[]): string => {
-            //     let examplesString = '['
-            //     examples.forEach(el => {
-            //         examplesString += el + ','
-            //     })
-            //     examplesString = examplesString.substring(0, examplesString.length - 1)
-            //     examplesString += ']'
-            //     return examplesString
-            // }
-
             const emptyChecks = (valid: boolean): boolean => {
                 let isFilled = valid
                 if (!state.inputPhrase) {
@@ -194,7 +184,9 @@ export default {
                 }
                 console.log(requestContent)
                 try {
-                    await axios.put<response>(request, requestContent, config)
+                    console.log(request)
+                    const {data} = await axios.put<response>(request, requestContent, config)
+                    console.log(data)
                     const approveResponse = await axios.patch<response>(`http://127.0.0.1:8000/api/moderator/phraseologies/${state.phraseId}/approve`, {} , config)
                     window.alert(`${approveResponse.data.message}`)
                     return await router.push('/moderator')
@@ -220,9 +212,9 @@ export default {
         // },
         async LoadPhraseInfo({ commit, rootGetters, dispatch }: any, payload: { phraseId: string }) {
             const token = rootGetters.token
-            console.log(payload.phraseId)
             try {
                 const request = 'http://localhost:8000/api/moderator/phraseologies/' + payload.phraseId
+                console.log(request)
                 const { data } = await axios.get<PhraseObject>(request, {
                     headers: {
                         Authorization: `Bearer ${token}`
@@ -235,7 +227,7 @@ export default {
                 commit('setInputMeaning', data.meaning)
                 commit('setInputSelectedTags', data.tags)
                 commit('setPhraseId', data.id)
-                // console.log(data)
+                console.log(data)
             } catch (error) {
                 if (error instanceof AxiosError && error.status == 401) {
                     // return await router.push('/login')

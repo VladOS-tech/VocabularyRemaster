@@ -45,14 +45,6 @@ export default defineComponent({
     computed:{
         ...mapGetters(['isLoading']),
         ...mapGetters('phraseForm', ['inputPhrase', 'inputPhraseError', 'inputTagsError']),
-        // inputPhrase: {
-        //     get(): string {
-        //         return this.inputPhrase
-        //     },
-        //     set(value: string){
-        //         this.setInputPhrase(value)
-        //     }
-        // }
     },
     methods: {
         ...mapMutations(['setLoading']),
@@ -68,7 +60,6 @@ export default defineComponent({
         },
         async checkInput() {
             this.setLoading({ whichLoading: 'inputPhrase', newLoading: true })
-            // store.commit('setInputTags', selectedTags.value); // Сохраняем выбранные теги
             await this.sendPhraseForm();
             this.setLoading({ whichLoading: 'inputPhrase', newLoading: false })
         },

@@ -2,7 +2,6 @@
     <div class="request-block">
         <loadingIcon v-if="isLoading" />
         <phraseItemModer v-else v-for="phrase in staffPhraseList" :key="phrase.id" :PhraseData="phrase" />
-        
     </div>
 </template>
 
