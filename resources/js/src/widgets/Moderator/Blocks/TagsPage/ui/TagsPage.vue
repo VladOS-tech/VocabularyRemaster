@@ -8,7 +8,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { mapMutations } from 'vuex';
-import AddTagForm from '../Forms/AddTagForm.vue';
+import AddTagForm from '@/widgets/Moderator/Forms/AddTagForm';
 import TagsBlock from './TagsBlock.vue';
 
     export default defineComponent({

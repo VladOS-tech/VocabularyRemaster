@@ -21,7 +21,7 @@
     import { defineComponent } from 'vue';
     import { mapActions, mapGetters, mapMutations } from 'vuex';
     import SortingOption from '@/shared/types/SortingOptions';
-    import sortingOptionsJSON from '@shared/assets/JSObjects/SortingOptions.json'
+    import sortingOptionsJSON from '@/shared/assets/JSObjects/SortingOptions.json'
     
     export default defineComponent({
         data(){
@@ -45,7 +45,7 @@
         methods: {
             ...mapMutations(['setSortingOption']),
             getIcon(img: string){
-                return require(`@/assets/images/icons/`+img)
+                return require(`@/shared/assets/images/`+img)
             },
             changeSelectedOption(name: string){
                 this.selectedOption = this.sortingOptions.find((e: SortingOption) => e.name === name)

@@ -1,3 +1,3 @@
-import StaffHeader from "../StaffHeader/ui/StaffHeader.vue";
+import UserHeader from "./ui/UserHeader.vue"
 
-export default StaffHeader
+export default UserHeader

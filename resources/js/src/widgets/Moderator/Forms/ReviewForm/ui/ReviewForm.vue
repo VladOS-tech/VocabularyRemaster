@@ -32,8 +32,8 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { mapActions, mapGetters, mapMutations } from 'vuex';
-import EditMeanings from './FormComponents/EditMeanings.vue';
-import EditTags from './FormComponents/EditTags.vue';
+import EditMeanings from './EditMeanings.vue';
+import EditTags from './EditTags.vue';
 
 export default defineComponent({
     components: { EditMeanings, EditTags },

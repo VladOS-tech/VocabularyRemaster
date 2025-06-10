@@ -15,7 +15,7 @@
 </template>
 
 <script lang="ts">
-import LoadingIcon from '@/components/Misc/LoadingIcon.vue';
+import LoadingIcon from '@/shared/ui/LoadingIcon';
 import { defineComponent } from 'vue';
 import TagItem from './TagItem.vue';
 import { mapActions, mapGetters } from 'vuex';

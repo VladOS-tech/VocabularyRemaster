@@ -8,10 +8,10 @@
         <form class="search-block" :class="{'mobile-search-block-active': isMobile && isSearchActive, 'search-block-inactive-mobile': !isSearchActive || !isMobile}">
             <input id="search-field-id" type="text" class="user-search-field user-search-field-light" placeholder="Поиск" v-model="searchInput" @keypress.enter="search" @input="search" @focus="isSearchActive = true" @blur="isSearchActive = false"/>
             <label for="search-field-id">
-                <img src="@/assets/images/icons/search-icon.svg" alt="search-icon" class="search-icon-header search-icon-header-light">
+                <img src="@/shared/assets/images/search-icon.svg" alt="search-icon" class="search-icon-header search-icon-header-light">
             </label>
             <router-link class="button plus-button-header button-large link-style" to="/add">
-                <img src="@/assets/images/icons/plus-icon.svg" alt="search-icon" class="plus-icon-header">
+                <img src="@/shared/assets/images/plus-icon.svg" alt="search-icon" class="plus-icon-header">
             </router-link>   
         </form>
     </header>

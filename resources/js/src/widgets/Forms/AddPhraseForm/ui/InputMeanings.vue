@@ -23,7 +23,7 @@
                         rows="1" :value="example"></textarea>
                     <button class="button delete-button button-large" v-if="examples.length > 1"
                         @click="removeExample(index);">
-                        <img src="@/assets/images/icons/trash-icon.svg" alt="delete">
+                        <img src="@/shared/assets/images/trash-icon.svg" alt="delete">
                     </button>
                 </div>
                 <div class="input-error" v-if="inputExamplesErrors[index]">
@@ -31,7 +31,7 @@
                 </div>
             </div>
             <button class="button button-large add-meaning-button" v-if="examples.length < 5" @click="addExample();">
-                <img src="@/assets/images/icons/plus-icon.svg" alt="plus">
+                <img src="@/shared/assets/images/plus-icon.svg" alt="plus">
                 Новое применение
             </button>
             <!-- <div class="input-error">

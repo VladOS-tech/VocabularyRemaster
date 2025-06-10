@@ -15,7 +15,7 @@
                     {{ tag.content }}
                     </div>
                     <div class="tag-search-inline">
-                        {{ tag.count }}
+                        {{ tag.timesUsed }}
                     </div>
                 </li>
             </ul>

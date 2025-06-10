@@ -2,7 +2,7 @@ import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
 import UserHeader from "@/widgets/Header/UserHeader";
 import PhrasesPage from "@/pages/UserPages/PhrasesPage";
 import AddPhrasePage from "@/pages/UserPages/AddPhrasePage";
-import StaffHeader from "@/widgets/Header/UserHeader";
+import StaffHeader from "@/widgets/Header/StaffHeader";
 import LoginPage from "@/pages/LoginPage";
 import ModeratorMain from "@/pages/ModeratorPages/ModeratorMain";
 import RequestBlock from "@/widgets/Moderator/Blocks/RequestBlock";

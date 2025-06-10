@@ -10,7 +10,7 @@
                 {{ username }}
             </div>
             <div class="button button-large logout-button" @click="onLogout">
-                <img src="@/assets/images/icons/logout-icon.svg" alt="logout">
+                <img src="@/shared/assets/images/logout-icon.svg" alt="logout">
             </div>
         </div>
     </header>
