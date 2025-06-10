@@ -33,8 +33,8 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { mapGetters, mapMutations, mapActions } from 'vuex';
-import TagObject from '@/assets/types/TagObject';
-import { throttle } from '@/assets/lib/throttle';
+import TagObject from '@/shared/types/TagObject';
+import { throttle } from '@/shared/lib/throttle';
 
 export default defineComponent({
     data() {
@@ -100,5 +100,5 @@ export default defineComponent({
 </script>
 
 <style scoped>
-@import url('@/assets/style/forms/form-components/input-tags.css');
+@import url('InputTags.css');
 </style>

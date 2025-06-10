@@ -77,5 +77,5 @@ import { mapActions } from 'vuex'
 </script>
 
 <style scoped>
-    @import url('@/assets/style/forms/login-form.css');
+    @import url('LoginForm.css');
 </style>

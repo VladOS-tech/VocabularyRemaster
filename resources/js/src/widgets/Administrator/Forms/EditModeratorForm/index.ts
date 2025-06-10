@@ -1,3 +1,3 @@
-import editModeratorForm from "@/store/edit-moderator-form";
+import EditModeratorForm from "./ui/EditModeratorForm.vue"
 
-export default editModeratorForm
+export default EditModeratorForm

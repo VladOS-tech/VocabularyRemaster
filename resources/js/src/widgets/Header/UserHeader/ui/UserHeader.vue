@@ -18,7 +18,7 @@
 </template>
 
 <script lang="ts">
-    import { throttle } from '@/assets/lib/throttle';
+    import { throttle } from '@/shared/lib/throttle';
 import { defineComponent } from 'vue';
     import { mapGetters, mapActions, mapMutations } from 'vuex';
 
@@ -57,5 +57,5 @@ import { defineComponent } from 'vue';
 </script>
 
 <style scoped>
-    @import url('@/assets/style/headers/user-header.css');
+    @import url('UserHeader.css');
 </style>

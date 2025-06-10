@@ -1,14 +1,14 @@
 <template>
     <div class="request-block">
         <loadingIcon v-if="isLoading" />
-        <phraseItemModer v-else v-for="phrase in staffPhraseList" :key="phrase.id" :PhraseData="phrase" />
+        <PhraseItemModer v-else v-for="phrase in staffPhraseList" :key="phrase.id" :PhraseData="phrase" />
     </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import phraseItemModer from '@/components/Moderator/Blocks/PhraseItemModer.vue';
-import LoadingIcon from '@/components/Misc/LoadingIcon.vue';
+import PhraseItemModer from './PhraseItemModer.vue';
+import LoadingIcon from '@/shared/ui/LoadingIcon';
 import { mapActions, mapGetters, mapMutations } from 'vuex';
 
 export default defineComponent({
@@ -18,7 +18,7 @@ export default defineComponent({
         }
     },
     components: {
-        phraseItemModer,
+        PhraseItemModer,
         LoadingIcon
     },
     computed: {
@@ -37,6 +37,6 @@ export default defineComponent({
 </script>
 
 <style scoped>
-@import url('@/assets/style/moderator/elements/requests.css');
+@import url('Requests.css');
 
 </style>

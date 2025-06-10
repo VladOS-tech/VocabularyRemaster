@@ -19,7 +19,7 @@ import LoadingIcon from '@/components/Misc/LoadingIcon.vue';
 import { defineComponent } from 'vue';
 import TagItem from './TagItem.vue';
 import { mapActions, mapGetters } from 'vuex';
-import TagObject from '@/assets/types/TagObject';
+import TagObject from '@/shared/types/TagObject';
 
 export default defineComponent({
     components:{

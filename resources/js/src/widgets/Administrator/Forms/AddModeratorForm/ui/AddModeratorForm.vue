@@ -106,7 +106,7 @@ export default defineComponent({
 </script>
 
 <style>
-@import url('@/assets/style/administrator/forms/add-moderator-form.css');
+@import url('AddModeratorForm.css');
 
 .input-row {
     display: flex;

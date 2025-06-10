@@ -20,8 +20,8 @@
 <script lang="ts">
     import { defineComponent } from 'vue';
     import { mapActions, mapGetters, mapMutations } from 'vuex';
-    import SortingOption from '@/assets/types/SortingOptions';
-    import sortingOptionsJSON from '@/assets/JSObjects/SortingOptions.json'
+    import SortingOption from '@/shared/types/SortingOptions';
+    import sortingOptionsJSON from '@shared/assets/JSObjects/SortingOptions.json'
     
     export default defineComponent({
         data(){
@@ -34,7 +34,7 @@
         computed:{
             ...mapGetters(['sortingOption']),
             notSelectedOptions(): SortingOption[]{
-                return this.sortingOptions.filter(el => { return el.name != this.selectedOption?.name })
+                return this.sortingOptions.filter((el: SortingOption) => { return el.name != this.selectedOption?.name })
             }
         },
         beforeMount(){
@@ -48,7 +48,7 @@
                 return require(`@/assets/images/icons/`+img)
             },
             changeSelectedOption(name: string){
-                this.selectedOption = this.sortingOptions.find(e => e.name === name)
+                this.selectedOption = this.sortingOptions.find((e: SortingOption) => e.name === name)
                 this.setSortingOption(this.selectedOption?.name)
                 this.GetPhrasesInfo()
             },
@@ -58,5 +58,5 @@
 </script>
 
 <style scoped>
-    @import url('@/assets/style/sorting-styles.css');
+    @import url('SortingSelection.css');
 </style>

@@ -1,21 +1,21 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
-import UserHeader from '@/components/UserHeader.vue';
-import PhrasesPage from '@/views/UserPages/PhrasesPage.vue'
-import AddPhrasePage from '@/views/UserPages/AddPhrasePage.vue'
-import StaffHeader from '@/components/StaffHeader.vue';
-import LoginPage from "@/views/LoginPage.vue";
-import ModeratorMain from "@/views/ModeratorPages/ModeratorMain.vue";
-import RequestBlock from "@/components/Moderator/Blocks/RequestBlock.vue";
-import PhraseBlockHolder from "@/components/Moderator/Blocks/PhraseBlockHolder.vue";
-import AdministratorMain from "@/views/AdminPages/AdministratorMain.vue";
-import StaffBlock from "@/components/Administrator/Blocks/StaffBlock.vue";
-import TagsPage from "@/components/Moderator/Blocks/TagsPage.vue";
-import store from "@/store";
-import RequestReview from "@/views/ModeratorPages/RequestReview.vue";
-import AddModerator from "@/views/AdminPages/AddModerator.vue";
-import EditModerator from "@/views/AdminPages/EditModerator.vue";
-import DeletionRequestsBlock from "@/components/Administrator/Blocks/DeletionRequestsBlock.vue";
-import RoleSelection from "@/views/RoleSelection.vue";
+import UserHeader from "@/widgets/Header/UserHeader";
+import PhrasesPage from "@/pages/UserPages/PhrasesPage";
+import AddPhrasePage from "@/pages/UserPages/AddPhrasePage";
+import StaffHeader from "@/widgets/Header/UserHeader";
+import LoginPage from "@/pages/LoginPage";
+import ModeratorMain from "@/pages/ModeratorPages/ModeratorMain";
+import RequestBlock from "@/widgets/Moderator/Blocks/RequestBlock";
+import PhraseBlockHolder from "@/widgets/Moderator/Blocks/PhraseBlockHolder";
+import AdministratorMain from "@/pages/AdminPages/AdministratorMain";
+import StaffBlock from "@/widgets/Administrator/Blocks/StaffBlock";
+import TagsPage from "@/widgets/Moderator/Blocks/TagsPage";
+import store from "../store";
+import RequestReview from "@/pages/ModeratorPages/RequestReview";
+import AddModerator from "@/pages/AdminPages/AddModerator";
+import EditModerator from "@/pages/AdminPages/EditModerator";
+import DeletionRequestsBlock from "@/widgets/Administrator/Blocks/DeletionRequestBlock";
+import RoleSelection from "@/pages/RoleSelection";
 
 const routes: Array<RouteRecordRaw> = [
   {

@@ -1,9 +1,7 @@
-import TagObject from "@/assets/types/TagObject";
-import exampleTags from "@/assets/JSObjects/ExampleTags.json"
-import InputTags from "@/components/Forms/FormComponents/InputTags.vue";
+import TagObject from "@/shared/types/TagObject";
 import axios, { AxiosError } from "axios";
-import router from "@/router";
-import PhraseObject from "@/assets/types/PhraseObject";
+import router from "@/app/router";
+import PhraseObject from "@/shared/types/PhraseObject";
 
 interface State {
     phraseId: string | undefined,

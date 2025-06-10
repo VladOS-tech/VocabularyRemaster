@@ -1,12 +1,8 @@
-import { Store } from 'vuex'
-import axios, { AxiosError } from 'axios'
+import axios from 'axios';
 
-import PhraseObject from "@/assets/types/PhraseObject"
-import TagObject from "@/assets/types/TagObject"
-import LoadingObject from "@/assets/types/LoadingObject"
-import MeaningObject from "@/assets/types/MeaningObject"
-import router from "@/router"
-import exampleTags from "@/assets/JSObjects/ExampleTags.json"
+import LoadingObject from '@/shared/types/LoadingObject';
+import PhraseObject from '@/shared/types/PhraseObject';
+import TagObject from '@/shared/types/TagObject';
 
 interface State {
     isMobile: boolean;
@@ -81,10 +77,10 @@ const actions = {
     async UserPageLoadAllInfo({ dispatch }: { dispatch: any }) {
         await Promise.all([dispatch('GetTags'), dispatch('GetPhrasesInfo')])
     },
-    async GetSearchRecommendedTags({commit }: {commit: any}, searchText: string){
-        //Api request for tags
-        commit('setSearchRecommendedTags', exampleTags)
-    },
+    // async GetSearchRecommendedTags({commit }: {commit: any}, searchText: string){
+    //     //Api request for tags
+    //     // commit('setSearchRecommendedTags', exampleTags)
+    // },
     async GetTags({ commit }: { commit: any }) {
         try {
             const { data } = await axios.get('http://127.0.0.1:8000/api/tags')

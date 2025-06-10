@@ -1,17 +1,17 @@
 <template>
     <div class="login-container">
-        <loginForm/>
+        <LoginForm/>
     </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import loginForm from '../components/Forms/LoginForm.vue';
+import LoginForm from '@/widgets/Forms/LoginForm';
 import { mapMutations } from 'vuex';
 
     export default defineComponent({
         components:{
-            loginForm
+            LoginForm
         },
         data() {
             return{
@@ -28,5 +28,5 @@ import { mapMutations } from 'vuex';
 </script>
 
 <style scoped>
-    @import url('/src/assets/style/pages/login-page.css');
+    @import url('LoginPage');
 </style>

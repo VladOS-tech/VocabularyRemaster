@@ -13,5 +13,5 @@
 </script>
 
 <style scoped>
-    @import url('@/assets/style/misc/loading-icon.css');
+    @import url('LoadingIcon.css');
 </style>

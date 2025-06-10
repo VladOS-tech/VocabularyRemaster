@@ -1,17 +1,17 @@
 <template>
     <div>
-        <addPhraseForm />
+        <AddPhraseForm />
     </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { mapMutations } from 'vuex';
-import addPhraseForm from '@/components/Forms/AddPhraseForm.vue';
+import AddPhraseForm from '@/widgets/Forms/AddPhraseForm';
 
 export default defineComponent({
     components: {
-        addPhraseForm
+        AddPhraseForm
     },
     data() {
         return {
@@ -30,5 +30,5 @@ export default defineComponent({
 </script>
 
 <style>
-@import url('@/assets/style/pages/add-phrase.css');
+@import url('AddPhrasePage.css');
 </style>

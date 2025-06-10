@@ -7,7 +7,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import LoadingIcon from '@/components/Misc/LoadingIcon.vue';
+import LoadingIcon from '@/shared/ui/LoadingIcon';
 import { mapActions, mapGetters, mapMutations } from 'vuex';
 import DeletionRequestItem from './DeletionRequestItem.vue';
 
@@ -37,6 +37,6 @@ import DeletionRequestItem from './DeletionRequestItem.vue';
 </script>
 
 <style scoped>
-    @import url('@/assets/style/moderator/elements/requests.css');
+    @import url('Requests.css');
 </style>
 

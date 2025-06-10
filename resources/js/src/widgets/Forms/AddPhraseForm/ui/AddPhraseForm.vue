@@ -15,7 +15,7 @@
             {{ inputTagsError }}
         </div>
 
-        <inputMeanings />
+        <InputMeanings />
 
         <div class="buttons-block">
             <button class="button button-large confirm-meaning-button"
@@ -31,12 +31,12 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import inputMeanings from './FormComponents/InputMeanings.vue';
-import InputTags from './FormComponents/InputTags.vue';
+import InputMeanings from './InputMeanings.vue';
+import InputTags from './InputTags.vue';
 import { mapActions, mapGetters, mapMutations } from 'vuex';
 
 export default defineComponent({
-    components: { inputMeanings, InputTags },
+    components: { InputMeanings, InputTags },
     data() {
         return {
             
@@ -71,5 +71,5 @@ export default defineComponent({
 </script>
 
 <style scoped>
-@import url('@/assets/style/forms/add-phrase-form.css');
+@import url('AddPhraseForm.css');
 </style>

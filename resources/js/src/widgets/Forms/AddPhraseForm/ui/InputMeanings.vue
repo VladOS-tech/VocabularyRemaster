@@ -105,5 +105,5 @@ export default defineComponent({
 </script>
 
 <style scoped>
-@import url('@/assets/style/forms/form-components/input-meanings.css');
+@import url('InputMeanings.css');
 </style>

@@ -7,7 +7,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { mapMutations } from 'vuex';
-import RoleSelectionForm from '@/components/Forms/RoleSelectionForm.vue';
+import RoleSelectionForm from '@/widgets/Forms/RoleSelectionForm';
 
     export default defineComponent({
         components:{
@@ -28,5 +28,5 @@ import RoleSelectionForm from '@/components/Forms/RoleSelectionForm.vue';
 </script>
 
 <style scoped>
-    @import url('/src/assets/style/pages/login-page.css');
+    @import url('RoleSelection.css');
 </style>

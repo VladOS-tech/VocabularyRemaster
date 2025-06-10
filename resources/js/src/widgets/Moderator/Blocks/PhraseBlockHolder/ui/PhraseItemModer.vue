@@ -41,7 +41,7 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
-import PhraseObject from '@/assets/types/PhraseObject';
+import PhraseObject from '@/shared/types/PhraseObject';
 import { mapActions } from 'vuex';
 
 export default defineComponent({
@@ -87,8 +87,8 @@ export default defineComponent({
 </script>
 
 <style scoped>
-@import url('@/assets/style/elements/phrase-style.css');
-@import url('@/assets/style/moderator/elements/phrase-item.css');
+@import url('PhraseStyle.css');
+@import url('PhraseItem.css');
 
 .deletion-requested {
     display: flex;

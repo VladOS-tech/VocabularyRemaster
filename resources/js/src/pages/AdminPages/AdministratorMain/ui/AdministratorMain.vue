@@ -53,5 +53,5 @@ export default defineComponent({
 </script>
 
 <style scoped>
-    @import url('@/assets/style/administrator/administrator-main.css');
+    @import url('AdministratorMain.css');
 </style>

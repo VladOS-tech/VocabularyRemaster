@@ -29,12 +29,12 @@
 
 import { defineComponent } from 'vue'
 import { mapGetters, mapMutations } from 'vuex';
-import sortingSelectionModerator from '@/components/Moderator/Misc/SortingSelectionModerator.vue';
+import SortingSelectionModerator from '@/widgets/Moderator/Misc';
 
 export default defineComponent({
 
         components: {
-            // sortingSelectionModerator
+            // SortingSelectionModerator
         },
         data() {
             return{
@@ -59,5 +59,5 @@ export default defineComponent({
 </script>
 
 <style scoped>
-    @import url('@/assets/style/moderator/moderator-main.css');
+    @import url('ModeratorMain.css');
 </style>

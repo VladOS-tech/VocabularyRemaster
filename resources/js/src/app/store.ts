@@ -1,11 +1,11 @@
 import { createStore } from "vuex";
-import userStore from "./user-store";
-import loginStore from "./login-store";
-import staffStore from "./staff-store";
-import phraseForm from "./phrase-request-form"
-import reviewForm from "./request-review-form"
-import addModeratorForm from "./add-moderator-form"
-import editModeratorForm from "./edit-moderator-form";
+import userStore from "@/entities/user/model/user-store";
+import loginStore from "@/features/auth";
+import staffStore from "@/entities/moderator/model/staff-store";
+import phraseForm from "@/entities/user/model/phrase-request-form"
+import reviewForm from "@/entities/moderator/model/request-review-form";
+import addModeratorForm from "@/entities/admin/model/add-moderator-form";
+import editModeratorForm from "@/entities/admin/model/edit-moderator-form";
 // ------------
 
 export default createStore({

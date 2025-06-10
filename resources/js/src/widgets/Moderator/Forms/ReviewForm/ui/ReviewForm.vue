@@ -82,5 +82,5 @@ export default defineComponent({
 </script>
 
 <style scoped>
-@import url('@/assets/style/forms/add-phrase-form.css');
+@import url('AddPhraseForm.css');
 </style>

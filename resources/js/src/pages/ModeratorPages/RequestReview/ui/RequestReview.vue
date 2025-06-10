@@ -4,8 +4,8 @@
 </template>
 
 <script lang="ts">
-import LoadingIcon from '@/components/Misc/LoadingIcon.vue';
-import ReviewForm from '@/components/Moderator/Forms/ReviewForm.vue';
+import LoadingIcon from '@/shared/ui/LoadingIcon';
+import ReviewForm from '@/widgets/Moderator/Forms/ReviewForm';
 import { defineComponent } from 'vue';
 import { mapActions } from 'vuex';
 
@@ -36,5 +36,5 @@ import { mapActions } from 'vuex';
 </script>
 
 <style>
-    @import url('@/assets/style/pages/add-phrase.css');
+    @import url('RequestReview.css');
 </style>

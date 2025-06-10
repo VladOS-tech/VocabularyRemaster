@@ -20,8 +20,8 @@
 <script lang="ts">
     import { defineComponent } from 'vue';
     import { mapActions, mapGetters, mapMutations } from 'vuex';
-    import SortingOption from '@/assets/types/SortingOptions';
-    import sortingOptionsJSON from '@/assets/JSObjects/SortingOptions.json'
+    import SortingOption from '@/shared/types/SortingOptions';
+    import sortingOptionsJSON from '@/shared/assets/JSObjects/SortingOptions.json'
     
     export default defineComponent({
         data(){
@@ -67,5 +67,5 @@
 </script>
 
 <style scoped>
-    @import url('@/assets/style/sorting-styles.css');
+    @import url('SortingStyles.css');
 </style>

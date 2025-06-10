@@ -1,4 +1,4 @@
-type PhraseObject = {
+type DeletionRequestObject = {
     id: string,
     created_at: Date,
     moderator_email: string,
@@ -7,4 +7,4 @@ type PhraseObject = {
     reason: string
 }
 
-export default PhraseObject;
+export default DeletionRequestObject;

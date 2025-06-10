@@ -37,7 +37,7 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
-import ModeratorObject from '@/assets/types/ModeratorObject';
+import ModeratorObject from '@/shared/types/ModeratorObject';
 import { mapActions } from 'vuex';
 
 export default defineComponent({
@@ -63,8 +63,8 @@ export default defineComponent({
 </script>
 
 <style scoped>
-@import url('@/assets/style/elements/phrase-style.css');
-@import url('@/assets/style/administrator/elements/staff-item.css');
+@import url('PhraseStyle.css');
+@import url('StaffItem.css');
 
 .moderator-online {
     color: #7FED7C;

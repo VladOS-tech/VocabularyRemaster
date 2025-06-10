@@ -30,5 +30,5 @@ import { mapMutations } from 'vuex';
 </script>
 
 <style>
-@import url("../src/assets/style/global-styles.css");
+@import url("global-styles.css");
 </style>

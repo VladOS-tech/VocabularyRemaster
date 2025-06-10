@@ -31,7 +31,7 @@ export default defineComponent({
 </script>
 
 <style scoped>
-@import url('@/assets/style/forms/login-form.css');
+@import url('RoleSelectionForm.css');
     .form-row{
         display: flex;
         justify-content: center;

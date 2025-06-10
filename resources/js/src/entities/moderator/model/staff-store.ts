@@ -1,10 +1,10 @@
-import PhraseObject from "@/assets/types/PhraseObject"
-import ModeratorObject from "@/assets/types/ModeratorObject"
+import PhraseObject from "@/shared/types/PhraseObject"
+import ModeratorObject from "@/shared/types/ModeratorObject"
 
 import axios, { AxiosError } from "axios"
-import router from "@/router"
-import TagObject from "@/assets/types/TagObject"
-import DeletionRequestObject from "@/assets/types/DeletionRequestObject"
+import router from "@/app/router"
+import TagObject from "@/shared/types/TagObject"
+import DeletionRequestObject from "@/shared/types/DeletionRequestObject"
 
 interface State {
     token: string,

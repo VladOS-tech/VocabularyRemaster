@@ -1,3 +1,3 @@
-import addModeratorForm from "@/store/add-moderator-form";
+import AddModeratorForm from "./ui/AddModeratorForm.vue"
 
-export default addModeratorForm
+export default AddModeratorForm

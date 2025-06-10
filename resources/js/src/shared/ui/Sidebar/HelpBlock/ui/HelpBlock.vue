@@ -18,5 +18,5 @@ import { defineComponent } from 'vue';
 </script>
 
 <style scoped>
-    @import url('@/assets/style/elements/help-block.css');
+    @import url('HelpBlock.css');
 </style>

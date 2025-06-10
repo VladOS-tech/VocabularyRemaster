@@ -1,19 +1,19 @@
 <template>
     <div class="request-block">
         <loadingIcon v-if="isLoading" />
-        <requestItem v-else v-for="request in requestList" :key="request.id" :RequestData="request" />
+        <RequestItem v-else v-for="request in requestList" :key="request.id" :RequestData="request" />
     </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import requestItem from '@/components/Moderator/Blocks/RequestItem.vue';
-import LoadingIcon from '@/components/Misc/LoadingIcon.vue';
+import RequestItem from './RequestItem.vue';
+import LoadingIcon from '@/shared/ui/LoadingIcon';
 import { mapActions, mapGetters, mapMutations } from 'vuex';
 
     export default defineComponent({
         components:{
-            requestItem,
+            RequestItem,
             LoadingIcon
         },
         data(){
@@ -37,6 +37,6 @@ import { mapActions, mapGetters, mapMutations } from 'vuex';
 </script>
 
 <style scoped>
-    @import url('@/assets/style/moderator/elements/requests.css');
+    @import url('Requests.css');
 </style>
 

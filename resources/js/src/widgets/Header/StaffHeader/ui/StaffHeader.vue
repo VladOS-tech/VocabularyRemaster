@@ -34,5 +34,5 @@
 </script>
 
 <style scoped>
-    @import url('@/assets/style/headers/admin-header.css');
+    @import url('StaffHeader.css');
 </style>

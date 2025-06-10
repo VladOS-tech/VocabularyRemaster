@@ -12,7 +12,7 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
-import PhraseObject from '@/assets/types/PhraseObject';
+import PhraseObject from '@/shared/types/PhraseObject';
 
     export default defineComponent({
         props:{
@@ -31,5 +31,5 @@ import PhraseObject from '@/assets/types/PhraseObject';
 </script>
 
 <style scoped>
-    @import url('@/assets/style/elements/phrase-style.css');
+    @import url('PhraseStyle.css');
 </style>

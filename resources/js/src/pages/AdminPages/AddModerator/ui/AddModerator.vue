@@ -3,7 +3,7 @@
 </template>
 
 <script lang="ts">
-import AddModeratorForm from '@/components/Administrator/Forms/AddModeratorForm.vue';
+import AddModeratorForm from '@/widgets/Administrator/Forms/AddModeratorForm';
 import { defineComponent } from 'vue';
 import {  mapMutations } from 'vuex';
 
@@ -32,5 +32,5 @@ import {  mapMutations } from 'vuex';
 </script>
 
 <style>
-    @import url('@/assets/style/pages/add-phrase.css');
+    @import url('AddModerator.css');
 </style>

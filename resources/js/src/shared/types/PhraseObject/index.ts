@@ -1,4 +1,4 @@
-import TagObject from "./TagObject";
+import TagObject from "@/shared/types/TagObject";
 
 type PhraseObject = {
     id: string,

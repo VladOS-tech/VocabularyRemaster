@@ -1,35 +1,35 @@
 <template>
     <div class="phrases-page-main-grid">
         <div class="sort-area">
-            <sortingSelection />
+            <SortingSelection />
         </div>
-        <loadingIcon v-if="isLoading" />
+        <LoadingIcon v-if="isLoading" />
         <div class="phrase-area" v-else>
-            <phraseBlock v-for="phrase in phraseList" :key="phrase.id" :PhraseData="phrase" />
+            <PhraseBlock v-for="phrase in phraseList" :key="phrase.id" :PhraseData="phrase" />
         </div>
         <div class="sidebar-area">
-            <helpBlock />
+            <HelpBlock />
             <SidebarTags/>
         </div>
     </div>
 </template>
 
 <script lang="ts">
-import sortingSelection from '@/components/Misc/SortingSelection.vue'
-import phraseBlock from '@/components/Blocks/PhraseBlock.vue';
-import helpBlock from '@/components/SidePanel/HelpBlock.vue';
-import SidebarTags from '@/components/SidePanel/SidebarTags.vue';
-import loadingIcon from '@/components/Misc/LoadingIcon.vue';
+import SortingSelection from '@/shared/ui/SortingSelection';
+import PhraseBlock from '@/widgets/Blocks/PhraseBlock';
+import HelpBlock from '@/shared/ui/Sidebar/HelpBlock';
+import SidebarTags from '@/shared/ui/Sidebar/SidebarTags';
+import LoadingIcon from '@/shared/ui/LoadingIcon';
 import { defineComponent } from 'vue';
 import { mapMutations, mapActions, mapGetters } from 'vuex';
 
 export default defineComponent({
     components:{
-        sortingSelection,
-        phraseBlock,
-        helpBlock,
+        SortingSelection,
+        PhraseBlock,
+        HelpBlock,
         SidebarTags,
-        loadingIcon
+        LoadingIcon
     },
     data(){
         return{
@@ -54,5 +54,5 @@ export default defineComponent({
 </script>
 
 <style scoped>
-@import url('@/assets/style/pages/phrases-screen.css');
+@import url('PhrasesPage.css');
 </style>

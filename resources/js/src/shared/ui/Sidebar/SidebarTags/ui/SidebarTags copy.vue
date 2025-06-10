@@ -3,7 +3,7 @@
         <h3>
             Популярные теги
         </h3>
-        <loadingIcon v-if="isLoading" />
+        <LoadingIcon v-if="isLoading" />
         <div class="tags-block" v-else>
             <div class="tag tag-button tag-highlighted" v-for="tag in unselectedPopularTags" :key="tag.id" @:click="selectTag(tag)"> {{ tag.content }}</div>
         </div>
@@ -41,10 +41,10 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import loadingIcon from '../Misc/LoadingIcon.vue';
-import TagObject from '@/assets/types/TagObject';
+import LoadingIcon from '@/shared/ui/LoadingIcon';
+import TagObject from '@/shared/types/TagObject';
 import { mapGetters, mapActions, mapMutations } from 'vuex';
-import { throttle } from '@/assets/lib/throttle';
+import { throttle } from '@/shared/lib/throttle';
 
     export default defineComponent({
         data() {
@@ -58,7 +58,7 @@ import { throttle } from '@/assets/lib/throttle';
             }
         },
         components:{
-            loadingIcon
+            LoadingIcon
         },
         computed:{
             ...mapGetters(['searchSelectedTags']),
@@ -116,6 +116,6 @@ import { throttle } from '@/assets/lib/throttle';
 </script>
 
 <style scoped>
-    @import url('@/assets/style/elements/popular-tags.css');
-    @import url('@/assets/style/forms/form-components/input-tags.css');
+    @import url('PopularTags.css');
+    @import url('InputTags.css');
 </style>

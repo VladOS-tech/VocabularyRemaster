@@ -1,7 +1,6 @@
 import axios, { AxiosError } from "axios";
-import router from "@/router";
+import router from "@/app/router";
 import { z, ZodError } from "zod";
-import ModeratorObject from "@/assets/types/ModeratorObject";
 
 interface State {
     moderatorId: string | undefined,

@@ -36,7 +36,7 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
-import DeletionRequestObject from '@/assets/types/DeletionRequestObject';
+import DeletionRequestObject from '@/shared/types/DeletionRequestObject';
 import { mapActions } from 'vuex';
 
 export default defineComponent({
@@ -86,7 +86,7 @@ export default defineComponent({
 </script>
 
 <style scoped>
-@import url('@/assets/style/elements/phrase-style.css');
+@import url('PhraseStyle.css');
 
 .removal-reason {
     color: #FF3D3D;

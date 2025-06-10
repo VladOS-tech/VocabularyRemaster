@@ -4,8 +4,8 @@
 </template>
 
 <script lang="ts">
-import EditModeratorForm from '@/components/Administrator/Forms/EditModeratorForm.vue';
-import LoadingIcon from '@/components/Misc/LoadingIcon.vue';
+import EditModeratorForm from '@/widgets/Administrator/Forms/EditModeratorForm';
+import LoadingIcon from '@/shared/ui/LoadingIcon';
 import { defineComponent } from 'vue';
 import {  mapActions } from 'vuex';
 
@@ -36,5 +36,5 @@ import {  mapActions } from 'vuex';
 </script>
 
 <style>
-    @import url('@/assets/style/pages/add-phrase.css');
+    @import url('EditModerator');
 </style>

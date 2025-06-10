@@ -13,7 +13,7 @@
 </template>
 
 <script lang="ts">
-import TagObject from '@/assets/types/TagObject';
+import TagObject from '@/shared/types/TagObject';
 import { PropType } from 'vue';
 import { defineComponent } from 'vue';
 import { mapActions } from 'vuex';
