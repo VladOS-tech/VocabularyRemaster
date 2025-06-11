@@ -1,5 +1,5 @@
 .light-header-colors{
-    background-image: var(--header-gradient);
+    background-color: var(--header-color);
 }
 
 .header-class{
@@ -13,7 +13,7 @@
     align-items: center;
     column-gap: 50px;
     min-height: 32px;
-    box-shadow: var(--default-shadow);
+    /* box-shadow: var(--default-shadow); */
     z-index: 10;
 }
 
@@ -31,19 +31,19 @@
 
 .mobile-search-block-active{
     z-index: 1;
-    background-color: var(--light-header-color);
+    background-color: var(--header-color);
     width: calc(100% - 100px);
     position: absolute;
 }
 
 .user-search-field-light{
-    background-color: #FFFFFF;
+    background-color: var(--white);
 }
 
 .user-search-field{
-    border-radius: var(--default-border-radius);
+    border-radius: var(--medium-border-radius);
     border-style: none;
-    box-shadow: var(--default-shadow);
+    /* box-shadow: var(--default-shadow); */
     height: 100%;
     width: 100%;
     min-width: 18.67px;

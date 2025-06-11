@@ -16,7 +16,7 @@
     user-select: none;
     flex-shrink: 0;
     position: relative;
-    background-color: var(--light-background-color);
+    background-color: var(--block-color);
 }
 
 .sort-button:hover{
@@ -35,12 +35,12 @@
 }
 
 .sort-options-panel-light{
-    background-color: var(--light-background-color);
+    background-color: var(--block-color);
 }
 
 .sort-options-panel{
     box-shadow: var(--default-shadow);
-    border-radius: var(--default-border-radius);
+    border-radius: var(--medium-border-radius);
     row-gap: 5px;
     padding: 5px;
     width: calc(100% - 10px);

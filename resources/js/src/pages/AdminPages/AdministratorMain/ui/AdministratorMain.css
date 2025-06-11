@@ -61,7 +61,7 @@
 .tabs-vertical-separator{
     width: 2px;
     height: 25px;
-    background-color: black;
+    background-color: var(--black);
     align-self: center;
 }
 
@@ -71,7 +71,7 @@
 }
 
 .tab-style{
-    color: black;
+    color: var(--black);
 }
 
 .tab-selected{
@@ -91,7 +91,7 @@
 }
 
 .admin-search-field-light{
-    background-color: #FFFFFF;
+    background-color: var(--white);
 }
 
 .admin-search-field{

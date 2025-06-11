@@ -1,22 +1,16 @@
-.post-date-light{
-    color: var(--light-date-color);
-}
-
 .post-date{
+    color: var(--date-color);
     font-size: 20px;
     margin: 0;
 }
 
-.phrase-block-light{
-    background: var(--block-background-gradient);
-    color: black;
-}
-
 .phrase-block{
+    background-color: var(--block-color);
+    color: black;
     display: flex;
     flex-direction: column;
     gap: 10px;
-    border-radius: var(--default-border-radius);
+    border-radius: var(--big-border-radius);
     border-style: solid;
     border-width: 0px;
     border-color: var(--border-color);

@@ -1,6 +1,6 @@
 <template>
-    <div class="phrase-block phrase-block-light">
-        <p class="post-date post-date-light">
+    <div class="phrase-block">
+        <p class="post-date">
             {{dateToString(PhraseData.date)}}
         </p>
         <h2>{{ PhraseData.content }}</h2>

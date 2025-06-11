@@ -4,19 +4,44 @@
 
 :root{
     /* Colors */
-    --light-header-color: #7BE8C7;
+    /* --light-header-color: #7BE8C7;
     --light-background-color: #ffffff;
     --light-block-color:#F9F3FF;
     --light-tag-color: #E2C7FF;
     --light-meaning-block-color: #EEDEFF;
     --button-color: #F4FF75;
     --border-color: #A9A9A9;
-    --light-date-color: #818181;
+    --light-date-color: #818181; */
+    --dark-purple: #8854CE;
+    --medium-purple: #B384EE;
+    --lightest-purple: #F4EDFD;
+    --light-purple: #DDC8F9;
+    --black: #000000;
+    --white: #FFFFFF;
+    --grey: #818181;
+    --yellow: #F7FF99;
+    --green: #7FED7C;
+    --red: #FF7878;
 
-    --block-background-gradient: linear-gradient(315deg, rgba(243,232,255,1) 0%, rgba(249,243,255,1) 100%);
-    /* --header-gradient: linear-gradient(180deg, #B384EE 0%, #B384EE 64%, #9872C8 100%); */
-    --header-gradient: linear-gradient(180deg, #B384EE 0%, #B384EE 64%, #a67cda 100%);
+    /* Functional colors */
+    --positive-color: var(--green);
+    --negative-color: var(--red);
+    --button-color: var(--yellow);
+    --header-color: var(--light-purple);
+    --background-color: var(--lightest-purple);
+    --block-color: var(--white);
+    --tag-color: var(--light-purple);
+    --tag-text-color: var(--dark-purple);
+    --separator: var(--medium-purple);
+    --text-color: var(--black);
+    --date-color: var(--grey);
 
+    /* Borders */
+    --medium-border-radius: 10px;
+    --big-border-radius: 20px;
+
+    /* Functional-borders */
+    
     /* Shadow */
     --default-shadow: 0px 4px 4px rgba(0, 0, 0, 0.1);
 
@@ -24,8 +49,12 @@
     --default-font-family: "Roboto", sans-serif;
     --default-header-font-family: "Roboto Slab", sans-serif;
 
-    /* Borders */
-    --default-border-radius: 10px;
+    /* --block-background-gradient: linear-gradient(315deg, rgba(243,232,255,1) 0%, rgba(249,243,255,1) 100%); */
+    /* --header-gradient: linear-gradient(180deg, #B384EE 0%, #B384EE 64%, #9872C8 100%); */
+    /* --header-gradient: linear-gradient(180deg, #B384EE 0%, #B384EE 64%, #a67cda 100%); */
+
+
+
 
     /* Animation */
     --default-transition-speed: .1s;
@@ -48,15 +77,15 @@ html{
 }
 
 body{
-    background-color: var(--light-background-color);
+    background-color: var(--background-color);
     font-family: var(--default-font-family);
     margin: 0;
 }
 
 h1, h2, h3 {
-    font-family: var(--default-header-font-family);
+    font-family: var(--default-font-family);
     font-weight: 500;
-    font-style: normal;
+    font-style: medium;
 }
 
 @media screen and (max-width: 768px) {
@@ -116,7 +145,7 @@ p {
 }
 
 .button {
-    border-radius: var(--default-border-radius);
+    border-radius: var(--medium-border-radius);
     border-style: none;
     display: flex;
     position: relative;
@@ -126,8 +155,8 @@ p {
     text-align: center;
     justify-content: center;
     align-items: center;
-    font-family: var(--default-header-font-family);
-    box-shadow: var(--default-shadow);
+    font-family: var(--default-font-family);
+    /* box-shadow: var(--default-shadow); */
     font-weight: 500;
     font-style: normal;
     font-size: 20px;
@@ -181,7 +210,7 @@ p {
     /* box-shadow: var(--default-shadow); */
     border-style: solid;
     border-width: 0 0 2px 0;
-    border-color: var(--border-color);
+    /* border-color: var(--border-color); */
     width: 100%;
     padding: 5px;
     box-sizing: border-box;
@@ -197,7 +226,7 @@ p {
 }
 
 .input-error{
-    color: #FF3D3D;
+    color: var(--negative-color);
     font-size: 16px;
     width: 100%;
 }
