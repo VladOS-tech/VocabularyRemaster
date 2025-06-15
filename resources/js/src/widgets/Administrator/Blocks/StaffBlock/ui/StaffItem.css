@@ -24,7 +24,7 @@
     border-radius: var(--medium-border-radius);
     background-color: var(--tag-color);
     padding: 5px;
-    box-shadow: var(--default-shadow);
+    /* box-shadow: var(--default-shadow); */
 }
 
 /* .staff-data-field{
