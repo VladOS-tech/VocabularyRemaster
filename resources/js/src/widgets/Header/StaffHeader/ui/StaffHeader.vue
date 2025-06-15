@@ -9,9 +9,9 @@
             <div class="header-name">
                 {{ username }}
             </div>
-            <div class="button button-large logout-button" @click="onLogout">
+            <button class="button button-large logout-button" :disabled="isLoading" @click="onLogout">
                 <img src="@/shared/assets/images/logout-icon.svg" alt="logout">
-            </div>
+            </button>
         </div>
     </header>
 </template>
@@ -21,13 +21,20 @@
     import { mapGetters, mapActions } from 'vuex';
 
     export default defineComponent({
+        data(){
+            return{
+                isLoading: false as boolean
+            }
+        },
         computed:{
             ...mapGetters(['username', 'pageName'])
         },
         methods:{
             ...mapActions(['logoutAction']),
-            onLogout(){
-                this.logoutAction()
+            async onLogout(){
+                this.isLoading = true
+                await this.logoutAction()
+                this.isLoading = false
             }
         }
     }) 

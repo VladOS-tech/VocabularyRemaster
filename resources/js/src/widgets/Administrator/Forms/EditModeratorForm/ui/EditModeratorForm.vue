@@ -56,10 +56,10 @@
                 {{ moderatorPasswordError }}
             </div>
             <div class="buttons-block">
-                <button class="button button-large confirm-moderator-button" @click="checkInput">
+                <button class="button button-large confirm-moderator-button" :disabled="isLoading" @click="checkInput">
                     Готово
                 </button>
-                <router-link to="/admin" class="button button-large cancel-edit-moderator-button link-style">
+                <router-link to="/admin" class="button-large cancel-edit-moderator-button link-style" :class="isLoading ? 'router-link--disabled' : 'button'">
                     Отмена
                 </router-link>
             </div>

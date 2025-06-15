@@ -24,13 +24,24 @@
             </div>
         </div>
         <div class="admin-staff-button">
-            <button class="button button-large remove-phrase-button" @click="removeModerator" :disabled="isLoading">
+            <button class="button button-large remove-phrase-button" @click="showConfirmationPopup" :disabled="isLoading">
                 Удалить
             </button>
             <router-link :to="`/admin/edit-moderator/${StaffData.id}`"
                 class="link-style button button-large review-button">
                 Изменить данные
             </router-link>
+        </div>
+        <div v-if="showConfirmation" class="popup-form-container">
+            <div class="popup-form">
+                <div class="popup-title">
+                    Удалить модератора?
+                </div>
+                <div class="popup-button">
+                    <button class="button button-large button-confirm" :disabled="isLoading" @click="removeModerator">Да</button>
+                    <button class="button button-large button-cancel" :disabled="isLoading" @click="hideConfirmationPopup">Отмена</button>
+                </div>
+            </div>
         </div>
     </div>
 </template>
@@ -49,7 +60,8 @@ export default defineComponent({
     },
     data() {
         return {
-            isLoading: false as boolean
+            isLoading: false as boolean,
+            showConfirmation: false as boolean
         }
     },
     methods: {
@@ -57,6 +69,12 @@ export default defineComponent({
         async removeModerator() {
             this.isLoading = true
             await this.removeModeratorRequest({ id: this.StaffData.id })
+        },
+        showConfirmationPopup() {
+            this.showConfirmation = true
+        },
+        hideConfirmationPopup() {
+            this.showConfirmation = false
         }
     }
 })

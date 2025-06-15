@@ -31,8 +31,8 @@
                 <textarea @input="heightResize" type="text" class="input-field input-field-regular input-field-textarea"
                     rows="1" maxlength="255" v-model="reason"></textarea>
                 <div class="popup-button">
-                    <button class="button button-large button-confirm" :disabled="reason.length < 3"  @click="requestDeletion">Готово</button>
-                    <button class="button button-large button-cancel" @click="hideReasonForm">Отмена</button>
+                    <button class="button button-large button-confirm" :disabled="reason.length < 3 || isLoading"  @click="requestDeletion">Готово</button>
+                    <button class="button button-large button-cancel" :disabled="isLoading" @click="hideReasonForm">Отмена</button>
                 </div>
             </div>
         </div>

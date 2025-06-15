@@ -5,7 +5,7 @@
                 {{ pageName }}
             </h1>
         </router-link>
-        <form class="search-block" :class="{'mobile-search-block-active': isMobile && isSearchActive, 'search-block-inactive-mobile': !isSearchActive || !isMobile}">
+        <form v-if="$route.path !== '/add'" class="search-block" :class="{'mobile-search-block-active': isMobile && isSearchActive, 'search-block-inactive-mobile': !isSearchActive || !isMobile}">
             <input id="search-field-id" type="text" class="user-search-field user-search-field-light" placeholder="Поиск" v-model="searchInput" @keypress.enter="search" @input="search" @focus="isSearchActive = true" @blur="isSearchActive = false"/>
             <label for="search-field-id">
                 <img src="@/shared/assets/images/search-icon.svg" alt="search-icon" class="search-icon-header search-icon-header-light">

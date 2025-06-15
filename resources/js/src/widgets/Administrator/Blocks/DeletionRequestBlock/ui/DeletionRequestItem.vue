@@ -11,7 +11,7 @@
         <h3>Причина удаления:</h3>
         <h4 class="removal-reason">{{ RequestData.reason }}</h4>
          <div class="admin-staff-button">
-             <button class="button button-large button-confirm" @click="acceptRequest" :disabled="isLoading">
+             <button class="button button-large button-confirm" @click="showConfirmationPopup" :disabled="isLoading">
                  Подтвердить
              </button>
              <button class="button button-large button-reject" @click="showReasonForm" :disabled="isLoading">
@@ -26,8 +26,19 @@
                 <textarea @input="heightResize" type="text" class="input-field input-field-regular input-field-textarea"
                     rows="1" maxlength="255" v-model="reason"></textarea>
                 <div class="popup-button">
-                    <button class="button button-large button-confirm" :disabled="reason.length < 3"  @click="rejectRequest">Готово</button>
-                    <button class="button button-large button-reject" @click="hideReasonForm">Отмена</button>
+                    <button class="button button-large button-confirm" :disabled="reason.length < 3 || isLoading"  @click="rejectRequest">Готово</button>
+                    <button class="button button-large button-reject" :disabled="isLoading" @click="hideReasonForm">Отмена</button>
+                </div>
+            </div>
+        </div>
+        <div v-if="showConfirmation" class="popup-form-container">
+            <div class="popup-form">
+                <div class="popup-title">
+                    Удалить фразеологизм?
+                </div>
+                <div class="popup-button">
+                    <button class="button button-large button-confirm" :disabled="isLoading" @click="acceptRequest">Да</button>
+                    <button class="button button-large button-cancel" :disabled="isLoading" @click="hideConfirmationPopup">Отмена</button>
                 </div>
             </div>
         </div>
@@ -50,6 +61,7 @@ export default defineComponent({
         return{
             isLoading: false as boolean,
             showPopup: false as boolean,
+            showConfirmation: false as boolean,
             reason: '' as string
         }
     },
@@ -62,11 +74,11 @@ export default defineComponent({
         },
         async acceptRequest(){
             this.isLoading = true
-            this.acceptPhraseDeletion({id: this.RequestData.id})
+            await this.acceptPhraseDeletion({id: this.RequestData.id})
         },
         async rejectRequest(){
             this.isLoading = true
-            this.rejectPhraseDeletion({id: this.RequestData.id, reason: this.reason})
+            await this.rejectPhraseDeletion({id: this.RequestData.id, reason: this.reason})
 
         },
         heightResize(e: Event) {
@@ -80,6 +92,12 @@ export default defineComponent({
         },
         hideReasonForm() {
             this.showPopup = false
+        },
+        showConfirmationPopup() {
+            this.showConfirmation = true
+        },
+        hideConfirmationPopup() {
+            this.showConfirmation = false
         }
     }
 })

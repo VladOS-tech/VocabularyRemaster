@@ -15,7 +15,7 @@
         </div>
         <div v-if="errors.password" class="input-error">{{ errors.password }}</div>
         <div v-if="errors.root" class="input-error">{{ errors.root }}</div>
-        <button class="button button-large login-button" type="submit">
+        <button class="button button-large login-button" type="submit" :disabled="isLoading">
             Вход
         </button>
     </form>
@@ -42,17 +42,20 @@ import { mapActions } from 'vuex'
                     login: null as null | string,
                     password: null as null | string,
                     root: null as null | string
-                }
+                },
+                isLoading: false as boolean
             }
         },
         methods: {
             ...mapActions(['loginAction']),
             async onLogin(){
+                this.isLoading = true
                 this.errors = {login: null, password: null, root: null}
                 const result = loginValidation.safeParse({login: this.login, password: this.password})
                 if(result.success){
                     const loginErr = await this.loginAction({login: result.data.login, password: result.data.password})
                     this.errors.root = loginErr
+                    this.isLoading = false
                 }
                 else{
                     result.error.issues.forEach((issue) => {
@@ -70,6 +73,7 @@ import { mapActions } from 'vuex'
                                 break;
                         }
                     })
+                    this.isLoading = false
                 }
             }
         }
