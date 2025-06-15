@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="add-moderator-block add-moderator-block-light">
+        <div class="add-moderator-block">
             <h2>Добавить модератора</h2>
             <div class="separator-line" />
 
@@ -68,7 +68,7 @@
                 <button class="button button-large confirm-moderator-button" @click="checkInput">
                     Готово
                 </button>
-                <router-link to="/admin" class="button button-large cancel-meaning-button link-style">
+                <router-link to="/admin" class="button button-large cancel-add-moderator-button link-style">
                     Отмена
                 </router-link>
             </div>

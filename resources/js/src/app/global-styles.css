@@ -28,6 +28,7 @@
     --negative-color: var(--red);
     --button-color: var(--yellow);
     --header-color: var(--light-purple);
+    --meaning-background: var(--light-purple);
     --background-color: var(--lightest-purple);
     --block-color: var(--white);
     --tag-color: var(--light-purple);
@@ -35,6 +36,7 @@
     --separator: var(--medium-purple);
     --text-color: var(--black);
     --date-color: var(--grey);
+    --input-color: var(--lightest-purple);
 
     /* Borders */
     --medium-border-radius: 10px;
@@ -128,7 +130,8 @@ p {
 }
 
 .tag{
-    border-radius: var(--default-border-radius);
+    border-radius: var(--medium-border-radius);
+    color: var(--tag-text-color);
     /* background-color: var(--light-tag-color); */
     /* border-style: none; */
     display: flex;
@@ -141,10 +144,11 @@ p {
 }
 
 .tag-generic{
-    background-color: var(--light-tag-color);
+    background-color: var(--tag-color);
 }
 
 .button {
+    text-decoration: none;
     border-radius: var(--medium-border-radius);
     border-style: none;
     display: flex;
@@ -178,21 +182,20 @@ p {
     pointer-events: none;
 } */
 
-.button:hover{
+.button:hover:enabled{
     cursor: pointer;
     filter:brightness(90%);
     transition: var(--default-transition-speed);
+}
+
+.button:disabled{
+    cursor:not-allowed;
 }
 
 /* .button:hover:before{
     transition: var(--default-transition-speed);
     opacity: .1;
 } */
-
-.link-style{
-    text-decoration: none;
-    color: black;
-}
 
 .input-field-regular{
     font-size: 16px;
@@ -201,15 +204,16 @@ p {
 
 .input-field-header{
     font-size: 32px;
-    font-family: var(--default-header-font-family);
+    font-family: var(--default-font-family);
     font-weight: 500px;
 }
 
 .input-field{
-    /* border-radius: var(--default-border-radius); */
+    border-radius: var(--medium-border-radius);
+    background-color: var(--input-color);
     /* box-shadow: var(--default-shadow); */
-    border-style: solid;
-    border-width: 0 0 2px 0;
+    border-style: none;
+    /* border-width: 0 0 2px 0; */
     /* border-color: var(--border-color); */
     width: 100%;
     padding: 5px;
@@ -218,6 +222,7 @@ p {
 
 .input-field:focus{
     outline-width: 0;
+    outline-style: none;
 }
 
 .input-field-textarea{
@@ -225,8 +230,97 @@ p {
     overflow: hidden;
 }
 
+.link-style{
+    text-decoration: none;
+    color: black;
+}
+
+.router-link--disabled{
+    text-decoration: none;
+    border-radius: var(--medium-border-radius);
+    border-style: none;
+    display: flex;
+    position: relative;
+    /* pointer-events: none; */
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
 .input-error{
     color: var(--negative-color);
     font-size: 16px;
     width: 100%;
+}
+
+.separator-line{
+    width: 100%;
+    background-color: var(--separator);
+    height: 2px;
+}
+
+.remove-tag-button{
+    display: flex;
+    justify-items: center;
+    align-items: center;
+    align-content: center;
+    background-color: #FF7878;
+    padding: 5px;
+    width: 20px;
+    height: 20px;
+}
+
+.remove-tag-button img{
+    width: 10px;
+    height: auto;
+    align-self: center;
+}
+
+.tag-editable{
+    gap: 10px;
+}
+
+.popup-form-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    backdrop-filter: blur(5px);
+}
+
+.popup-form {
+    display: flex;
+    flex-direction: column;
+    align-self: center;
+    gap: 10px;
+    border-radius: var(--big-border-radius);
+    /* border-style: solid;
+    border-width: 0px;
+    border-color: var(--border-color); */
+    padding: 10px;
+    box-shadow: var(--default-shadow);
+    background-color: var(--block-color);
+}
+
+.popup-title {
+    font-size: 32px;
+    font-family: var(--default-header-font-family);
+    font-weight: 500;
+    font-style: normal;
+}
+
+.popup-button {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+.button-confirm {
+    background-color: var(--positive-color);
+}
+
+.button-cancel {
+    background-color: var(--negative-color);
 }

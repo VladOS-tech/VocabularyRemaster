@@ -1,5 +1,5 @@
 <template>
-    <div class="request-block">
+    <div class="staff-block-holder">
         <LoadingIcon v-if="isLoading" />
         <StaffItemAdmin v-for="staff in moderatorList" :key="staff.id" :StaffData="staff" />
     </div>
@@ -37,6 +37,6 @@ import { mapActions, mapGetters, mapMutations } from 'vuex';
 </script>
 
 <style scoped>
-    @import url('Requests.css');
+    @import url('StaffBlock.css');
 </style>
 

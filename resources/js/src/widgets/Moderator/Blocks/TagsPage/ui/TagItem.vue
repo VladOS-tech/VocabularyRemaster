@@ -6,7 +6,7 @@
             <div class="use-count">
                 {{tagInfo.count}}
             </div>
-            <button class="button button-large delete-button" @click="removeTag">
+            <button class="button button-large delete-tag-button" @click="removeTag">
                 Удалить
             </button>
     </div>
@@ -49,8 +49,12 @@ import { mapActions } from 'vuex';
     content: "";
     grid-column: 1 / -1;
     height: 1px;
-    background: var(--border-color);
+    background-color: var(--separator);
     display: block;
     margin-top: -1px;
+}
+
+.delete-tag-button{
+    background-color: var(--negative-color);
 }
 </style>

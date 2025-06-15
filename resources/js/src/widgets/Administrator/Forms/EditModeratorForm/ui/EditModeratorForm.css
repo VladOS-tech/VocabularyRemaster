@@ -1,13 +1,10 @@
-.add-moderator-block-light{
-    background: var(--block-background-gradient);
+.edit-moderator-block{
+    background-color: var(--block-color);
     color: black;
-}
-
-.add-moderator-block{
-    border-radius: var(--default-border-radius);
-    border-style: solid;
+    border-radius: var(--big-border-radius);
+    /* border-style: solid;
     border-width: 0px;
-    border-color: var(--border-color);
+    border-color: var(--border-color); */
     padding: 10px;
     box-shadow: var(--default-shadow);
     animation: var(--default-appear-animation);
@@ -17,20 +14,18 @@
     gap: 10px;
 }
 
-.separator-line{
-    width: 100%;
-    background-color: var(--light-tag-color);
-    height: 2px;
+.cancel-edit-moderator-button {
+    background-color: #bfbfbf;
 }
 
 @media screen and (min-width: 769px) {
-    .add-moderator-block{
+    .edit-moderator-block{
         margin: 61px 30% 30px 30%;
     }
 }
 
 @media screen and (max-width: 768px) {
-    .add-moderator-block{
+    .edit-moderator-block{
         margin: 20px 1% 30px 1%;
     }
 }

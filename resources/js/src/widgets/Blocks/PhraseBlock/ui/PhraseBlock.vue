@@ -1,6 +1,6 @@
 <template>
-    <div class="phrase-block">
-        <p class="post-date">
+    <div class="user-phrase-block">
+        <p class="user-post-date">
             {{dateToString(PhraseData.date)}}
         </p>
         <h2>{{ PhraseData.content }}</h2>
@@ -8,9 +8,10 @@
             <div class="tag tag-generic" v-for="tag in PhraseData.tags" :key="tag.id">{{ tag.content }}</div>
         </div>
         <h3>Значение:</h3>
-        <div class="meaning-block meaning-block-light">
+        <div class="user-meaning-block">
             <h4>{{PhraseData.meanings}}</h4>
-            <p class="meaning-example-text" v-for="(context, index) in PhraseData.contexts" :key="index">
+            <div class="user-separator"/>
+            <p class="user-meaning-example-text" v-for="(context, index) in PhraseData.contexts" :key="index">
                 "{{context.content}}"
             </p>
         </div>

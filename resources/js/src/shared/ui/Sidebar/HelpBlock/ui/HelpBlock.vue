@@ -1,9 +1,9 @@
 <template>
-    <div class="help-block help-block-light">
+    <div class="help-block">
         <p class="help-text">
             Помогите нам дополнить базу знаний новыми выражениями
         </p>
-        <router-link to="/add" class="button button-large button-side link-style">
+        <router-link to="/add" class="button button-large help-button-side">
             Добавить выражение
         </router-link>
     </div>    

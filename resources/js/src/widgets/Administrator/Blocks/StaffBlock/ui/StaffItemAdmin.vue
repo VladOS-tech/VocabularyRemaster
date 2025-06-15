@@ -1,5 +1,5 @@
 <template>
-    <div class="phrase-block phrase-block-light">
+    <div class="staff-block">
         <h2>{{ StaffData.name }} <span
                 :class="StaffData.online_status ? 'moderator-online' : 'moderator-offline'">•</span></h2>
         <div class="staff-data-row">
@@ -63,7 +63,6 @@ export default defineComponent({
 </script>
 
 <style scoped>
-@import url('PhraseStyle.css');
 @import url('StaffItem.css');
 
 .moderator-online {

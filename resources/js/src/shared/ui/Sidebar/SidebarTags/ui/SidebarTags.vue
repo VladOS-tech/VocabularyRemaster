@@ -1,5 +1,5 @@
 <template>
-    <div class="popular-tags-block popular-tags-block-light">
+    <div class="popular-tags-block">
         <h3>
             Популярные теги
         </h3>
@@ -9,8 +9,8 @@
         </div>
         <div class="tag-search-input-area">
             <input type="text" class="input-field input-field-regular" v-model="tagSearch" ref="tagSearchInputField" placeholder="Введите желаемый тег:" @input="searchTag" @keyup="closeTagSelector">
-            <ul class="tag-selector-list" v-if="showTagSelector && tagSearch.length >= 3">
-                <li class="tag-selector-list-element button" v-for="tag in unselectedSearchResultTags" :key="tag.id" @click="selectTag(tag); selectTagViaSearch();">
+            <ul class="sidebar-tag-selector-list" v-if="showTagSelector && tagSearch.length >= 3">
+                <li class="sidebar-tag-selector-list-element button" v-for="tag in unselectedSearchResultTags" :key="tag.id" @click="selectTag(tag); selectTagViaSearch();">
                     <div class="tag-search-inline">
                     {{ tag.content }}
                     </div>
@@ -27,7 +27,7 @@
             <div class="tag tag-generic tag-editable" @click.stop v-for="tag in searchSelectedTags" :key="tag.id">
                 {{ tag.content }}
                 <button class="button remove-tag-button" @click="unselectTag(tag)">
-                    x
+                    <img src="@/shared/assets/images/cross-icon.svg" alt="remove-tag">
                 </button>
             </div>
             

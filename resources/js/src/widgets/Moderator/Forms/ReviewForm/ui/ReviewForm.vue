@@ -1,5 +1,5 @@
 <template>
-    <div class="add-phrase-block add-phrase-block-light">
+    <div class="review-block">
         <h2>Заполните указанные поля</h2>
         <div class="separator-line" />
 
@@ -18,11 +18,11 @@
         <EditMeanings />
 
         <div class="buttons-block">
-            <button class="button button-large confirm-meaning-button"
+            <button class="button button-large moderator-approve-button"
                 @click="checkInput" :disabled="isLoading">
                 Одобрить
             </button>
-            <button class="button button-large cancel-meaning-button" @click="reject" :disabled="isLoading">
+            <button class="button button-large moderator-cancel-button" @click="reject" :disabled="isLoading">
                 Отклонить
             </button>
         </div>
@@ -82,5 +82,5 @@ export default defineComponent({
 </script>
 
 <style scoped>
-@import url('AddPhraseForm.css');
+@import url('ReviewForm.css');
 </style>

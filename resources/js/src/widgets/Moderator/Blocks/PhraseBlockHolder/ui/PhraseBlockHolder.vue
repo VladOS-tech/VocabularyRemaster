@@ -1,5 +1,5 @@
 <template>
-    <div class="request-block">
+    <div class="moderator-phrase-block-holder">
         <loadingIcon v-if="isLoading" />
         <PhraseItemModer v-else v-for="phrase in staffPhraseList" :key="phrase.id" :PhraseData="phrase" />
     </div>
@@ -37,6 +37,6 @@ export default defineComponent({
 </script>
 
 <style scoped>
-@import url('Requests.css');
+@import url('PhraseBlockHolder.css');
 
 </style>

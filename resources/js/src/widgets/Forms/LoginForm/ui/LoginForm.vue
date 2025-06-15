@@ -1,5 +1,5 @@
 <template>
-    <form class="login-form login-form-light" @submit.prevent="onLogin">
+    <form class="login-form" @submit.prevent="onLogin">
         <h2>
             Авторизация
         </h2>

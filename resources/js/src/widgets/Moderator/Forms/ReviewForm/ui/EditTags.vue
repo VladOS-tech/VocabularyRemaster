@@ -1,13 +1,13 @@
 <template>
-    <div class="input-tags-block">
+    <div class="edit-tags-block">
         <h3>
             Теги:
         </h3>
         <div class="tag-search-input-area">
             <input type="text" class="input-field input-field-regular" v-model="tagSearch" ref="tagSearchInputField"
                 placeholder="Начните вводить тег..." @input="searchTags" @keyup="closeTagSelector">
-            <ul class="form-tag-selector-list" v-if="showTagSelector && tagSearch.length >= 3">
-                <li class="tag-selector-list-element button" v-for="tag in unselectedSearchResultTags" :key="tag.id"
+            <ul class="moderator-form-tag-selector-list" v-if="showTagSelector && tagSearch.length >= 3">
+                <li class="moderator-tag-selector-list-element button" v-for="tag in unselectedSearchResultTags" :key="tag.id"
                     @click="selectTag(tag); selectTagViaSearch();">
                     <div class="tag-search-inline">
                         {{ tag.content }}
@@ -22,7 +22,7 @@
             <div class="tag tag-generic tag-editable" @click.stop v-for="tag in inputSelectedTags" :key="tag.id">
                 {{ tag.content }}
                 <button class="button remove-tag-button" @click="unselectTag(tag)">
-                    x
+                    <img src="@/shared/assets/images/cross-icon.svg" alt="remove-tag">
                 </button>
             </div>
 
@@ -100,5 +100,5 @@ export default defineComponent({
 </script>
 
 <style scoped>
-@import url('InputTags.css');
+@import url('EditTags.css');
 </style>

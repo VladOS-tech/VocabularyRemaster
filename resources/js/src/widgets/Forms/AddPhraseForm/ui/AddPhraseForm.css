@@ -1,13 +1,10 @@
-.add-phrase-block-light{
-    background: var(--block-background-gradient);
+.user-add-phrase-block{
+    background-color: var(--block-color);
     color: black;
-}
-
-.add-phrase-block{
-    border-radius: var(--default-border-radius);
-    border-style: solid;
-    border-width: 0px;
-    border-color: var(--border-color);
+    border-radius: var(--big-border-radius);
+    /* border-style: solid; */
+    /* border-width: 0px; */
+    /* border-color: var(--border-color); */
     padding: 10px;
     box-shadow: var(--default-shadow);
     animation: var(--default-appear-animation);
@@ -17,20 +14,39 @@
     gap: 10px;
 }
 
-.separator-line{
+.user-separator-line{
     width: 100%;
-    background-color: var(--light-tag-color);
+    background-color: var(--separator);
     height: 2px;
 }
 
+.turnstile-row{
+    width: 100%;
+}
+
+
+.user-confirm-phrase-button{
+    background-color: var(--positive-color);
+}
+
+.user-cancel-phrase-button{
+    background-color: #bfbfbf;
+}
+
+.user-buttons-block{
+    display: flex;
+    align-self: flex-start;
+    gap: 10px;
+}
+
 @media screen and (min-width: 769px) {
-    .add-phrase-block{
-        margin: 61px 9% 30px 9%;
+    .user-add-phrase-block{
+        margin: 61px 20% 30px 20%;
     }
 }
 
 @media screen and (max-width: 768px) {
-    .add-phrase-block{
+    .user-add-phrase-block{
         margin: 20px 1% 30px 1%;
     }
 }

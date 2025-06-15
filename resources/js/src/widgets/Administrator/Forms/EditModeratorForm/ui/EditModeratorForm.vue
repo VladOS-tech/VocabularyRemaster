@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="add-moderator-block add-moderator-block-light">
+        <div class="edit-moderator-block">
             <h2>Изменение данных модератора</h2>
             <div class="separator-line" />
 
@@ -59,7 +59,7 @@
                 <button class="button button-large confirm-moderator-button" @click="checkInput">
                     Готово
                 </button>
-                <router-link to="/admin" class="button button-large cancel-meaning-button link-style">
+                <router-link to="/admin" class="button button-large cancel-edit-moderator-button link-style">
                     Отмена
                 </router-link>
             </div>
@@ -97,7 +97,7 @@ export default defineComponent({
 </script>
 
 <style>
-@import url('AddModeratorForm.css');
+@import url('EditModeratorForm.css');
 
 .input-row {
     display: flex;
@@ -107,6 +107,6 @@ export default defineComponent({
 }
 
 .confirm-moderator-button {
-    background-color: #7FED7C;
+    background-color: var(--positive-color);
 }
 </style>

@@ -125,7 +125,7 @@ export default {
     },
 
     actions: {
-        async sendPhraseForm({ state, commit }: { state: State, commit: any }) {
+        async sendPhraseForm({ state, commit }: { state: State, commit: any }, payload: {turnstileToken: string}) {
 
             const tagsToIds = (tags: TagObject[]): number[] => tags.map(el => el.id)
 
@@ -174,7 +174,8 @@ export default {
                         content: state.inputPhrase,
                         contexts: Array.from(state.inputExamples),
                         meaning: state.inputMeaning,
-                        tags: tagsToIds(Array.from(state.inputSelectedTags))
+                        tags: tagsToIds(Array.from(state.inputSelectedTags)),
+                        turnstileToken: payload.turnstileToken
                     }
                     console.log(requestContent)
                 try {

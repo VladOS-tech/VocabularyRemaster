@@ -1,4 +1,4 @@
-.input-tags-block{
+.user-input-tags-block{
     width: 100%;
     display: flex;
     flex-direction: column;
@@ -50,19 +50,16 @@
     outline-style: none;
 }
 
-.tag-editable{
-    gap: 10px;
-}
-
-.remove-tag-button{
+.user-remove-tag-button{
+    /* color: var(--white); */
     display: flex;
     justify-content: center;
     align-items: center;
     padding-bottom: 2.2px;
-    background-color: #FF7878;
+    background-color: var(--negative-color);
 }
 
-.tag-search-input-area{
+.user-tag-search-input-area{
     position: relative;
 
 }
@@ -80,12 +77,12 @@
     background-color: var(--light-background-color);
     border-width: 1px;
     box-shadow: var(--default-shadow);
-    border-color: var(--border-color);
-    border-style: solid;
+    /* border-color: var(--border-color);
+    border-style: solid; */
     list-style: none;
 }
 
-.form-tag-selector-list{
+.user-form-tag-selector-list{
     position: absolute;
     padding: 10px;
     margin: 0;
@@ -94,20 +91,20 @@
     overflow-y: scroll;
     top:0;
     transform: translateY(30px);
-    border-radius: var(--default-border-radius);
-    background-color: var(--light-background-color);
+    border-radius: var(--medium-border-radius);
+    background-color: var(--block-color);
     border-width: 1px;
     box-shadow: var(--default-shadow);
-    border-color: var(--border-color);
-    border-style: solid;
+    /* border-color: var(--border-color);
+    border-style: solid; */
     list-style: none;
     z-index: 1;
     /* opacity: .2; */
 }
 
-.tag-selector-list-element{
+.user-tag-selector-list-element{
     display: flex;
-    background-color: var(--light-background-color);
+    background-color: var(--block-color);
     padding: 5px;
     flex-direction: row;
     justify-content: space-between;

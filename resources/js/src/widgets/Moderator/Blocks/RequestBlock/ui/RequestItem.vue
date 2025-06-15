@@ -1,6 +1,6 @@
 <template>
-    <div class="request-item request-item-light">
-        <p class="request-date request-date-light">
+    <div class="request-item">
+        <p class="request-date">
             {{dateToString(RequestData.date)}}
         </p>
         <h2>{{ RequestData.content }}</h2>

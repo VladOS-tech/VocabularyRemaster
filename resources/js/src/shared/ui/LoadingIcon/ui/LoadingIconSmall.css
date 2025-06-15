@@ -1,0 +1,19 @@
+.loading-icon-small{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.loading-icon-small img{
+    width: 40px;
+    animation-name: loading-animation;
+    animation-duration: 1s;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: infinite;
+}
+
+@keyframes loading-animation {
+    from {transform: rotate(0deg);}
+    to {transform: rotate(360deg);}
+}

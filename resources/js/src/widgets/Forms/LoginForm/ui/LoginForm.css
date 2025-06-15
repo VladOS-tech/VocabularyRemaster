@@ -1,8 +1,10 @@
 .login-form{
-    border-radius: var(--default-border-radius);
-    border-style: solid;
+    background-color: var(--block-color);
+    color: black;
+    border-radius: var(--big-border-radius);
+    /* border-style: solid;
     border-width: 0px;
-    border-color: var(--border-color);
+    border-color: var(--border-color); */
     padding: 10px;
     box-shadow: var(--default-shadow);
     animation: var(--default-appear-animation);
@@ -13,11 +15,6 @@
     width: 100%;
     max-width: 400px;
     margin: 60px 10px;
-}
-
-.login-form-light{
-    background: var(--block-background-gradient);
-    color: black;
 }
 
 .login-field-holder{

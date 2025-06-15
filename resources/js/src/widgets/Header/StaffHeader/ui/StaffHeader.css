@@ -33,5 +33,5 @@
 }
 
 .logout-button{
-    background-color: #FF3D3D;
+    background-color: var(--negative-color);
 }

@@ -1,11 +1,11 @@
 <template>
-    <div class="add-phrase-block add-phrase-block-light">
+    <div class="user-add-phrase-block">
         <h2>Заполните указанные поля</h2>
-        <div class="separator-line" />
+        <div class="user-separator-line" />
 
         <textarea type="text" class="input-field input-field-header input-field-textarea"
-            placeholder="Введите новый фразеологизм" @blur="updateInputPhrase" rows="1"
-            :value="inputPhrase" @input="heightResize($event); setInputPhrase(($event.target as HTMLTextAreaElement).value)">
+            placeholder="Введите новый фразеологизм" @blur="updateInputPhrase" rows="1" :value="inputPhrase"
+            @input="heightResize($event); setInputPhrase(($event.target as HTMLTextAreaElement).value)">
         </textarea>
         <div v-if="inputPhraseError" class="input-error">
             {{ inputPhraseError }}
@@ -16,13 +16,20 @@
         </div>
 
         <InputMeanings />
+        <div class="turnstile-row">
+            <div id="cf-turnstile" class="cf-turnstile" data-sitekey="0x4AAAAAABhCy47tF322to7t"
+                data-callback="completeTurnstile" data-theme="light">
+            </div>
+        </div>
+        <div class="user-buttons-block">
+            <!-- <LoadingIconSmall v-if="isLoading"/> -->
 
-        <div class="buttons-block">
-            <button class="button button-large confirm-meaning-button"
-                @click="checkInput">
+            <button class="button button-large user-confirm-phrase-button"
+                :disabled="isLoading || !isTurnstileCompleted" @click="checkInput">
                 Готово
             </button>
-            <router-link to="/" class="button button-large cancel-meaning-button link-style">
+            <router-link to="/" class="button button-large user-cancel-phrase-button link-style"
+                :class="isLoading ? 'router-link--disabled' : 'button'">
                 Отмена
             </router-link>
         </div>
@@ -33,17 +40,22 @@
 import { defineComponent } from 'vue';
 import InputMeanings from './InputMeanings.vue';
 import InputTags from './InputTags.vue';
+import LoadingIconSmall from '@/shared/ui/LoadingIcon/ui/LoadingIconSmall.vue';
 import { mapActions, mapGetters, mapMutations } from 'vuex';
 
 export default defineComponent({
-    components: { InputMeanings, InputTags },
+    components: {
+        InputMeanings, InputTags,
+        // LoadingIconSmall
+    },
     data() {
         return {
-            
+            isLoading: false as boolean,
+            isTurnstileCompleted: false as boolean,
+            turnstileToken: '' as string
         }
     },
-    computed:{
-        ...mapGetters(['isLoading']),
+    computed: {
         ...mapGetters('phraseForm', ['inputPhrase', 'inputPhraseError', 'inputTagsError']),
     },
     methods: {
@@ -59,14 +71,17 @@ export default defineComponent({
             textField.style.height = textField.scrollHeight + 'px';
         },
         async checkInput() {
-            this.setLoading({ whichLoading: 'inputPhrase', newLoading: true })
-            await this.sendPhraseForm();
-            this.setLoading({ whichLoading: 'inputPhrase', newLoading: false })
+            this.isLoading = true
+            await this.sendPhraseForm({turnstileToken: this.turnstileToken});
+            this.isLoading = false
         },
-        mounted() {
-            this.setLoading({ whichLoading: 'inputPhrase', newLoading: false })
-        },
-    }
+    },
+    mounted() {
+        (window as any).completeTurnstile = (token: string) => {
+            this.isTurnstileCompleted = true;
+            this.turnstileToken = token;
+        };
+    },
 })
 </script>
 
