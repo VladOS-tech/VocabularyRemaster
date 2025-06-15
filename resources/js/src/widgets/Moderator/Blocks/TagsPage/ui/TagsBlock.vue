@@ -54,6 +54,10 @@ export default defineComponent({
     grid-template-columns: 4fr 6fr 2fr;
     row-gap: 5px;
     column-gap: 10px;
+    border-radius: var(--big-border-radius);
+    box-shadow: var(--default-shadow);
+    background-color: var(--block-color);
+    padding: 6px;
 }
 
 .tag-loading-block{
@@ -62,7 +66,7 @@ export default defineComponent({
 
 .tag-list-header {
     font-family: var(--default-header-font-family);
-    padding: 6px;
+    padding: 0 6px 6px 6px;
     font-size: 20px;
     font-weight: 500;
 

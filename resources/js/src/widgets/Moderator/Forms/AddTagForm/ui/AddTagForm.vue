@@ -34,16 +34,17 @@ import { mapActions } from 'vuex';
 
 <style scoped>
     .add-tag-form{
-            position: sticky;
-            top: 100px;
+        position: sticky;
+        top: 100px;
         display: flex;
         flex-direction: column;
         gap: 10px;
         font-family: var(--default-header-font-family);
         padding: 6px;
         font-size: 20px;
-        background-color: var(--light-meaning-block-color);
-        border-radius: var(--default-border-radius);
+        background-color: var(--block-color);
+        border-radius: var(--big-border-radius);
+        box-shadow: var(--default-shadow);
         width: fit-content;
         height: fit-content;
         font-weight: 500;

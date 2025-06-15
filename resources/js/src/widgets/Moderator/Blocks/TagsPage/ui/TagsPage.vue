@@ -30,5 +30,6 @@ import TagsBlock from './TagsBlock.vue';
         display: grid;
         grid-template-columns: 2fr 4fr;
         grid-template-areas: 'add-tag tag-list';
+        gap: 10px;
     }
 </style>
