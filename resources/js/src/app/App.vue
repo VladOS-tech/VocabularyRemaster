@@ -14,17 +14,6 @@ export default defineComponent({
     }
     else this.setMobile(false)
     this.loadUser()
-    
-    const scriptId = 'turnstile-script';
-
-    if (!document.getElementById(scriptId)) {
-      const script = document.createElement('script');
-      script.id = scriptId;
-      script.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js';
-      script.async = true;
-      script.defer = true;
-      document.head.appendChild(script);
-    }
   },
   methods: {
     ...mapMutations(['setToken', 'setUsername', 'setUserRole', 'setMobile']),

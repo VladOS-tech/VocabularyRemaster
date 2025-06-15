@@ -17,9 +17,7 @@
 
         <InputMeanings />
         <div class="turnstile-row">
-            <div id="cf-turnstile" class="cf-turnstile" data-sitekey="0x4AAAAAABhCy47tF322to7t"
-                data-callback="completeTurnstile" data-theme="light">
-            </div>
+            <TurnstileComponent sitekey="0x4AAAAAABhCy47tF322to7t" :onSuccess="handleTurnstile"/>
         </div>
         <div class="user-buttons-block">
             <!-- <LoadingIconSmall v-if="isLoading"/> -->
@@ -40,13 +38,14 @@
 import { defineComponent } from 'vue';
 import InputMeanings from './InputMeanings.vue';
 import InputTags from './InputTags.vue';
-import LoadingIconSmall from '@/shared/ui/LoadingIcon/ui/LoadingIconSmall.vue';
 import { mapActions, mapGetters, mapMutations } from 'vuex';
+import TurnstileComponent from '@/shared/ui/TurnstileComponent';
 
 export default defineComponent({
     components: {
         InputMeanings, InputTags,
-        // LoadingIconSmall
+        // LoadingIconSmall,
+        TurnstileComponent
     },
     data() {
         return {
@@ -75,13 +74,11 @@ export default defineComponent({
             await this.sendPhraseForm({turnstileToken: this.turnstileToken});
             this.isLoading = false
         },
-    },
-    mounted() {
-        (window as any).completeTurnstile = (token: string) => {
+        handleTurnstile(token: string){
             this.isTurnstileCompleted = true;
             this.turnstileToken = token;
-        };
-    },
+        }
+    }
 })
 </script>
 
