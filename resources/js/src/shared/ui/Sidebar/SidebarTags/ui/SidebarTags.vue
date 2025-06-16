@@ -33,9 +33,9 @@
             
         </div>
         <div v-else>-   </div>
-        <div class="button button-large button-side" @click="GetPhrasesInfo()">
+        <button class="button button-large button-side" @click="GetPhrasesInfo()">
             Применить
-        </div>
+        </button>
     </div>    
 </template>
 
