@@ -17,7 +17,7 @@
 
         <InputMeanings />
         <div class="turnstile-row">
-            <TurnstileComponent sitekey="0x4AAAAAABhCy47tF322to7t" :onSuccess="handleTurnstile"/>
+            <div ref="turnstileEl"></div>
         </div>
         <div class="user-buttons-block">
             <!-- <LoadingIconSmall v-if="isLoading"/> -->
@@ -39,13 +39,28 @@ import { defineComponent } from 'vue';
 import InputMeanings from './InputMeanings.vue';
 import InputTags from './InputTags.vue';
 import { mapActions, mapGetters, mapMutations } from 'vuex';
-import TurnstileComponent from '@/shared/ui/TurnstileComponent';
+// import TurnstileComponent from '@/shared/ui/TurnstileComponent';
+
+declare global {
+  interface Window {
+    turnstile?: {
+      render: (
+        el: HTMLElement,
+        options: {
+          sitekey: string;
+          callback: (token: string) => void;
+          theme?: string;
+        }
+      ) => void;
+    };
+  }
+}
 
 export default defineComponent({
     components: {
         InputMeanings, InputTags,
         // LoadingIconSmall,
-        TurnstileComponent
+        // TurnstileComponent
     },
     data() {
         return {
@@ -71,14 +86,30 @@ export default defineComponent({
         },
         async checkInput() {
             this.isLoading = true
-            await this.sendPhraseForm({turnstileToken: this.turnstileToken});
+            await this.sendPhraseForm({ turnstileToken: this.turnstileToken });
             this.isLoading = false
         },
-        handleTurnstile(token: string){
+        renderTurnstile() {
+            const el = this.$refs.turnstileEl as HTMLElement | undefined;
+            if (el && window.turnstile) {
+                window.turnstile.render(el, {
+                    sitekey: '0x4AAAAAABhCy47tF322to7t',
+                    callback: (token: string) => this.handleTurnstile(token),
+                    theme: 'light',
+                });
+            } else {
+                setTimeout(this.renderTurnstile, 500);
+            }
+        },
+        handleTurnstile(token: string) {
             this.isTurnstileCompleted = true;
             this.turnstileToken = token;
-        }
+        },
+    },
+    mounted() {
+        this.renderTurnstile();
     }
+
 })
 </script>
 

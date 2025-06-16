@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
   <div ref="turnstileEl" class="cf-turnstile"></div>
 </template>
 
@@ -37,6 +37,7 @@ export default defineComponent({
     },
   },
   mounted() {
+    console.log(typeof this.sitekey)
     this.renderTurnstile();
   },
   methods: {
@@ -72,7 +73,7 @@ export default defineComponent({
       if (el && window.turnstile) {
         el.innerHTML = '';
         window.turnstile.render(el, {
-          sitekey: this.sitekey,
+          sitekey: String(this.sitekey),
           callback: this.onSuccess,
           theme: this.theme,
         });
@@ -86,4 +87,4 @@ export default defineComponent({
 .cf-turnstile {
   margin-top: 20px;
 }
-</style> -->
+</style> --> -->
